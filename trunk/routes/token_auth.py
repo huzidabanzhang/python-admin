@@ -17,17 +17,17 @@ def verify_password(token, pwd):
     # header key:value
     # account  账号
     # 密码
-    # key=Authorization
+    # key=随机
     # value =basic base64(账号:密码)
     user_info = verify_auth_token(token, pwd)
     if not user_info:
         return False
-    else:   
+    else:
         g.user = user_info
         return True
 
 
-def generate_auth_token(params, expiration = 30 * 24 * 3600):
+def generate_auth_token(params, expiration=30 * 24 * 3600):
     """
     生成token
     params 参数
