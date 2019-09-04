@@ -1,3 +1,4 @@
+# -*- coding:UTF-8 -*-
 # token 基本参数
 token_info = {
     'expiration': 30 * 24 * 3600,
