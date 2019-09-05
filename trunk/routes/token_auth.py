@@ -1,7 +1,7 @@
 # -*- coding:UTF-8 -*-
 # trunk/routes/token_auth.py
 
-from flask import current_app, g, request
+from flask import current_app, request
 from flask_httpauth import HTTPBasicAuth
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 from libs.error_code import AuthFailed, Forbidden
@@ -23,7 +23,6 @@ def verify_password(token, pwd):
     if not user_info:
         return False
     else:
-        g.user = user_info
         return True
 
 

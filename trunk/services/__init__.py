@@ -1,6 +1,6 @@
 # -*- coding:UTF-8 -*-
 # trunk/services/__init__.py
-from conf.setting import server_info, mysql_info, token_info
+from conf.setting import server_info, token_info
 
 
 def init_app(app):
