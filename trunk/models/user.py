@@ -46,20 +46,48 @@ class Role(db.Model):
     type = db.Column(db.SmallInteger, index=True, default=1)
     users = db.relationship('User', backref='role')
     menus = db.relationship('Menu',
-                            secondary=RoleToMenu,
+                            secondary=MenuToRole,
                             backref=db.backref('db_role', lazy='dynamic'),
                             lazy='dynamic')
+    routes = db.relationship('Route',
+                             secondary=RouteToRole,
+                             backref=db.backref('db_route', lazy='dynamic'),
+                             lazy='dynamic')
     __table_args__ = ({"useexisting": True})
 
     def __repr__(self):
         return '<Role %r>' % self.name
 
 
-RoleToMenu = db.Table(
-    'db_role_to_menu',
+MenuToRole = db.Table(
+    'db_menu_to_role',
     db.Column('role_id', db.Integer, db.ForeignKey('db_role.id')),
     db.Column('menu_id', db.Integer, db.ForeignKey('db_menu.id'))
 )
+
+
+RouteToRole = db.Table(
+    'db_route_to_role',
+    db.Column('route_id', db.Integer, db.ForeignKey('db_route.id')),
+    db.Column('menu_id', db.Integer, db.ForeignKey('db_menu.id'))
+)
+
+
+def Route(db.Model):
+    '''
+    路由
+    '''
+    __tablename__ = 'db_route'
+    id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
+    name = db.Column(db.String(64), nullable=False, unique=True)
+    path = db.Column(db.String(255), nullable=False)
+    permission = db.Column(db.SmallInteger, index=True, default=1)
+    description = db.Column(db.String(255), nullable=False)
+    isLock = db.Column(db.Boolean, index=True, default=True)
+    __table_args__ = ({"useexisting": True})
+
+    def __repr__(self):
+        return '<Route %r>' % self.name
 
 
 def Menu(db.Model):
@@ -73,8 +101,9 @@ def Menu(db.Model):
     path = db.Column(db.String(255), nullable=False)
     icon = db.Column(db.String(255), nullable=False)
     sort = db.Column(db.SmallInteger, index=True, default=1)
-    type = db.Column(db.SmallInteger, index=True, default=1)
+    permission = db.Column(db.SmallInteger, index=True, default=1)
     isLock = db.Column(db.Boolean, index=True, default=True)
+    routes = db.relationship('Route', backref='menu')
     __table_args__ = ({"useexisting": True})
 
     def __repr__(self):
