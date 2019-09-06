@@ -73,7 +73,7 @@ RouteToRole = db.Table(
 )
 
 
-def Route(db.Model):
+class Route(db.Model):
     '''
     路由
     '''
@@ -90,7 +90,7 @@ def Route(db.Model):
         return '<Route %r>' % self.name
 
 
-def Menu(db.Model):
+class Menu(db.Model):
     '''
     菜单
     '''
