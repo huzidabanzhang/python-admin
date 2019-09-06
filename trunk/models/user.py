@@ -1,6 +1,6 @@
 # -*- coding:UTF-8 -*-
 # trunk/models/User.py
-from app import db
+from models import db
 import datetime
 
 
@@ -36,6 +36,20 @@ class User(db.Model):
         return '<User %r>' % self.username
 
 
+MenuToRole = db.Table(
+    'db_menu_to_role',
+    db.Column('role_id', db.Integer, db.ForeignKey('db_role.id')),
+    db.Column('menu_id', db.Integer, db.ForeignKey('db_menu.id'))
+)
+
+
+RouteToRole = db.Table(
+    'db_route_to_role',
+    db.Column('route_id', db.Integer, db.ForeignKey('db_route.id')),
+    db.Column('menu_id', db.Integer, db.ForeignKey('db_menu.id'))
+)
+
+
 class Role(db.Model):
     '''
     权限
@@ -57,20 +71,6 @@ class Role(db.Model):
 
     def __repr__(self):
         return '<Role %r>' % self.name
-
-
-MenuToRole = db.Table(
-    'db_menu_to_role',
-    db.Column('role_id', db.Integer, db.ForeignKey('db_role.id')),
-    db.Column('menu_id', db.Integer, db.ForeignKey('db_menu.id'))
-)
-
-
-RouteToRole = db.Table(
-    'db_route_to_role',
-    db.Column('route_id', db.Integer, db.ForeignKey('db_route.id')),
-    db.Column('menu_id', db.Integer, db.ForeignKey('db_menu.id'))
-)
 
 
 class Route(db.Model):
