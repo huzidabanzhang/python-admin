@@ -46,7 +46,7 @@ MenuToRole = db.Table(
 RouteToRole = db.Table(
     'db_route_to_role',
     db.Column('route_id', db.Integer, db.ForeignKey('db_route.id')),
-    db.Column('menu_id', db.Integer, db.ForeignKey('db_menu.id'))
+    db.Column('role_id', db.Integer, db.ForeignKey('db_role.id'))
 )
 
 
@@ -79,6 +79,7 @@ class Route(db.Model):
     '''
     __tablename__ = 'db_route'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
+    menu_id = db.Column(db.Integer, db.ForeignKey('db_menu.id'))
     name = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False)
     permission = db.Column(db.SmallInteger, index=True, default=1)

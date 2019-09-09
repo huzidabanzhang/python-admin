@@ -5,6 +5,11 @@ from models.user import User
 
 
 class UserModel():
+    def CreateDropRequest(self):
+        db.drop_all()
+        db.create_all()
+        return True
+
     def QueryUserByParamRequest(self):
         try:
             s = db.session()
