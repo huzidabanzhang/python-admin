@@ -1,5 +1,7 @@
 # -*- coding:UTF-8 -*-
 # token 基本参数
+import hashlib
+
 token_info = {
     'expiration': 30 * 24 * 3600,
     'SECRET_KEY': 'k#6@1%8)a'
@@ -24,3 +26,8 @@ class Config():
 
     def get_sql_url(self):
         return "mysql://%s:%s@%s:%s/%s?charset=utf8" % (self.user, self.password, self.host, self.port, self.db)
+
+    def get_md5(self, m):
+        h = hashlib.md5()
+        h.update(m.encode('utf-8'))
+        return h.hexdigest()

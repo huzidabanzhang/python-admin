@@ -4,7 +4,7 @@
 from flask import current_app, request
 from flask_httpauth import HTTPBasicAuth
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
-from libs.error_code import AuthFailed, Forbidden
+from libs.error_code import ResultDeal
 from libs.scope import is_in_scope
 
 auth = HTTPBasicAuth()
@@ -19,11 +19,19 @@ def verify_password(token, pwd):
     # 密码
     # key=随机
     # value =basic base64(账号:密码)
+    if not token:
+        return False
+
     user_info = verify_auth_token(token, pwd)
     if not user_info:
         return False
     else:
         return True
+
+
+@auth.error_handler
+def unauthorized():
+    return ResultDeal(code=401, msg='Unauthorized access')
 
 
 def generate_auth_token(params, expiration=30 * 24 * 3600):
@@ -40,15 +48,15 @@ def verify_auth_token(token, pwd):
     try:
         data = s.loads(token)
     except SignatureExpired:
-        raise AuthFailed(msg='token已过期', error_code=1003)
+        return False
     except BadSignature:
-        raise AuthFailed(msg='token不合法', error_code=1002)
+        return False
 
-    if data.get(data.get('user_name')) != pwd:
+    if data.get('password') != pwd:
         return False
 
     # 路由权限
-    allow = is_in_scope(data['scope'], request.endpoint)
+    allow = is_in_scope(data.get('role_id'), request.endpoint)
     if not allow:
-        raise Forbidden()
+        return False
     return data

@@ -16,5 +16,5 @@ def create_app():
 
 # 初始化
 app = create_app()
-print app.url_map
+# print app.url_map
 app.run()
