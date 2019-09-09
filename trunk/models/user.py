@@ -1,6 +1,6 @@
 # -*- coding:UTF-8 -*-
 # trunk/models/User.py
-from models import db
+from models.base import db
 import datetime
 
 

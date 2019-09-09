@@ -8,3 +8,5 @@ def init_app(app):
     app.config.from_object(server_info)
     # session
     app.config['SECRET_KEY'] = token_info['SECRET_KEY']
+    # 调试模式
+    app.config['DEBUG'] = True

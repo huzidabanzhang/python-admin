@@ -9,7 +9,6 @@ token_info = {
 server_info = {
     "host": '0.0.0.0',
     "port": 5000,  # 启动服务的端口号
-    'debug': True  # 是否是调试模式
 }
 
 

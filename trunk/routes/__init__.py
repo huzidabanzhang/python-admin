@@ -1,6 +1,6 @@
 # -*- coding:UTF-8 -*-
 # trunk/routes/__init__.py
-from .user import route_user
+from .v1.user import route_user
 
 
 def init_app(app):
