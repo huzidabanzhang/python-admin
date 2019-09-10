@@ -15,6 +15,7 @@ class User(db.Model):
     password = db.Column(db.String(32), nullable=False)
     nickname = db.Column(db.String(64))
     sex = db.Column(db.SmallInteger, default=1)
+    isLock = db.Column(db.Boolean, index=True, default=True)
     role_id = db.Column(db.Integer, db.ForeignKey('db_role.id'))
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     update_time = db.Column(db.DateTime, default=datetime.datetime.now)
@@ -58,6 +59,7 @@ class Role(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
     type = db.Column(db.SmallInteger, index=True, default=1)
+    isLock = db.Column(db.Boolean, index=True, default=True)
     users = db.relationship('User', backref='role')
     menus = db.relationship('Menu',
                             secondary=MenuToRole,
