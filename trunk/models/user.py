@@ -33,6 +33,16 @@ class User(db.Model):
     def get_id(self):
         return unicode(self.user_id)
 
+    def to_json(self):
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        if "update_time" in dict:
+            dict["update_time"] = dict["update_time"].strftime('%Y-%m-%d %H:%M:%S')
+        if "create_time" in dict:
+            dict["create_time"] = dict["create_time"].strftime('%Y-%m-%d %H:%M:%S')
+        return dict
+
     def __repr__(self):
         return '<User %r>' % self.username
 
@@ -71,6 +81,12 @@ class Role(db.Model):
                              lazy='dynamic')
     __table_args__ = ({"useexisting": True})
 
+    def to_json(self):
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        return dict
+
     def __repr__(self):
         return '<Role %r>' % self.name
 
@@ -88,6 +104,12 @@ class Route(db.Model):
     description = db.Column(db.String(255), nullable=False)
     isLock = db.Column(db.Boolean, index=True, default=True)
     __table_args__ = ({"useexisting": True})
+
+    def to_json(self):
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        return dict
 
     def __repr__(self):
         return '<Route %r>' % self.name
@@ -108,6 +130,12 @@ class Menu(db.Model):
     isLock = db.Column(db.Boolean, index=True, default=True)
     routes = db.relationship('Route', backref='menu')
     __table_args__ = ({"useexisting": True})
+
+    def to_json(self):
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        return dict
 
     def __repr__(self):
         return '<Menu %r>' % self.title

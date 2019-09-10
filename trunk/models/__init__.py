@@ -3,6 +3,7 @@
 from conf.setting import Config
 from base import db
 
+
 def init_app(app):
     # mysql 数据库连接数据
     app.config['SQLALCHEMY_DATABASE_URI'] = Config().get_sql_url()

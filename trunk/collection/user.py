@@ -5,6 +5,7 @@ from models.user import User
 from conf.setting import Config
 import uuid
 import datetime
+import json
 
 
 class UserModel():
@@ -26,12 +27,16 @@ class UserModel():
                 if params.has_key(i):
                     data[i] = params[i]
 
-            result = s.query(User).filter_by(*data).filter(
+            result = User.query.filter_by(*data).filter(
                 User.username.like("%" + params['username'] + "%") if params.has_key('username') else '',
                 User.nickname.like("%" + params['nickname'] + "%") if params.has_key('nickname') else ''
             ).order_by(order_by).paginate(page, page_size, error_out=False)
-            print result
-            return {'data': result.items, 'total': result.total}
+            
+            data = []
+            for value in result.items:
+                data.append(value.to_json())
+
+            return {'data': data, 'total': result.total}
         except Exception as e:
             print e
             return str(e.message)
