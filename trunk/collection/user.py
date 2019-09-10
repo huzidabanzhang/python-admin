@@ -5,7 +5,6 @@ from models.user import User
 from conf.setting import Config
 import uuid
 import datetime
-import json
 
 
 class UserModel():
