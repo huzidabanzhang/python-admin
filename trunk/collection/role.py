@@ -54,7 +54,7 @@ class RoleModel():
             if not role:
                 return str('数据不存在')
 
-            return role
+            return role.to_json()
         except Exception as e:
             print e
             return str(e.message)

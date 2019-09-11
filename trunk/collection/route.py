@@ -66,7 +66,7 @@ class RouteModel():
             if not route:
                 return str('路由不存在')
 
-            return route
+            return route.to_json()
         except Exception as e:
             print e
             return str(e.message)

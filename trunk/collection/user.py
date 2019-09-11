@@ -80,7 +80,7 @@ class UserModel():
             if not user:
                 return str('用户不存在')
 
-            return user
+            return user.to_json()
         except Exception as e:
             print e
             return str(e.message)

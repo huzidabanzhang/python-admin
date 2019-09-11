@@ -58,14 +58,7 @@ class MenuModel():
             if not menu:
                 return str('菜单不存在')
 
-            data = []
-            for key in menu.routes:
-                data.append(key.to_json())
-            
-            item = menu.to_json()
-            item['routes'] = data
-
-            return item
+            return menu.to_json()
         except Exception as e:
             print e
             return str(e.message)
