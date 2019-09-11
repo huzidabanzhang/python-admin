@@ -35,6 +35,13 @@ def LockMenu():
     return ResultDeal(data=result)
 
 
+@route_menu.route('/GetMenu', methods=['POST'])
+@auth.login_required
+def GetMenu():
+    result = MenuModel().GetMenuRequest(menu_id=request.form.get('menu_id'))
+    return ResultDeal(data=result)
+
+
 @route_menu.route('/ModifyMenu', methods=['POST'])
 @auth.login_required
 def ModifyMenu():

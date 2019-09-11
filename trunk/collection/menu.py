@@ -11,13 +11,6 @@ class MenuModel():
         '''
         s = db.session()
         try:
-            Int = ['menu_id', 'isLock']
-            data = {}
-
-            for i in Int:
-                if params.has_key(i):
-                    data[i] = params[i]
-
             result = Menu.query.order_by(order_by).all()
 
             data = []
@@ -65,7 +58,14 @@ class MenuModel():
             if not menu:
                 return str('菜单不存在')
 
-            return menu
+            data = []
+            for key in menu.routes:
+                data.append(key.to_json())
+            
+            item = menu.to_json()
+            item['routes'] = data
+
+            return item
         except Exception as e:
             print e
             return str(e.message)
