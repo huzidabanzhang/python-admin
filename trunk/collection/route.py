@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 
+@Description: 路由控制器
 @Author: Zpp
 @Date: 2019-09-10 16:00:22
-@LastEditTime: 2019-09-12 11:27:11
+@LastEditTime: 2019-09-12 13:39:07
 @LastEditors: Zpp
 '''
 from models.base import db

@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 
+@Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2019-09-12 11:27:04
+@LastEditTime: 2019-09-12 14:04:35
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -114,7 +114,7 @@ class RoleModel():
         '''
         s = db.session()
         try:
-            Int = ['menu_id', 'isLock']
+            Int = ['isLock']
             data = {}
 
             for i in Int:
@@ -132,93 +132,6 @@ class RoleModel():
             return {'data': data, 'total': result.total}
         except Exception as e:
             print e
-            return str(e.message)
-        finally:
-            s.close()
-
-    def CreateRouteRequest(self, params):
-        '''
-        新建路由
-        '''
-        s = db.session()
-        try:
-            item = Route(
-                name=params['name'],
-                permission=int(params['permission']),
-                menu_id=int(params['menu_id']),
-                path=params['path'],
-                description=params['description']
-            )
-            s.add(item)
-            s.commit()
-            return True
-        except Exception as e:
-            s.rollback()
-            print e
-            return str(e.message)
-        finally:
-            s.close()
-
-    def GetRouteRequest(self, route_id):
-        '''
-        查询权限
-        '''
-        s = db.session()
-        try:
-            route = s.query(Route).filter(Route.id == route_id).first()
-            if not route:
-                return str('数据不存在')
-
-            return route
-        except Exception as e:
-            print e
-            return str(e.message)
-        finally:
-            s.close()
-
-    def ModifyRouteRequest(self, route_id, params):
-        '''
-        修改路由信息
-        '''
-        s = db.session()
-        try:
-            route = s.query(Route).filter(Route.id == route_id).first()
-            if not route:
-                return str('路由不存在')
-
-            AllowableFields = ['menu_id', 'name', 'path', 'permission', 'description']
-            data = {}
-
-            for i in params:
-                if i in AllowableFields and params.has_key(i):
-                    data[i] = params[i]
-
-            s.query(Route).filter(Route.id == route_id).update(data)
-            s.commit()
-            return True
-        except Exception as e:
-            print e
-            s.rollback()
-            return str(e.message)
-        finally:
-            s.close()
-
-    def LockRouteRequest(self, route_id):
-        '''
-        禁用路由
-        '''
-        s = db.session()
-        try:
-            for key in route_id:
-                route = s.query(Route).filter(Route.route_id == key).first()
-                if not route:
-                    continue
-                route.isLock = False
-                s.commit()
-            return True
-        except Exception as e:
-            print e
-            s.rollback()
             return str(e.message)
         finally:
             s.close()

@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 
+@Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2019-09-12 11:27:29
+@LastEditTime: 2019-09-12 14:02:44
 @LastEditors: Zpp
 '''
 import hashlib
