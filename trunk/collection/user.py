@@ -4,11 +4,11 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-09-12 11:26:16
+@LastEditTime: 2019-09-12 15:02:46
 @LastEditors: Zpp
 '''
 from models.base import db
-from models.user import User
+from models.user import User, Role, Route, Menu
 from conf.setting import Config
 import uuid
 import datetime
@@ -65,7 +65,8 @@ class UserModel():
                 username=params['username'],
                 password=Config().get_md5(params['password']),
                 sex=int(params['sex']),
-                nickname=params['nickname']
+                nickname=params['nickname'],
+                role_id=int(params['role_id'])
             )
             s.add(item)
             s.commit()
@@ -87,7 +88,20 @@ class UserModel():
             if not user:
                 return str('用户不存在')
 
-            return user.to_json()
+            data = user.to_json()
+            if user.role_id:
+                role = s.query(Role).filter(Role.id == user.role_id).first()
+                route = []
+                for i in role.routes:
+                    route.append(i.to_json())
+                menu = []
+                for i in role.menus:
+                    menu.append(i.to_json())
+                
+                data['routes'] = route
+                data['menus'] = menu
+
+            return data
         except Exception as e:
             print e
             return str(e.message)
@@ -110,7 +124,7 @@ class UserModel():
             for i in params:
                 if i in AllowableFields and params.has_key(i):
                     data[i] = params[i]
-            data['update_time'] = datetime.datetime.now
+
             s.query(User).filter(User.user_id == user_id).update(data)
             s.commit()
             return True

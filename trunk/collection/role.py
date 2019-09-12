@@ -4,11 +4,11 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2019-09-12 14:04:35
+@LastEditTime: 2019-09-12 14:23:58
 @LastEditors: Zpp
 '''
 from models.base import db
-from models.user import Role
+from models.user import Role, Route, Menu
 
 
 class RoleModel():
@@ -64,6 +64,58 @@ class RoleModel():
             return role.to_json()
         except Exception as e:
             print e
+            return str(e.message)
+        finally:
+            s.close()
+
+    def ModifyRoleToRoute(self, role_id, route_id):
+        '''
+        修改路由权限
+        '''
+        s = db.session()
+        try:
+            role = s.query(Role).filter(Role.id == role_id).first()
+            if not role:
+                return str('数据不存在')
+
+            route = []
+            for key in route_id:
+                item = s.query(Route).filter(Route.id == key).first()
+                if item:
+                    route.append(item)
+
+            role.routes = route
+            s.commit()
+            return True
+        except Exception as e:
+            print e
+            s.rollback()
+            return str(e.message)
+        finally:
+            s.close()
+
+    def ModifyRoleToMenu(self, role_id, menu_id):
+        '''
+        修改菜单权限
+        '''
+        s = db.session()
+        try:
+            role = s.query(Role).filter(Role.id == role_id).first()
+            if not role:
+                return str('数据不存在')
+
+            menu = []
+            for key in menu_id:
+                item = s.query(Menu).filter(Menu.id == key).first()
+                if item:
+                    menu.append(item)
+
+            role.menus = menu
+            s.commit()
+            return True
+        except Exception as e:
+            print e
+            s.rollback()
             return str(e.message)
         finally:
             s.close()

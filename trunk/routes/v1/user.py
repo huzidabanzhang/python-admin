@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-09-12 11:28:50
+@LastEditTime: 2019-09-12 15:00:11
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -32,14 +32,18 @@ def Login():
         return ResultDeal(msg=result, code=-1)
 
     token = generate_auth_token({
-        'username': result.username,
-        'user_id': result.user_id,
-        'role_id': result.role_id,
-        'password': result.password,
-        'nickname': result.nickname
+        'username': result['username'],
+        'user_id': result['user_id'],
+        'role_id': result['role_id'],
+        'password': result['password'],
+        'nickname': result['nickname']
     })
 
-    return ResultDeal(data=token)
+    return ResultDeal(data={
+        'token': token,
+        'routes': result['routes'],
+        'menus': result['menus']
+    })
 
 
 @route_user.route('/CreateUser', methods=['POST'])
@@ -50,6 +54,7 @@ def CreateUser():
         'password': request.form.get('password'),
         'nickname': request.form.get('nickname') or '',
         'sex': request.form.get('sex') or 1,
+        'role_id': request.form.get('role_id') or 1
     }
 
     result = UserModel().CreateUserRequest(params)
