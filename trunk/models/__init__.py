@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# trunk/models/__init__.py
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-04 10:23:51
+@LastEditTime: 2019-09-12 11:28:00
+@LastEditors: Zpp
+'''
 from conf.setting import Config
 from base import db
 

@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# trunk/routes/v1/user.py
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-06 14:19:29
+@LastEditTime: 2019-09-12 11:28:50
+@LastEditors: Zpp
+'''
 from flask import Blueprint, request
 from collection.user import UserModel
 from ..token_auth import auth, generate_auth_token
@@ -94,7 +101,7 @@ def QueryUserByParam():
         page_size=int(request.form.get('page_size')),
         order_by=request.form.get('order_by') if request.form.get('order_by') else None
     )
-    
+
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
 

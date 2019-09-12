@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# trunk/collection/menu.py
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-10 16:05:51
+@LastEditTime: 2019-09-12 11:26:57
+@LastEditors: Zpp
+'''
 from models.base import db
 from models.user import Menu
 

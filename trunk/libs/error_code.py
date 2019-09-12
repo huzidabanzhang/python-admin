@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# trunk/libs/error_code.py
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-04 17:09:14
+@LastEditTime: 2019-09-12 11:27:47
+@LastEditors: Zpp
+'''
 from flask import jsonify
 import json
 

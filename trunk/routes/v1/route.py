@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# trunk/routes/v1/route.py
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-11 16:51:59
+@LastEditTime: 2019-09-12 11:28:40
+@LastEditors: Zpp
+'''
 from flask import Blueprint, request
 from collection.route import RouteModel
 from ..token_auth import auth, generate_auth_token

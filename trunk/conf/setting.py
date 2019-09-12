@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# token 基本参数
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-02 15:53:39
+@LastEditTime: 2019-09-12 11:27:29
+@LastEditors: Zpp
+'''
 import hashlib
 
 token_info = {

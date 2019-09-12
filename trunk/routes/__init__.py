@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# trunk/routes/__init__.py
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-04 10:23:46
+@LastEditTime: 2019-09-12 11:28:56
+@LastEditors: Zpp
+'''
 from .v1.user import route_user
 from .v1.menu import route_menu
 from .v1.route import route_route

@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# trunk/services/__init__.py
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-04 10:23:44
+@LastEditTime: 2019-09-12 11:29:13
+@LastEditors: Zpp
+'''
 from conf.setting import server_info, token_info
 
 

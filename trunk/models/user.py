@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# trunk/models/User.py
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-05 15:57:55
+@LastEditTime: 2019-09-12 11:28:17
+@LastEditors: Zpp
+'''
 from models.base import db
 import datetime
 
@@ -97,7 +104,6 @@ class Route(db.Model):
     '''
     __tablename__ = 'db_route'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
-    menu_id = db.Column(db.Integer, db.ForeignKey('db_menu.id'))
     name = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False)
     permission = db.Column(db.SmallInteger, index=True, default=1)
@@ -128,7 +134,6 @@ class Menu(db.Model):
     sort = db.Column(db.SmallInteger, index=True, default=1)
     permission = db.Column(db.SmallInteger, index=True, default=1)
     isLock = db.Column(db.Boolean, index=True, default=True)
-    routes = db.relationship('Route', backref='menu')
     __table_args__ = ({"useexisting": True})
 
     def to_json(self):

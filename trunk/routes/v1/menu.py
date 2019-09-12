@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# trunk/routes/v1/menu.py
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-10 16:16:54
+@LastEditTime: 2019-09-12 10:29:06
+@LastEditors: Zpp
+'''
 from flask import Blueprint, request
 from collection.menu import MenuModel
 from ..token_auth import auth, generate_auth_token

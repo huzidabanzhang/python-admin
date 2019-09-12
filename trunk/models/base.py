@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# trunk/models/base.py
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-09 10:47:44
+@LastEditTime: 2019-09-12 11:28:07
+@LastEditors: Zpp
+'''
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.pool import NullPool
 

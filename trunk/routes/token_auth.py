@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# trunk/routes/token_auth.py
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-04 16:06:14
+@LastEditTime: 2019-09-04 16:06:14
+@LastEditors: Zpp
+'''
 
 from flask import current_app, request
 from flask_httpauth import HTTPBasicAuth

@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# trunk/collection/route.py
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-10 16:00:22
+@LastEditTime: 2019-09-12 11:27:11
+@LastEditors: Zpp
+'''
 from models.base import db
 from models.user import Route
 

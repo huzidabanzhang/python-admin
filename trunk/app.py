@@ -1,5 +1,12 @@
+#!/usr/bin/env python
 # -*- coding:UTF-8 -*-
-# trunk/app.py
+'''
+@Description: 
+@Author: Zpp
+@Date: 2019-09-05 16:07:19
+@LastEditTime: 2019-09-12 11:29:26
+@LastEditors: Zpp
+'''
 from flask import Flask
 import models
 import routes
