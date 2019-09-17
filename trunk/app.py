@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-05 16:07:19
-@LastEditTime: 2019-09-17 09:30:55
+@LastEditTime: 2019-09-17 14:33:30
 @LastEditors: Zpp
 '''
 from flask import Flask
@@ -12,6 +12,7 @@ import models
 import routes
 import services
 import logs
+import logging
 
 
 def create_app():
@@ -25,5 +26,7 @@ def create_app():
 
 # 初始化
 app = create_app()
+
+logging.info(u'启动')
 # print app.url_map
 app.run()

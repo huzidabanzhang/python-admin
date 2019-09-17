@@ -1,2 +1,4 @@
 *.pyc
-logs/log*
+logs/*.log
+sessions
+caches

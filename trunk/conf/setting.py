@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2019-09-17 09:36:23
+@LastEditTime: 2019-09-17 14:17:08
 @LastEditors: Zpp
 '''
 import hashlib
@@ -28,6 +28,21 @@ log_info = {
     'LOG_FILE_BACKUP_COUNT': 0,
     'LOG_PATH_ERROR': os.path.join(os.path.join(basedir, 'logs'), 'error.log'),
     'LOG_PATH_INFO': os.path.join(os.path.join(basedir, 'logs'), 'info.log')
+}
+
+# session参数
+session_info = {
+    'SESSION_TYPE': 'filesystem',
+    'SESSION_FILE_DIR': os.path.join(basedir, 'sessions'),
+    'SESSION_FILE_THRESHOLD': 500,
+    'SESSION_FILE_MODE': 384
+}
+
+# cache参数
+cache_info = {
+    'CACHE_TYPE': 'filesystem',
+    'CACHE_DIR': os.path.join(basedir, 'caches'),
+    'CACHE_THRESHOLD': 500
 }
 
 
