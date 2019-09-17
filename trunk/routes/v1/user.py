@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 
+@Description:
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-09-12 15:00:11
+@LastEditTime: 2019-09-17 15:38:10
 @LastEditors: Zpp
 '''
-from flask import Blueprint, request
+from flask import Blueprint, request, make_response, session
 from collection.user import UserModel
 from ..token_auth import auth, generate_auth_token
 from libs.error_code import ResultDeal
+from libs.captcha import Captcha
+from io import BytesIO
 
 route_user = Blueprint('User', __name__, url_prefix='/User')
 
@@ -21,8 +23,29 @@ def CreateDrop():
     return ResultDeal(msg=True)
 
 
+@route_user.route('/Captcha', methods=['GET'])
+def GetCaptcha():
+    text, image = Captcha().gen_graph_captcha()
+    out = BytesIO()
+    image.save(out, 'png')
+    out.seek(0) 
+    resp = make_response(out.read())
+    resp.content_type = 'image/png'
+    # 存入session
+    session['Captcha'] = text
+    return resp
+
+
 @route_user.route('/Login', methods=['POST'])
 def Login():
+    # 验证码校验
+    captcha = request.form.get('code')
+    if not captcha:
+        return ResultDeal(msg=u'请输入验证码', code=-1)
+    
+    if session.get('Captcha').lower() != captcha.lower():
+        return ResultDeal(msg=u'验证码不正确', code=-1)
+
     result = UserModel().GetUserRequest(
         username=request.form.get('username'),
         password=request.form.get('password')
