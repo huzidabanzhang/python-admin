@@ -4,11 +4,13 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2019-09-12 14:23:58
+@LastEditTime: 2019-09-17 10:06:50
 @LastEditors: Zpp
 '''
+from flask import request
 from models.base import db
 from models.user import Role, Route, Menu
+from libs.error_code import RecordLog
 
 
 class RoleModel():
@@ -27,7 +29,7 @@ class RoleModel():
             return {'data': data, 'total': result.total}
         except Exception as e:
             print e
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -47,7 +49,7 @@ class RoleModel():
         except Exception as e:
             s.rollback()
             print e
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -64,7 +66,7 @@ class RoleModel():
             return role.to_json()
         except Exception as e:
             print e
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -90,7 +92,7 @@ class RoleModel():
         except Exception as e:
             print e
             s.rollback()
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -116,7 +118,7 @@ class RoleModel():
         except Exception as e:
             print e
             s.rollback()
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -136,7 +138,7 @@ class RoleModel():
         except Exception as e:
             print e
             s.rollback()
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -156,7 +158,7 @@ class RoleModel():
         except Exception as e:
             print e
             s.rollback()
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -184,6 +186,6 @@ class RoleModel():
             return {'data': data, 'total': result.total}
         except Exception as e:
             print e
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()

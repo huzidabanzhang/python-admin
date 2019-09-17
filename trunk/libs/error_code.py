@@ -4,11 +4,13 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 17:09:14
-@LastEditTime: 2019-09-12 11:27:47
+@LastEditTime: 2019-09-17 10:01:25
 @LastEditors: Zpp
 '''
 from flask import jsonify
-import json
+from models.log import Log
+from models.base import db
+import logging
 
 
 def ResultDeal(code=0, data={}, msg=''):
@@ -17,3 +19,16 @@ def ResultDeal(code=0, data={}, msg=''):
         'data': data,
         'msg': msg
     })
+
+
+def RecordLog(src, error):
+    logging.exception(error)
+    s = db.session()
+    item = Log(
+        src=src,
+        content=error.message
+    )
+    s.add(item)
+    s.commit()
+    s.close()
+    return str(error.message)

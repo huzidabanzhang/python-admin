@@ -4,12 +4,13 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2019-09-12 11:26:57
+@LastEditTime: 2019-09-17 10:19:24
 @LastEditors: Zpp
 '''
+from flask import request
 from models.base import db
 from models.user import Menu
-
+from libs.error_code import RecordLog
 
 class MenuModel():
     def QueryMenuByParamRequest(self, order_by='-id'):
@@ -27,7 +28,7 @@ class MenuModel():
             return data
         except Exception as e:
             print e
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -51,7 +52,7 @@ class MenuModel():
         except Exception as e:
             s.rollback()
             print e
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -68,7 +69,7 @@ class MenuModel():
             return menu.to_json()
         except Exception as e:
             print e
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -95,7 +96,7 @@ class MenuModel():
         except Exception as e:
             print e
             s.rollback()
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -115,6 +116,6 @@ class MenuModel():
         except Exception as e:
             print e
             s.rollback()
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()

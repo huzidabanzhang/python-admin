@@ -4,21 +4,27 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-09-12 15:02:46
+@LastEditTime: 2019-09-17 10:18:56
 @LastEditors: Zpp
 '''
+from flask import request
 from models.base import db
 from models.user import User, Role, Route, Menu
 from conf.setting import Config
+from libs.error_code import RecordLog
 import uuid
 import datetime
 
 
 class UserModel():
     def CreateDropRequest(self):
-        db.drop_all()
-        db.create_all()
-        return True
+        try:
+            # db.drop_all()
+            db.create_all()
+            return True
+        except Exception as e:
+            print e
+            return RecordLog(request.url, e)
 
     def QueryUserByParamRequest(self, params, page=1, page_size=20, order_by='-id'):
         '''
@@ -45,7 +51,7 @@ class UserModel():
             return {'data': data, 'total': result.total}
         except Exception as e:
             print e
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -74,7 +80,7 @@ class UserModel():
         except Exception as e:
             s.rollback()
             print e
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -104,7 +110,7 @@ class UserModel():
             return data
         except Exception as e:
             print e
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -131,7 +137,7 @@ class UserModel():
         except Exception as e:
             print e
             s.rollback()
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -151,6 +157,6 @@ class UserModel():
         except Exception as e:
             print e
             s.rollback()
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()

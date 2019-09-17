@@ -4,13 +4,13 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2019-09-12 17:10:28
+@LastEditTime: 2019-09-17 09:36:23
 @LastEditors: Zpp
 '''
 import hashlib
 import os
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+basedir = os.path.abspath(os.path.dirname(__file__) + '/..')
 
 token_info = {
     'expiration': 30 * 24 * 3600,
@@ -25,10 +25,9 @@ server_info = {
 
 # 日志
 log_info = {
-    'LOG_PATH': os.path.join(basedir, 'logs'),
-    'LOG_FILE_BACKUP_COUNT': 0  ,
-    'LOG_PATH_ERROR': os.path.join(log_info['LOG_PATH'], 'error.log'),
-    'LOG_PATH_INFO': os.path.join(log_info['LOG_PATH'], 'info.log')
+    'LOG_FILE_BACKUP_COUNT': 0,
+    'LOG_PATH_ERROR': os.path.join(os.path.join(basedir, 'logs'), 'error.log'),
+    'LOG_PATH_INFO': os.path.join(os.path.join(basedir, 'logs'), 'info.log')
 }
 
 

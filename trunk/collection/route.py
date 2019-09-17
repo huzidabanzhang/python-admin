@@ -4,11 +4,13 @@
 @Description: 路由控制器
 @Author: Zpp
 @Date: 2019-09-10 16:00:22
-@LastEditTime: 2019-09-12 13:39:07
+@LastEditTime: 2019-09-17 10:19:15
 @LastEditors: Zpp
 '''
+from flask import request
 from models.base import db
 from models.user import Route
+from libs.error_code import RecordLog
 
 
 class RouteModel():
@@ -36,7 +38,7 @@ class RouteModel():
             return {'data': data, 'total': result.total}
         except Exception as e:
             print e
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -59,7 +61,7 @@ class RouteModel():
         except Exception as e:
             s.rollback()
             print e
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -76,7 +78,7 @@ class RouteModel():
             return route.to_json()
         except Exception as e:
             print e
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -103,7 +105,7 @@ class RouteModel():
         except Exception as e:
             print e
             s.rollback()
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
 
@@ -123,6 +125,6 @@ class RouteModel():
         except Exception as e:
             print e
             s.rollback()
-            return str(e.message)
+            return RecordLog(request.url, e)
         finally:
             s.close()
