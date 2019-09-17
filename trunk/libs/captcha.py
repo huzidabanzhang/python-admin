@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-09-17 15:07:00
 @LastEditors: Zpp
-@LastEditTime: 2019-09-17 15:08:23
+@LastEditTime: 2019-09-17 17:18:51
 '''
 import random
 import string
@@ -22,7 +22,7 @@ class Captcha(object):
     # 生成的验证码的个数
     number = 4
     # 图片的宽度和高度
-    size = (80, 30)
+    size = (90, 38)
     # 字体大小
     fontsize = 25
     # 干扰线条数

@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-09-17 15:38:10
+@LastEditTime: 2019-09-17 15:39:42
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -40,8 +40,12 @@ def GetCaptcha():
 def Login():
     # 验证码校验
     captcha = request.form.get('code')
+    sesson_captcha = session.get('Captcha')
     if not captcha:
         return ResultDeal(msg=u'请输入验证码', code=-1)
+
+    if not sesson_captcha:
+        return ResultDeal(msg=u'请刷新验证码', code=-1)
     
     if session.get('Captcha').lower() != captcha.lower():
         return ResultDeal(msg=u'验证码不正确', code=-1)
