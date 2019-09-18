@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-05 16:07:19
-@LastEditTime: 2019-09-17 14:37:06
+@LastEditTime: 2019-09-18 15:02:44
 @LastEditors: Zpp
 '''
 from flask import Flask
@@ -20,14 +20,17 @@ def create_app():
     models.init_app(app)
     routes.init_app(app)
     services.init_app(app)
-    logs.init_app(app)
     return app
 
 
 # 初始化
+logs.init_app()
+
+logging.info(u'初始化项目')
 app = create_app()
 
-if not app.config['DEBUG']:
-    logging.info(u'启动')
-# print app.url_map
-app.run()
+try:
+    logging.info(u'启动成功')
+    app.run()
+except Exception as e:
+    logging.error(u'启动失败')

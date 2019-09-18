@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2019-09-17 14:17:08
+@LastEditTime: 2019-09-18 15:00:17
 @LastEditors: Zpp
 '''
 import hashlib
@@ -26,7 +26,6 @@ server_info = {
 # 日志
 log_info = {
     'LOG_FILE_BACKUP_COUNT': 0,
-    'LOG_PATH_ERROR': os.path.join(os.path.join(basedir, 'logs'), 'error.log'),
     'LOG_PATH_INFO': os.path.join(os.path.join(basedir, 'logs'), 'info.log')
 }
 

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 17:09:14
-@LastEditTime: 2019-09-17 10:01:25
+@LastEditTime: 2019-09-18 14:41:19
 @LastEditors: Zpp
 '''
 from flask import jsonify
@@ -22,7 +22,7 @@ def ResultDeal(code=0, data={}, msg=''):
 
 
 def RecordLog(src, error):
-    logging.exception(error)
+    logging.error(error)
     s = db.session()
     item = Log(
         src=src,
