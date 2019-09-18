@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-05 16:07:19
-@LastEditTime: 2019-09-18 15:02:44
+@LastEditTime: 2019-09-18 15:13:39
 @LastEditors: Zpp
 '''
 from flask import Flask
@@ -26,11 +26,12 @@ def create_app():
 # 初始化
 logs.init_app()
 
-logging.info(u'初始化项目')
+logging.info(u'-----初始化项目-----')
 app = create_app()
+logging.info('--------------------')
 
 try:
-    logging.info(u'启动成功')
+    logging.info(u'------启动成功------')
     app.run()
 except Exception as e:
-    logging.error(u'启动失败')
+    logging.error(u'------启动失败------')
