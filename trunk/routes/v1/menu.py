@@ -4,12 +4,12 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:16:54
-@LastEditTime: 2019-09-12 10:29:06
+@LastEditTime: 2019-09-18 10:49:52
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
 from collection.menu import MenuModel
-from ..token_auth import auth, generate_auth_token
+from ..token_auth import auth, validate_current_access
 from libs.error_code import ResultDeal
 
 route_menu = Blueprint('Menu', __name__, url_prefix='/v1/Menu')
@@ -17,6 +17,7 @@ route_menu = Blueprint('Menu', __name__, url_prefix='/v1/Menu')
 
 @route_menu.route('/CreateMenu', methods=['POST'])
 @auth.login_required
+@validate_current_access
 def CreateMenu():
     params = {
         'parentId': request.form.get('parentId') or 0,
@@ -37,6 +38,7 @@ def CreateMenu():
 
 @route_menu.route('/LockMenu', methods=['POST'])
 @auth.login_required
+@validate_current_access
 def LockMenu():
     result = MenuModel().LockMenuRequest(menu_id=request.form.getlist('menu_id'))
     return ResultDeal(data=result)
@@ -44,6 +46,7 @@ def LockMenu():
 
 @route_menu.route('/GetMenu', methods=['POST'])
 @auth.login_required
+@validate_current_access
 def GetMenu():
     result = MenuModel().GetMenuRequest(menu_id=request.form.get('menu_id'))
     return ResultDeal(data=result)
@@ -51,6 +54,7 @@ def GetMenu():
 
 @route_menu.route('/ModifyMenu', methods=['POST'])
 @auth.login_required
+@validate_current_access
 def ModifyMenu():
     params = {}
     Str = ['parentId', 'title', 'path', 'icon', 'sort', 'permission']
@@ -69,6 +73,7 @@ def ModifyMenu():
 
 @route_menu.route('/QueryMenuByParam', methods=['POST'])
 @auth.login_required
+@validate_current_access
 def QueryMenuByParam():
     result = MenuModel().QueryMenuByParamRequest()
 

@@ -4,12 +4,13 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 16:06:14
-@LastEditTime: 2019-09-04 16:06:14
+@LastEditTime: 2019-09-18 11:05:49
 @LastEditors: Zpp
 '''
 
-from flask import current_app, request
+from flask import current_app, request, session
 from flask_httpauth import HTTPBasicAuth
+from functools import wraps
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 from libs.error_code import ResultDeal
 from libs.scope import is_in_scope
@@ -38,7 +39,7 @@ def verify_password(token, pwd):
 
 @auth.error_handler
 def unauthorized():
-    return ResultDeal(code=401, msg='Unauthorized access')
+    return ResultDeal(code=401, msg=u'登录认证失效，请重新登录')
 
 
 def generate_auth_token(params, expiration=30 * 24 * 3600):
@@ -51,6 +52,15 @@ def generate_auth_token(params, expiration=30 * 24 * 3600):
 
 
 def verify_auth_token(token, pwd):
+    info = session.get('User')
+    if not info or info != token:
+        return False
+
+    data = get_auth_token(token)
+    return data if data.get('password') == pwd else False
+
+
+def get_auth_token(token):
     s = Serializer(current_app.config['SECRET_KEY'])
     try:
         data = s.loads(token)
@@ -59,11 +69,18 @@ def verify_auth_token(token, pwd):
     except BadSignature:
         return False
 
-    if data.get('password') != pwd:
-        return False
-
-    # 路由权限
-    allow = is_in_scope(data.get('role_id'), request.endpoint)
-    if not allow:
-        return False
     return data
+
+
+def validate_current_access(f):
+    @wraps(f)
+    def decorated_function(*args, **kws):
+         # 路由权限
+        info = get_auth_token(session.get('User'))
+        allow = is_in_scope(info.get('role_id'), request.endpoint)
+        if not allow:
+            return ResultDeal(code=403, msg=u'您没有访问权限')
+
+        return f(*args, **kws)
+
+    return decorated_function

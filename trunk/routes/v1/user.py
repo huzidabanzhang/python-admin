@@ -4,13 +4,13 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-09-18 09:12:46
+@LastEditTime: 2019-09-18 10:45:45
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
 from collection.user import UserModel
-from ..token_auth import auth, generate_auth_token
-from libs.error_code import ResultDeal
+from ..token_auth import auth, generate_auth_token, validate_current_access
+from libs.error_code import ResultDeal, RecordLog
 from libs.captcha import Captcha
 from io import BytesIO
 
@@ -58,23 +58,35 @@ def Login():
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
 
-    token = generate_auth_token({
-        'username': result['username'],
-        'user_id': result['user_id'],
-        'role_id': result['role_id'],
-        'password': result['password'],
-        'nickname': result['nickname']
-    })
+    try:
+        token = generate_auth_token({
+            'username': result['username'],
+            'user_id': result['user_id'],
+            'role_id': result['role_id'],
+            'password': result['password'],
+            'nickname': result['nickname']
+        })
 
-    return ResultDeal(data={
-        'token': token,
-        'routes': result['routes'],
-        'menus': result['menus']
-    })
+        session['User'] = token
+        return ResultDeal(data={
+            'token': token,
+            'routes': result['routes'],
+            'menus': result['menus']
+        })
+    except Exception as e:
+        print e
+        return RecordLog(request.url, e)
+
+
+@route_user.route('/Logout', methods=['GET'])
+def Logout():
+    session.pop('User')
+    return ResultDeal()
 
 
 @route_user.route('/CreateUser', methods=['POST'])
 @auth.login_required
+@validate_current_access
 def CreateUser():
     params = {
         'username': request.form.get('username'),
@@ -94,6 +106,7 @@ def CreateUser():
 
 @route_user.route('/LockUser', methods=['POST'])
 @auth.login_required
+@validate_current_access
 def LockUser():
     result = UserModel().LockUserRequest(user_id=request.form.getlist('user_id'))
     return ResultDeal(data=result)
@@ -101,6 +114,7 @@ def LockUser():
 
 @route_user.route('/ModifyUser', methods=['POST'])
 @auth.login_required
+@validate_current_access
 def ModifyUser():
     params = {}
     Str = ['username', 'nickname', 'sex', 'role_id']
@@ -119,6 +133,7 @@ def ModifyUser():
 
 @route_user.route('/QueryUserByParam', methods=['POST'])
 @auth.login_required
+@validate_current_access
 def QueryUserByParam():
     params = {}
     Str = ['username', 'nickname', 'sex', 'role_id', 'isLock']

@@ -4,12 +4,12 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-11 16:51:59
-@LastEditTime: 2019-09-12 11:28:40
+@LastEditTime: 2019-09-18 10:49:23
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
 from collection.route import RouteModel
-from ..token_auth import auth, generate_auth_token
+from ..token_auth import auth, validate_current_access
 from libs.error_code import ResultDeal
 
 route_route = Blueprint('Route', __name__, url_prefix='/v1/Route')
@@ -17,6 +17,7 @@ route_route = Blueprint('Route', __name__, url_prefix='/v1/Route')
 
 @route_route.route('/CreateRoute', methods=['POST'])
 @auth.login_required
+@validate_current_access
 def CreateRoute():
     params = {
         'menu_id': request.form.get('menu_id'),
@@ -36,6 +37,7 @@ def CreateRoute():
 
 @route_route.route('/LockRoute', methods=['POST'])
 @auth.login_required
+@validate_current_access
 def LockRoute():
     result = RouteModel().LockRouteRequest(route_id=request.form.getlist('route_id'))
     return ResultDeal(data=result)
@@ -43,6 +45,7 @@ def LockRoute():
 
 @route_route.route('/ModifyRoute', methods=['POST'])
 @auth.login_required
+@validate_current_access
 def ModifyRoute():
     params = {}
     Str = ['menu_id', 'name', 'path', 'description', 'permission']
@@ -61,6 +64,7 @@ def ModifyRoute():
 
 @route_route.route('/QueryRouteByParam', methods=['POST'])
 @auth.login_required
+@validate_current_access
 def QueryRouteByParam():
     result = RouteModel().QueryRouteByParamRequest()
 
