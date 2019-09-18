@@ -12,7 +12,7 @@ from collection.menu import MenuModel
 from ..token_auth import auth, generate_auth_token
 from libs.error_code import ResultDeal
 
-route_menu = Blueprint('Menu', __name__, url_prefix='/Menu')
+route_menu = Blueprint('Menu', __name__, url_prefix='/v1/Menu')
 
 
 @route_menu.route('/CreateMenu', methods=['POST'])

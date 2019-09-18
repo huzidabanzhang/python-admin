@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-09-17 15:39:42
+@LastEditTime: 2019-09-18 09:12:46
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -14,7 +14,7 @@ from libs.error_code import ResultDeal
 from libs.captcha import Captcha
 from io import BytesIO
 
-route_user = Blueprint('User', __name__, url_prefix='/User')
+route_user = Blueprint('User', __name__, url_prefix='/v1/User')
 
 
 @route_user.route('/CreateDrop', methods=['POST'])

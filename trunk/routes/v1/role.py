@@ -4,7 +4,7 @@
 @Description: 权限API
 @Author: Zpp
 @Date: 2019-09-12 10:30:39
-@LastEditTime: 2019-09-12 14:45:07
+@LastEditTime: 2019-09-18 09:12:57
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -12,7 +12,7 @@ from collection.role import RoleModel
 from ..token_auth import auth, generate_auth_token
 from libs.error_code import ResultDeal
 
-route_role = Blueprint('Role', __name__, url_prefix='/Role')
+route_role = Blueprint('Role', __name__, url_prefix='/v1/Role')
 
 
 @route_role.route('/CreateRole', methods=['POST'])

@@ -12,7 +12,7 @@ from collection.route import RouteModel
 from ..token_auth import auth, generate_auth_token
 from libs.error_code import ResultDeal
 
-route_route = Blueprint('Route', __name__, url_prefix='/Route')
+route_route = Blueprint('Route', __name__, url_prefix='/v1/Route')
 
 
 @route_route.route('/CreateRoute', methods=['POST'])
