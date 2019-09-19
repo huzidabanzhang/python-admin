@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-05 16:07:19
-@LastEditTime: 2019-09-18 15:13:39
+@LastEditTime: 2019-09-18 15:57:18
 @LastEditors: Zpp
 '''
 from flask import Flask
@@ -23,9 +23,8 @@ def create_app():
     return app
 
 
-# 初始化
 logs.init_app()
-
+# 初始化
 logging.info(u'-----初始化项目-----')
 app = create_app()
 logging.info('--------------------')

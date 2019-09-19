@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-09-18 10:45:45
+@LastEditTime: 2019-09-19 09:55:24
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -71,7 +71,11 @@ def Login():
         return ResultDeal(data={
             'token': token,
             'routes': result['routes'],
-            'menus': result['menus']
+            'menus': result['menus'],
+            'info': {
+                'name': result['nickname'] if result['nickname'] else result['username'],
+                'user_id': result['user_id']
+            }
         })
     except Exception as e:
         print e
