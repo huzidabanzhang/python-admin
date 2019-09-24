@@ -4,7 +4,7 @@
 @Description: 用户相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-09-12 14:52:37
+@LastEditTime: 2019-09-24 15:57:22
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -104,6 +104,7 @@ class Route(db.Model):
     '''
     __tablename__ = 'db_route'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
+    menu_id = db.Column(db.Integer, nullable=False, index=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False)
     permission = db.Column(db.SmallInteger, index=True, default=1)
