@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 用户相关的几张表结构
+@Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-09-24 15:57:22
+@LastEditTime: 2019-09-27 15:08:19
 @LastEditors: Zpp
 '''
 from models.base import db

@@ -9,7 +9,7 @@
 '''
 from flask import request
 from models.base import db
-from models.user import User, Role, Route, Menu
+from models.system import User, Role, Route, Menu
 from conf.setting import Config
 from libs.error_code import RecordLog
 import uuid

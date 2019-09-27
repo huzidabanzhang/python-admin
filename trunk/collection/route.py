@@ -9,7 +9,7 @@
 '''
 from flask import request
 from models.base import db
-from models.user import Route
+from models.system import Route
 from libs.error_code import RecordLog
 
 
