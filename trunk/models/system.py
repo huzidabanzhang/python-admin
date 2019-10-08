@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-09-27 15:08:19
+@LastEditTime: 2019-10-08 15:15:18
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -22,6 +22,7 @@ class User(db.Model):
     password = db.Column(db.String(32), nullable=False)
     nickname = db.Column(db.String(64))
     sex = db.Column(db.SmallInteger, default=1)
+    avatarUrl = db.Column(db.String(255))
     isLock = db.Column(db.Boolean, index=True, default=True)
     role_id = db.Column(db.Integer, db.ForeignKey('db_role.id'))
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
@@ -74,6 +75,7 @@ class Role(db.Model):
     '''
     __tablename__ = 'db_role'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
+    role_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
     type = db.Column(db.SmallInteger, index=True, default=1)
     isLock = db.Column(db.Boolean, index=True, default=True)
@@ -104,11 +106,14 @@ class Route(db.Model):
     '''
     __tablename__ = 'db_route'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
-    menu_id = db.Column(db.Integer, nullable=False, index=True)
+    route_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
+    parentId = db.Column(db.String(36), nullable=False, index=True, default='0')
     name = db.Column(db.String(64), nullable=False, unique=True)
+    title = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False)
-    permission = db.Column(db.SmallInteger, index=True, default=1)
-    description = db.Column(db.String(255), nullable=False)
+    commponent = db.Column(db.String(255), nullable=False)
+    commponentPath = db.Column(db.String(255), nullable=False)
+    cache = db.Column(db.Boolean, index=True, default=True)
     isLock = db.Column(db.Boolean, index=True, default=True)
     __table_args__ = ({"useexisting": True})
 
@@ -128,13 +133,15 @@ class Menu(db.Model):
     '''
     __tablename__ = 'db_menu'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
-    parentId = db.Column(db.Integer, nullable=False, index=True, default=0)
+    menu_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
+    parentId = db.Column(db.String(36), nullable=False, index=True, default='0')
     title = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False)
     icon = db.Column(db.String(255), nullable=False)
     sort = db.Column(db.SmallInteger, index=True, default=1)
-    permission = db.Column(db.SmallInteger, index=True, default=1)
+    type = db.Column(db.SmallInteger, index=True, default=1)
     isLock = db.Column(db.Boolean, index=True, default=True)
+    interfaces = db.relationship('Interface', backref='menu')
     __table_args__ = ({"useexisting": True})
 
     def to_json(self):
@@ -145,3 +152,53 @@ class Menu(db.Model):
 
     def __repr__(self):
         return '<Menu %r>' % self.title
+
+
+class Interface(db.Model):
+    '''
+    接口
+    '''
+    __tablename__ = 'db_interface'
+    id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
+    interface_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
+    name = db.Column(db.String(64), nullable=False, unique=True)
+    path = db.Column(db.String(255), nullable=False)
+    method = db.Column(db.String(36), nullable=False)
+    description = db.Column(db.String(255), nullable=False)
+    isLock = db.Column(db.Boolean, index=True, default=True)
+    menu_id = db.Column(db.Integer, db.ForeignKey('db_menu.id'))
+    __table_args__ = ({"useexisting": True})
+
+    def to_json(self):
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        return dict
+
+    def __repr__(self):
+        return '<Interface %r>' % self.name
+
+
+class Document(db.Model):
+    '''
+    文档
+    '''
+    __tablename__ = 'db_document'
+    id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
+    document_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
+    user_id = db.Column(db.String(36), index=True, nullable=False)
+    name = db.Column(db.String(64), nullable=False, unique=True)
+    path = db.Column(db.String(255), nullable=False)
+    type = db.Column(db.SmallInteger, index=True, default=1)
+    ext = db.Column(db.String(64), nullable=False)
+    size = db.Column(db.Integer, nullable=False)
+    __table_args__ = ({"useexisting": True})
+
+    def to_json(self):
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        return dict
+
+    def __repr__(self):
+        return '<Document %r>' % self.name

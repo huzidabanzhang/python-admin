@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-09-19 09:55:24
+@LastEditTime: 2019-10-08 16:05:09
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -60,11 +60,8 @@ def Login():
 
     try:
         token = generate_auth_token({
-            'username': result['username'],
-            'user_id': result['user_id'],
-            'role_id': result['role_id'],
-            'password': result['password'],
-            'nickname': result['nickname']
+            'user_id': params['user_id'],
+            'password': params['password']
         })
 
         session['User'] = token
@@ -72,9 +69,11 @@ def Login():
             'token': token,
             'routes': result['routes'],
             'menus': result['menus'],
+            'interface': result['interface'],
             'info': {
                 'name': result['nickname'] if result['nickname'] else result['username'],
-                'user_id': result['user_id']
+                'user_id': result['user_id'],
+                'avatarUrl': result['avatarUrl']
             }
         })
     except Exception as e:
@@ -95,9 +94,10 @@ def CreateUser():
     params = {
         'username': request.form.get('username'),
         'password': request.form.get('password'),
-        'nickname': request.form.get('nickname') or '',
-        'sex': request.form.get('sex') or 1,
-        'role_id': request.form.get('role_id') or 1
+        'nickname': request.form.get('nickname', ''),
+        'sex': request.form.get('sex', 1),
+        'role_id': request.form.get('role_id', 1),
+        'avatarUrl': request.form.get('avatarUrl', '')
     }
 
     result = UserModel().CreateUserRequest(params)
@@ -121,7 +121,7 @@ def LockUser():
 @validate_current_access
 def ModifyUser():
     params = {}
-    Str = ['username', 'nickname', 'sex', 'role_id']
+    Str = ['username', 'nickname', 'sex', 'avatarUrl']
     Int = ['sex', 'role_id']
     for i in Str:
         if request.form.get(i):
@@ -141,7 +141,7 @@ def ModifyUser():
 def QueryUserByParam():
     params = {}
     Str = ['username', 'nickname', 'sex', 'role_id', 'isLock']
-    Int = ['sex', 'role_id', 'isLock']
+    Int = ['sex', 'role_id']
     for i in Str:
         if request.form.get(i):
             params[i] = int(request.form.get(i)) if i in Int else request.form.get(i)
@@ -150,7 +150,7 @@ def QueryUserByParam():
         params=params,
         page=int(request.form.get('page')),
         page_size=int(request.form.get('page_size')),
-        order_by=request.form.get('order_by') if request.form.get('order_by') else None
+        order_by=request.form.get('order_by', None)
     )
 
     if type(result).__name__ == 'str':

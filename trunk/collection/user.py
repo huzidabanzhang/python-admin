@@ -32,7 +32,7 @@ class UserModel():
         '''
         s = db.session()
         try:
-            Int = ['sex', 'role_id', 'isLock']
+            Int = ['sex', 'role_id']
             data = {}
 
             for i in Int:
@@ -72,7 +72,8 @@ class UserModel():
                 password=Config().get_md5(params['password']),
                 sex=int(params['sex']),
                 nickname=params['nickname'],
-                role_id=int(params['role_id'])
+                role_id=int(params['role_id']),
+                avatarUrl=params['avatarUrl']
             )
             s.add(item)
             s.commit()
@@ -101,11 +102,15 @@ class UserModel():
                 for i in role.routes:
                     route.append(i.to_json())
                 menu = []
+                interface = []
                 for i in role.menus:
                     menu.append(i.to_json())
+                    for j in i.interfaces:
+                        interface.append(j.to_json())
                 
                 data['routes'] = route
                 data['menus'] = menu
+                data['interface'] = interface
 
             return data
         except Exception as e:
@@ -124,7 +129,7 @@ class UserModel():
             if not user:
                 return str('用户不存在')
 
-            AllowableFields = ['password', 'nickname', 'sex', 'role_id']
+            AllowableFields = ['password', 'nickname', 'sex', 'role_id', 'avatarUrl']
             data = {}
 
             for i in params:
