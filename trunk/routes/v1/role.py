@@ -4,7 +4,7 @@
 @Description: 权限API
 @Author: Zpp
 @Date: 2019-09-12 10:30:39
-@LastEditTime: 2019-09-18 10:49:38
+@LastEditTime: 2019-10-09 10:48:45
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -80,7 +80,22 @@ def ModifyRoleToMenu():
 @auth.login_required
 @validate_current_access
 def QueryRoleByParam():
-    result = RoleModel().QueryRoleByParamRequest()
+    Int = ['type']
+    Bool = ['isLock']
+    params = request.form
+
+    for i in request.form:
+        if i in Int:
+            params[i] = int(params[i])
+        if i in Bool:
+            params[i] = True if params[i] == 'true' else False
+
+    result = RoleModel().QueryRoleByParamRequest(
+        params=params,
+        page=int(request.form.get('page')),
+        page_size=int(request.form.get('page_size')),
+        order_by=request.form.get('order_by', None)
+    )
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)

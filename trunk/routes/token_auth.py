@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 16:06:14
-@LastEditTime: 2019-09-18 11:05:49
+@LastEditTime: 2019-10-09 10:18:47
 @LastEditors: Zpp
 '''
 
@@ -77,7 +77,7 @@ def validate_current_access(f):
     def decorated_function(*args, **kws):
          # 路由权限
         info = get_auth_token(session.get('User'))
-        allow = is_in_scope(info.get('role_id'), request.endpoint)
+        allow = is_in_scope(1, request.endpoint)
         if not allow:
             return ResultDeal(code=403, msg=u'您没有访问权限')
 

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-09-17 10:18:56
+@LastEditTime: 2019-10-09 10:49:25
 @LastEditors: Zpp
 '''
 from flask import request
@@ -32,7 +32,7 @@ class UserModel():
         '''
         s = db.session()
         try:
-            Int = ['sex', 'role_id']
+            Int = ['sex', 'role_id', 'isLock']
             data = {}
 
             for i in Int:

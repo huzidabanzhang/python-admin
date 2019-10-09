@@ -11,6 +11,7 @@ from flask import request
 from models.base import db
 from models.system import Menu
 from libs.error_code import RecordLog
+import uuid
 
 class MenuModel():
     def QueryMenuByParamRequest(self, order_by='-id'):
@@ -39,9 +40,10 @@ class MenuModel():
         s = db.session()
         try:
             item = Menu(
-                parentId=int(params['parentId']),
+                menu_id=uuid.uuid4(),
+                parentId=params['parentId'],
                 title=params['title'],
-                permission=int(params['permission']),
+                type=int(params['type']),
                 sort=int(params['sort']),
                 path=params['path'],
                 icon=params['icon']
@@ -62,7 +64,7 @@ class MenuModel():
         '''
         s = db.session()
         try:
-            menu = s.query(Menu).filter(Menu.id == menu_id).first()
+            menu = s.query(Menu).filter(Menu.menu_id == menu_id).first()
             if not menu:
                 return str('菜单不存在')
 
@@ -83,14 +85,14 @@ class MenuModel():
             if not menu:
                 return str('菜单不存在')
 
-            AllowableFields = ['parentId', 'title', 'path', 'icon', 'sort', 'permission']
+            AllowableFields = ['parentId', 'title', 'path', 'icon', 'sort', 'type']
             data = {}
 
             for i in params:
                 if i in AllowableFields and params.has_key(i):
                     data[i] = params[i]
 
-            s.query(Menu).filter(Menu.id == menu_id).update(data)
+            s.query(Menu).filter(Menu.menu_id == menu_id).update(data)
             s.commit()
             return True
         except Exception as e:

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-11 16:51:59
-@LastEditTime: 2019-09-18 10:49:23
+@LastEditTime: 2019-10-09 10:51:35
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -20,11 +20,13 @@ route_route = Blueprint('Route', __name__, url_prefix='/v1/Route')
 @validate_current_access
 def CreateRoute():
     params = {
-        'menu_id': request.form.get('menu_id'),
+        'parentId': request.form.get('parentId', '0'),
         'name': request.form.get('name'),
+        'title': request.form.get('title'),
         'path': request.form.get('path'),
-        'description': request.form.get('description'),
-        'permission': request.form.get('permission') or 1
+        'commponent': request.form.get('commponent'),
+        'commponentPath': request.form.get('commponentPath'),
+        'cache': True if request.form.get('cache') == 'true' else False
     }
 
     result = RouteModel().CreateRouteRequest(params)
@@ -47,12 +49,11 @@ def LockRoute():
 @auth.login_required
 @validate_current_access
 def ModifyRoute():
-    params = {}
-    Str = ['menu_id', 'name', 'path', 'description', 'permission']
-    Int = ['menu_id', 'permission']
-    for i in Str:
-        if request.form.get(i):
-            params[i] = int(request.form.get(i)) if i in Int else request.form.get(i)
+    params = request.form
+    Bool = ['cache']
+    for i in params:
+        if i in Bool
+            params[i] = True if params[i] == 'true' else False
 
     result = RouteModel().ModifyRouteRequest(route_id=request.form.get('route_id'), params=params)
 
@@ -66,7 +67,21 @@ def ModifyRoute():
 @auth.login_required
 @validate_current_access
 def QueryRouteByParam():
-    result = RouteModel().QueryRouteByParamRequest()
+    params = request.form
+    Int = ['menu_id']
+    Bool = ['isLock']
+    for i in params:
+        if i in Int:
+            params[i] = int(params[i])
+        if i in Bool:
+            params[i] = True if params[i] == 'true' else False
+
+    result = RouteModel().QueryRouteByParamRequest(
+        params=params,
+        page=int(request.form.get('page')),
+        page_size=int(request.form.get('page_size')),
+        order_by=request.form.get('order_by', None)
+    )
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)

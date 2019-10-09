@@ -11,6 +11,7 @@ from flask import request
 from models.base import db
 from models.system import Route
 from libs.error_code import RecordLog
+import uuid
 
 
 class RouteModel():
@@ -49,11 +50,14 @@ class RouteModel():
         s = db.session()
         try:
             item = Route(
+                route_id=uuid.uuid4,
+                parentId=params['parentId'],
                 name=params['name'],
-                permission=int(params['permission']),
-                menu_id=int(params['menu_id']),
+                title=params['title'],
                 path=params['path'],
-                description=params['description']
+                commponent=params['commponent'],
+                commponentPath=params['commponentPath'],
+                cache=params['cache']
             )
             s.add(item)
             s.commit()
@@ -71,7 +75,7 @@ class RouteModel():
         '''
         s = db.session()
         try:
-            route = s.query(Route).filter(Route.id == route_id).first()
+            route = s.query(Route).filter(Route.route_id == route_id).first()
             if not route:
                 return str('路由不存在')
 
@@ -88,18 +92,18 @@ class RouteModel():
         '''
         s = db.session()
         try:
-            route = s.query(Route).filter(Route.id == route_id).first()
+            route = s.query(Route).filter(Route.route_id == route_id).first()
             if not route:
                 return str('路由不存在')
 
-            AllowableFields = ['menu_id', 'name', 'path', 'permission', 'description']
+            AllowableFields = ['parentId', 'name', 'path', 'title', 'commponent', 'commponentPath', 'cache']
             data = {}
 
             for i in params:
                 if i in AllowableFields and params.has_key(i):
                     data[i] = params[i]
 
-            s.query(Route).filter(Route.id == route_id).update(data)
+            s.query(Route).filter(Route.route_id == route_id).update(data)
             s.commit()
             return True
         except Exception as e:

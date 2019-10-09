@@ -4,35 +4,17 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2019-09-17 10:06:50
+@LastEditTime: 2019-10-09 10:36:41
 @LastEditors: Zpp
 '''
 from flask import request
 from models.base import db
 from models.system import Role, Route, Menu
 from libs.error_code import RecordLog
+import uuid
 
 
 class RoleModel():
-    def QueryRoleByParamRequest(self, page=1, page_size=20, order_by='-id'):
-        '''
-        权限列表
-        '''
-        s = db.session()
-        try:
-            result = Role.query.order_by(order_by).paginate(page, page_size, error_out=False)
-
-            data = []
-            for value in result.items:
-                data.append(value.to_json())
-
-            return {'data': data, 'total': result.total}
-        except Exception as e:
-            print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
-
     def CreateRoleRequest(self, params):
         '''
         新建权限
@@ -41,7 +23,8 @@ class RoleModel():
         try:
             item = Role(
                 name=params['name'],
-                type=int(params['type'])
+                type=int(params['type']),
+                role_id=uuid.uuid4
             )
             s.add(item)
             s.commit()
@@ -59,7 +42,7 @@ class RoleModel():
         '''
         s = db.session()
         try:
-            role = s.query(Role).filter(Role.id == role_id).first()
+            role = s.query(Role).filter(Role.role_id == role_id).first()
             if not role:
                 return str('数据不存在')
 
@@ -76,13 +59,13 @@ class RoleModel():
         '''
         s = db.session()
         try:
-            role = s.query(Role).filter(Role.id == role_id).first()
+            role = s.query(Role).filter(Role.role_id == role_id).first()
             if not role:
                 return str('数据不存在')
 
             route = []
             for key in route_id:
-                item = s.query(Route).filter(Route.id == key).first()
+                item = s.query(Route).filter(Route.role_id == key).first()
                 if item:
                     route.append(item)
 
@@ -102,13 +85,13 @@ class RoleModel():
         '''
         s = db.session()
         try:
-            role = s.query(Role).filter(Role.id == role_id).first()
+            role = s.query(Role).filter(Role.role_id == role_id).first()
             if not role:
                 return str('数据不存在')
 
             menu = []
             for key in menu_id:
-                item = s.query(Menu).filter(Menu.id == key).first()
+                item = s.query(Menu).filter(Menu.menu_id == key).first()
                 if item:
                     menu.append(item)
 
@@ -128,7 +111,7 @@ class RoleModel():
         '''
         s = db.session()
         try:
-            role = s.query(Role).filter(Role.id == role_id).first()
+            role = s.query(Role).filter(Role.role_id == role_id).first()
             if not role:
                 return str('数据不存在')
 
@@ -162,13 +145,13 @@ class RoleModel():
         finally:
             s.close()
 
-    def QueryRouteByParamRequest(self, params, page=1, page_size=20, order_by='-id'):
+    def QueryRoleByParamRequest(self, params, page=1, page_size=20, order_by='-id'):
         '''
         权限列表
         '''
         s = db.session()
         try:
-            Int = ['isLock']
+            Int = ['isLock', 'type']
             data = {}
 
             for i in Int:

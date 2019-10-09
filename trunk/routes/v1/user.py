@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-10-08 16:05:09
+@LastEditTime: 2019-10-09 10:47:54
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -120,12 +120,11 @@ def LockUser():
 @auth.login_required
 @validate_current_access
 def ModifyUser():
-    params = {}
-    Str = ['username', 'nickname', 'sex', 'avatarUrl']
+    params = request.form
     Int = ['sex', 'role_id']
-    for i in Str:
-        if request.form.get(i):
-            params[i] = int(request.form.get(i)) if i in Int else request.form.get(i)
+    for i in params:
+        if i in Int:
+            params[i] = int(params[i])
 
     result = UserModel().ModifyUserRequest(user_id=request.form.get('user_id'), params=params)
 
@@ -139,12 +138,14 @@ def ModifyUser():
 @auth.login_required
 @validate_current_access
 def QueryUserByParam():
-    params = {}
-    Str = ['username', 'nickname', 'sex', 'role_id', 'isLock']
+    params = request.form
     Int = ['sex', 'role_id']
-    for i in Str:
-        if request.form.get(i):
-            params[i] = int(request.form.get(i)) if i in Int else request.form.get(i)
+    Bool = ['isLock']
+    for i in params:
+        if i in Int:
+            params[i] = int(params[i])
+        if i in Bool:
+            params[i] = True if params[i] == 'true' else False
 
     result = UserModel().QueryUserByParamRequest(
         params=params,

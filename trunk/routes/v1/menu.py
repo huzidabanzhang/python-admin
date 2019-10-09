@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:16:54
-@LastEditTime: 2019-09-18 10:49:52
+@LastEditTime: 2019-10-09 10:47:39
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -20,12 +20,12 @@ route_menu = Blueprint('Menu', __name__, url_prefix='/v1/Menu')
 @validate_current_access
 def CreateMenu():
     params = {
-        'parentId': request.form.get('parentId') or 0,
+        'parentId': request.form.get('parentId', '0'),
         'title': request.form.get('title'),
         'path': request.form.get('path'),
         'icon': request.form.get('icon'),
         'sort': request.form.get('sort'),
-        'permission': request.form.get('permission') or 1
+        'type': request.form.get('type', 1)
     }
 
     result = MenuModel().CreateMenuRequest(params)
@@ -56,12 +56,11 @@ def GetMenu():
 @auth.login_required
 @validate_current_access
 def ModifyMenu():
-    params = {}
-    Str = ['parentId', 'title', 'path', 'icon', 'sort', 'permission']
-    Int = ['sort', 'parentId', 'permission']
-    for i in Str:
-        if request.form.get(i):
-            params[i] = int(request.form.get(i)) if i in Int else request.form.get(i)
+    params = request.form
+    Int = ['sort', 'type']
+    for i in params:
+        if i in Int:
+            params[i] = int(params[i])
 
     result = MenuModel().ModifyMenuRequest(menu_id=request.form.get('menu_id'), params=params)
 
