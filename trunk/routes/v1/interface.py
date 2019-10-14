@@ -1,35 +1,33 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 路由API
+@Description: 接口API
 @Author: Zpp
-@Date: 2019-09-11 16:51:59
-@LastEditTime: 2019-10-14 13:52:30
+@Date: 2019-10-14 13:50:25
 @LastEditors: Zpp
+@LastEditTime: 2019-10-14 14:36:48
 '''
 from flask import Blueprint, request
-from collection.route import RouteModel
+from collection.interface import InterfaceModel
 from ..token_auth import auth, validate_current_access
 from libs.error_code import ResultDeal
 
-route_route = Blueprint('Route', __name__, url_prefix='/v1/Route')
+route_interface = Blueprint('Interface', __name__, url_prefix='/v1/Interface')
 
 
-@route_route.route('/CreateRoute', methods=['POST'])
+@route_interface.interface('/CreateInterface', methods=['POST'])
 @auth.login_required
 @validate_current_access
-def CreateRoute():
+def CreateInterface():
     params = {
-        'parentId': request.form.get('parentId', '0'),
         'name': request.form.get('name'),
-        'title': request.form.get('title'),
         'path': request.form.get('path'),
-        'commponent': request.form.get('commponent'),
-        'commponentPath': request.form.get('commponentPath'),
-        'cache': True if request.form.get('cache') == 'true' else False
+        'method': request.form.get('method'),
+        'description': request.form.get('description'),
+        'menu_id': int(request.form.get('menu_id'))
     }
 
-    result = RouteModel().CreateRouteRequest(params)
+    result = InterfaceModel().CreateInterfaceRequest(params)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -37,25 +35,25 @@ def CreateRoute():
     return ResultDeal(data=result)
 
 
-@route_route.route('/LockRoute', methods=['POST'])
+@route_interface.interface('/LockInterface', methods=['POST'])
 @auth.login_required
 @validate_current_access
-def LockRoute():
-    result = RouteModel().LockRouteRequest(route_id=request.form.getlist('route_id'))
+def LockInterface():
+    result = InterfaceModel().LockInterfaceRequest(interface_id=request.form.getlist('interface_id'))
     return ResultDeal(data=result)
 
 
-@route_route.route('/ModifyRoute', methods=['POST'])
+@route_interface.interface('/ModifyInterface', methods=['POST'])
 @auth.login_required
 @validate_current_access
-def ModifyRoute():
+def ModifyInterface():
     params = request.form
-    Bool = ['cache']
+    Int = ['menu_id']
     for i in params:
-        if i in Bool
-            params[i] = True if params[i] == 'true' else False
+        if i in Int
+            params[i] = int(params[i])
 
-    result = RouteModel().ModifyRouteRequest(route_id=request.form.get('route_id'), params=params)
+    result = InterfaceModel().ModifyInterfaceRequest(interface_id=request.form.get('interface_id'), params=params)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -63,10 +61,10 @@ def ModifyRoute():
     return ResultDeal(data=result)
 
 
-@route_route.route('/QueryRouteByParam', methods=['POST'])
+@route_interface.interface('/QueryInterfaceByParam', methods=['POST'])
 @auth.login_required
 @validate_current_access
-def QueryRouteByParam():
+def QueryInterfaceByParam():
     params = request.form
     Int = ['menu_id']
     Bool = ['isLock']
@@ -76,7 +74,7 @@ def QueryRouteByParam():
         if i in Bool:
             params[i] = True if params[i] == 'true' else False
 
-    result = RouteModel().QueryRouteByParamRequest(
+    result = InterfaceModel().QueryInterfaceByParamRequest(
         params=params,
         page=int(request.form.get('page')),
         page_size=int(request.form.get('page_size')),

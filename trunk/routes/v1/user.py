@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description:
+@Description: 用户API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-10-09 10:47:54
+@LastEditTime: 2019-10-14 13:52:38
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
