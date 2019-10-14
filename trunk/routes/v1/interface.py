@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 13:50:25
 @LastEditors: Zpp
-@LastEditTime: 2019-10-14 14:36:48
+@LastEditTime: 2019-10-14 16:46:14
 '''
 from flask import Blueprint, request
 from collection.interface import InterfaceModel
@@ -15,7 +15,7 @@ from libs.error_code import ResultDeal
 route_interface = Blueprint('Interface', __name__, url_prefix='/v1/Interface')
 
 
-@route_interface.interface('/CreateInterface', methods=['POST'])
+@route_interface.route('/CreateInterface', methods=['POST'])
 @auth.login_required
 @validate_current_access
 def CreateInterface():
@@ -35,7 +35,7 @@ def CreateInterface():
     return ResultDeal(data=result)
 
 
-@route_interface.interface('/LockInterface', methods=['POST'])
+@route_interface.route('/LockInterface', methods=['POST'])
 @auth.login_required
 @validate_current_access
 def LockInterface():
@@ -43,7 +43,7 @@ def LockInterface():
     return ResultDeal(data=result)
 
 
-@route_interface.interface('/ModifyInterface', methods=['POST'])
+@route_interface.route('/ModifyInterface', methods=['POST'])
 @auth.login_required
 @validate_current_access
 def ModifyInterface():
@@ -61,7 +61,7 @@ def ModifyInterface():
     return ResultDeal(data=result)
 
 
-@route_interface.interface('/QueryInterfaceByParam', methods=['POST'])
+@route_interface.route('/QueryInterfaceByParam', methods=['POST'])
 @auth.login_required
 @validate_current_access
 def QueryInterfaceByParam():

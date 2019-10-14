@@ -5,9 +5,9 @@
 @Author: Zpp
 @Date: 2019-10-14 15:56:20
 @LastEditors: Zpp
-@LastEditTime: 2019-10-14 16:41:40
+@LastEditTime: 2019-10-14 16:44:25
 '''
-from flask import Blueprint, request, send_from_directory, make_response
+from flask import Blueprint, request, send_from_directory, make_response, abort
 from collection.document import DocumentModel
 from ..token_auth import auth, validate_current_access
 from libs.error_code import ResultDeal
@@ -16,7 +16,7 @@ from conf.setting import document_dir
 route_document = Blueprint('Document', __name__, url_prefix='/v1/Document')
 
 
-@route_document.document('/CreateDocument', methods=['POST'])
+@route_document.route('/CreateDocument', methods=['POST'])
 @auth.login_required
 @validate_current_access
 def CreateDocument():
@@ -37,7 +37,7 @@ def CreateDocument():
     return ResultDeal(data=result)
 
 
-@route_document.document('/GetDocument/<path:filename>', methods=['GET'])
+@route_document.route('/GetDocument/<path:filename>', methods=['GET'])
 @auth.login_required
 @validate_current_access
 def GetDocument(filename):
@@ -47,7 +47,7 @@ def GetDocument(filename):
         abort(404)
 
 
-@route_document.document('/DownDocument/<path:filename>/<name>', methods=['GET'])
+@route_document.route('/DownDocument/<path:filename>/<name>', methods=['GET'])
 @auth.login_required
 @validate_current_access
 def DownDocument(filename, name):
@@ -60,7 +60,8 @@ def DownDocument(filename, name):
     else:
         abort(404)
 
-@route_document.document('/DelDocument', methods=['POST'])
+
+@route_document.route('/DelDocument', methods=['POST'])
 @auth.login_required
 @validate_current_access
 def LockDocument():
@@ -68,7 +69,7 @@ def LockDocument():
     return ResultDeal(data=result)
 
 
-@route_document.document('/QueryDocumentByParam', methods=['POST'])
+@route_document.route('/QueryDocumentByParam', methods=['POST'])
 @auth.login_required
 @validate_current_access
 def QueryDocumentByParam():

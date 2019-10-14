@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
 @LastEditors: Zpp
-@LastEditTime: 2019-10-14 16:14:01
+@LastEditTime: 2019-10-14 16:54:40
 '''
 from flask import request
 from models.base import db
@@ -61,7 +61,7 @@ class DocumentModel():
             ext = self.file_extension(file_name)
             size = len(file.read())
 
-            fn = '/' + str(time.strftime('%Y/%m/%d')):
+            fn = '/' + str(time.strftime('%Y/%m/%d'))
             if not os.path.exists(document_dir + fn):
                 os.makedirs(document_dir + fn)
             path = fn + '/' + str(uuid.uuid1()) + '.' + ext

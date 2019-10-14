@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 16:06:14
-@LastEditTime: 2019-10-09 10:18:47
+@LastEditTime: 2019-10-14 16:55:57
 @LastEditors: Zpp
 '''
 
@@ -42,7 +42,7 @@ def unauthorized():
     return ResultDeal(code=401, msg=u'登录认证失效，请重新登录')
 
 
-def generate_auth_token(params, expiration=30 * 24 * 3600):
+def generate_auth_token(params, expiration=24 * 3600):
     """
     生成token
     params 参数

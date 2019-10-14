@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-05 16:07:19
-@LastEditTime: 2019-09-18 15:57:18
+@LastEditTime: 2019-10-14 16:54:12
 @LastEditors: Zpp
 '''
 from flask import Flask
@@ -28,6 +28,16 @@ logs.init_app()
 logging.info(u'-----初始化项目-----')
 app = create_app()
 logging.info('--------------------')
+
+
+@app.errorhandler(404)
+def handle_404_error(error):
+    return "出现了404错误，错误信息：%s" % error
+
+
+@app.errorhandler(500)
+def handle_500_error(error):
+    return "出现了500错误，错误信息：%s" % error
 
 try:
     logging.info(u'------启动成功------')
