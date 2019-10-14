@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-10-08 15:15:18
+@LastEditTime: 2019-10-14 16:13:01
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -192,6 +192,7 @@ class Document(db.Model):
     type = db.Column(db.SmallInteger, index=True, default=1)
     ext = db.Column(db.String(64), nullable=False)
     size = db.Column(db.Integer, nullable=False)
+    deleted = db.Column(db.Integer, default=0)
     __table_args__ = ({"useexisting": True})
 
     def to_json(self):

@@ -5,13 +5,15 @@
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
 @LastEditors: Zpp
-@LastEditTime: 2019-10-14 15:11:53
+@LastEditTime: 2019-10-14 16:14:01
 '''
 from flask import request
 from models.base import db
 from models.system import Document
 from libs.error_code import RecordLog
+from conf.setting import document_dir
 import uuid
+import time
 
 
 class DocumentModel():
@@ -21,7 +23,7 @@ class DocumentModel():
         '''
         s = db.session()
         try:
-            Int = ['type']
+            Int = ['type', 'deleted']
             data = {}
 
             for i in Int:
@@ -43,19 +45,36 @@ class DocumentModel():
         finally:
             s.close()
 
-    def CreateDocumentRequest(self, fiel, params):
+    def file_extension(self, filename):
+        ary = filename.split('.')
+        count = len(ary)
+        return ary[count - 1] if count > 1 else ''
+
+    def CreateDocumentRequest(self, file, params):
         '''
         新建文档
         '''
         s = db.session()
         try:
-            #上传
+            # 上传
+            file_name = file.filename
+            ext = self.file_extension(file_name)
+            size = len(file.read())
+
+            fn = '/' + str(time.strftime('%Y/%m/%d')):
+            if not os.path.exists(document_dir + fn):
+                os.makedirs(document_dir + fn)
+            path = fn + '/' + str(uuid.uuid1()) + '.' + ext
+            file.save(document_dir + path)
 
             item = Document(
                 document_id=uuid.uuid4,
                 user_id=params['user_id'],
-                name=params['name'],
-                type=params['type']
+                name=file_name,
+                type=params['type'],
+                ext=ext,
+                path=path,
+                size=size
             )
             s.add(item)
             s.commit()
@@ -94,7 +113,7 @@ class DocumentModel():
                 document = s.query(Document).filter(Document.document_id == key).first()
                 if not document:
                     continue
-                document.delete()
+                document.deleted = 1
                 s.commit()
             return True
         except Exception as e:

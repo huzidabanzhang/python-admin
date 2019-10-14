@@ -50,7 +50,7 @@ def ModifyInterface():
     params = request.form
     Int = ['menu_id']
     for i in params:
-        if i in Int
+        if i in Int:
             params[i] = int(params[i])
 
     result = InterfaceModel().ModifyInterfaceRequest(interface_id=request.form.get('interface_id'), params=params)

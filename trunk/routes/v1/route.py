@@ -4,7 +4,7 @@
 @Description: 路由API
 @Author: Zpp
 @Date: 2019-09-11 16:51:59
-@LastEditTime: 2019-10-14 13:52:30
+@LastEditTime: 2019-10-14 15:21:33
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -52,7 +52,7 @@ def ModifyRoute():
     params = request.form
     Bool = ['cache']
     for i in params:
-        if i in Bool
+        if i in Bool:
             params[i] = True if params[i] == 'true' else False
 
     result = RouteModel().ModifyRouteRequest(route_id=request.form.get('route_id'), params=params)

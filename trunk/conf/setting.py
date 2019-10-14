@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2019-09-18 15:00:17
+@LastEditTime: 2019-10-14 15:29:12
 @LastEditors: Zpp
 '''
 import hashlib
@@ -22,6 +22,9 @@ server_info = {
     "host": '0.0.0.0',
     "port": 5000,  # 启动服务的端口号
 }
+
+# 文档路径
+document_dir = os.path.join(basedir, 'document')
 
 # 日志
 log_info = {
