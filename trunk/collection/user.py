@@ -4,13 +4,13 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-10-15 10:57:24
+@LastEditTime: 2019-10-15 15:37:47
 @LastEditors: Zpp
 '''
 from flask import request
 from models.base import db
-from models.system import User, Role, Route, Menu
-from conf.setting import Config
+from models.system import User, Role, Route, Menu, Interface
+from conf.setting import Config, init_route, init_menu
 from libs.error_code import RecordLog
 import uuid
 import datetime
@@ -21,10 +21,84 @@ class UserModel():
         try:
             db.drop_all()
             db.create_all()
+
+            s = db.session()
+            admin = User(
+                user_id=uuid.uuid4(),
+                username=u'Admin',
+                password=Config().get_md5('123456'),
+                avatarUrl='',
+                role_id=1
+            )
+            s.add(admin)
+            s.commit()
+
+            role = Role(role_id=uuid.uuid4(), name=u'超级管理员')
+            s.add(role)
+            s.commit()
+
+            self.__init_routes(init_route, '0')
+            self.__init_menus(init_menu, '0')
             return True
         except Exception as e:
             print e
             return RecordLog(request.url, e)
+    
+    def __init_routes(self, data, parentId):
+        s = db.session()
+        for r in data:
+            route_id = uuid.uuid4()
+            route = self.__create_route(r, route_id, parentId)
+            s.add(route)
+            s.commit()
+            if r.has_key('children'):
+                return self.__init_routes(r['children'], route_id)
+
+    def __init_menus(self, data, parentId):
+        s = db.session()
+        for m in data:
+            menu_id = uuid.uuid4()
+            menu = self.__create_menu(m, menu_id, parentId)
+            s.add(menu)
+            s.commit()
+            if m.has_key('interface'):
+                for f in m['interface']:
+                    interface = self.__create_interface(f, uuid.uuid4(), menu_id)
+                    s.add(interface)
+                    s.commit()
+            if m.has_key('children'):
+                return self.__init_menus(m['children'], menu_id)
+
+    def __create_route(self, params, route_id, parentId):
+        return Route(
+            route_id=route_id,
+            parentId=parentId,
+            name=params['name'],
+            title=params['title'],
+            path=params['path'],
+            component=params['component'],
+            componentPath=params['componentPath'],
+            cache=params['cache']
+        )
+
+    def __create_menu(self, params, menu_id, parentId):
+        return Menu(
+            menu_id=menu_id,
+            parentId=parentId,
+            title=params['title'],
+            path=params['path'],
+            icon=params['icon']
+        )
+
+    def __create_interface(self, params, interface_id, menu_id):
+        return Interface(
+            menu_id=menu_id,
+            interface_id=interface_id,
+            name=params['name'],
+            path=params['path'],
+            method=params['method'],
+            description=params['description']
+        )
 
     def QueryUserByParamRequest(self, params, page=1, page_size=20, order_by='-id'):
         '''
@@ -109,7 +183,7 @@ class UserModel():
                     menu.append(i.to_json())
                     for j in i.interfaces:
                         interface.append(j.to_json())
-            
+
             data['routes'] = route
             data['menus'] = menu
             data['interface'] = interface

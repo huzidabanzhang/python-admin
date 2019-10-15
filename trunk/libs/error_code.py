@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 
+@Description: 错误处理方法
 @Author: Zpp
 @Date: 2019-09-04 17:09:14
-@LastEditTime: 2019-09-18 14:41:19
+@LastEditTime: 2019-10-15 13:46:40
 @LastEditors: Zpp
 '''
 from flask import jsonify

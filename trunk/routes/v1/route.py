@@ -4,7 +4,7 @@
 @Description: 路由API
 @Author: Zpp
 @Date: 2019-09-11 16:51:59
-@LastEditTime: 2019-10-14 15:21:33
+@LastEditTime: 2019-10-15 15:37:03
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -24,8 +24,8 @@ def CreateRoute():
         'name': request.form.get('name'),
         'title': request.form.get('title'),
         'path': request.form.get('path'),
-        'commponent': request.form.get('commponent'),
-        'commponentPath': request.form.get('commponentPath'),
+        'component': request.form.get('component'),
+        'componentPath': request.form.get('componentPath'),
         'cache': True if request.form.get('cache') == 'true' else False
     }
 

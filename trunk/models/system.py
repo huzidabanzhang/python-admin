@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-10-14 16:13:01
+@LastEditTime: 2019-10-15 15:41:59
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -111,8 +111,8 @@ class Route(db.Model):
     name = db.Column(db.String(64), nullable=False, unique=True)
     title = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False)
-    commponent = db.Column(db.String(255), nullable=False)
-    commponentPath = db.Column(db.String(255), nullable=False)
+    component = db.Column(db.String(255), nullable=False)
+    componentPath = db.Column(db.String(255), nullable=False)
     cache = db.Column(db.Boolean, index=True, default=True)
     isLock = db.Column(db.Boolean, index=True, default=True)
     __table_args__ = ({"useexisting": True})
@@ -166,7 +166,7 @@ class Interface(db.Model):
     method = db.Column(db.String(36), nullable=False)
     description = db.Column(db.String(255), nullable=False)
     isLock = db.Column(db.Boolean, index=True, default=True)
-    menu_id = db.Column(db.Integer, db.ForeignKey('db_menu.id'))
+    menu_id = db.Column(db.String(36), db.ForeignKey('db_menu.menu_id'))
     __table_args__ = ({"useexisting": True})
 
     def to_json(self):

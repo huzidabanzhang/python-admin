@@ -4,7 +4,7 @@
 @Description: 菜单API
 @Author: Zpp
 @Date: 2019-09-10 16:16:54
-@LastEditTime: 2019-10-14 13:52:21
+@LastEditTime: 2019-10-15 14:45:00
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -44,11 +44,11 @@ def LockMenu():
     return ResultDeal(data=result)
 
 
-@route_menu.route('/GetMenu', methods=['POST'])
+@route_menu.route('/GetMenu/<menu_id>', methods=['GET'])
 @auth.login_required
 @validate_current_access
-def GetMenu():
-    result = MenuModel().GetMenuRequest(menu_id=request.form.get('menu_id'))
+def GetMenu(menu_id):
+    result = MenuModel().GetMenuRequest(menu_id=menu_id)
     return ResultDeal(data=result)
 
 

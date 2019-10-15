@@ -4,7 +4,7 @@
 @Description: 用户API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-10-15 11:00:57
+@LastEditTime: 2019-10-15 15:38:23
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -17,10 +17,13 @@ from io import BytesIO
 route_user = Blueprint('User', __name__, url_prefix='/v1/User')
 
 
-@route_user.route('/CreateDrop', methods=['POST'])
+@route_user.route('/CreateDrop', methods=['GET'])
 def CreateDrop():
     result = UserModel().CreateDropRequest()
-    return ResultDeal(msg=True)
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
+    return ResultDeal(data=result)
 
 
 @route_user.route('/Captcha', methods=['GET'])

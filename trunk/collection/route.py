@@ -4,7 +4,7 @@
 @Description: 路由控制器
 @Author: Zpp
 @Date: 2019-09-10 16:00:22
-@LastEditTime: 2019-09-17 10:19:15
+@LastEditTime: 2019-10-15 15:37:20
 @LastEditors: Zpp
 '''
 from flask import request
@@ -55,8 +55,8 @@ class RouteModel():
                 name=params['name'],
                 title=params['title'],
                 path=params['path'],
-                commponent=params['commponent'],
-                commponentPath=params['commponentPath'],
+                component=params['component'],
+                componentPath=params['componentPath'],
                 cache=params['cache']
             )
             s.add(item)
@@ -96,7 +96,7 @@ class RouteModel():
             if not route:
                 return str('路由不存在')
 
-            AllowableFields = ['parentId', 'name', 'path', 'title', 'commponent', 'commponentPath', 'cache']
+            AllowableFields = ['parentId', 'name', 'path', 'title', 'component', 'componentPath', 'cache']
             data = {}
 
             for i in params:

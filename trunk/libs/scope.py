@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 
+@Description: 权限判断方法
 @Author: Zpp
 @Date: 2019-09-04 16:55:43
-@LastEditTime: 2019-10-15 10:50:44
+@LastEditTime: 2019-10-15 13:47:09
 @LastEditors: Zpp
 '''
 from models.base import db
