@@ -4,7 +4,7 @@
 @Description: 用户API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-10-15 15:38:23
+@LastEditTime: 2019-10-15 15:45:10
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -23,7 +23,10 @@ def CreateDrop():
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
 
-    return ResultDeal(data=result)
+    return ResultDeal(data={
+        'username': 'Admin',
+        'password': '123456'
+    })
 
 
 @route_user.route('/Captcha', methods=['GET'])
