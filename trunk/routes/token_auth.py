@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 16:06:14
-@LastEditTime: 2019-10-15 10:14:40
+@LastEditTime: 2019-10-15 10:59:49
 @LastEditors: Zpp
 '''
 
@@ -77,7 +77,10 @@ def validate_current_access(f):
     def decorated_function(*args, **kws):
          # 路由权限
         info = get_auth_token(session.get('User'))
-        allow = is_in_scope(info['user_id'], request.endpoint)
+        if info['is_admin']:
+            return f(*args, **kws)
+        
+        allow = is_in_scope(info['user_id'], request.path)
         if not allow:
             abort(403)
 

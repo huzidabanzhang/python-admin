@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-10-15 09:59:58
+@LastEditTime: 2019-10-15 10:57:24
 @LastEditors: Zpp
 '''
 from flask import request
@@ -132,6 +132,8 @@ class UserModel():
                 return str('用户不存在')
             if not user.isLock:
                 return str('用户被禁用')
+            if params['role_id'] == 1:
+                return str('不能设为为超级管理员')
 
             AllowableFields = ['password', 'nickname', 'sex', 'role_id', 'avatarUrl']
             data = {}

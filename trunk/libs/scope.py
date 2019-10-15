@@ -4,14 +4,14 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 16:55:43
-@LastEditTime: 2019-10-15 10:20:19
+@LastEditTime: 2019-10-15 10:50:44
 @LastEditors: Zpp
 '''
 from models.base import db
 from models.system import User, Role, Route
 
 
-def is_in_scope(user_id, endpoint):
+def is_in_scope(user_id, path):
     '''
     路由权限判断
     '''
@@ -28,11 +28,12 @@ def is_in_scope(user_id, endpoint):
         if role:
             for i in role.routes:
                 route.append(i.to_json())
-        print endpoint
-        if not route:
-            return False
+                
+        for i in route:
+            if i['path'] == path:
+                return True
 
-        return True
+        return False
     except Exception, e:
         print e
         return False

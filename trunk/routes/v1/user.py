@@ -4,7 +4,7 @@
 @Description: 用户API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-10-15 10:10:02
+@LastEditTime: 2019-10-15 11:00:57
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -61,7 +61,8 @@ def Login():
     try:
         token = generate_auth_token({
             'user_id': result['user_id'],
-            'password': result['password']
+            'password': result['password'],
+            'is_admin': True if result['role_id'] == 1 else False
         })
 
         session['User'] = token
