@@ -4,11 +4,11 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 16:06:14
-@LastEditTime: 2019-10-14 16:55:57
+@LastEditTime: 2019-10-15 10:14:40
 @LastEditors: Zpp
 '''
 
-from flask import current_app, request, session
+from flask import current_app, request, session, abort
 from flask_httpauth import HTTPBasicAuth
 from functools import wraps
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
@@ -39,7 +39,7 @@ def verify_password(token, pwd):
 
 @auth.error_handler
 def unauthorized():
-    return ResultDeal(code=401, msg=u'登录认证失效，请重新登录')
+    abort(401)
 
 
 def generate_auth_token(params, expiration=24 * 3600):
@@ -77,9 +77,9 @@ def validate_current_access(f):
     def decorated_function(*args, **kws):
          # 路由权限
         info = get_auth_token(session.get('User'))
-        allow = is_in_scope(1, request.endpoint)
+        allow = is_in_scope(info['user_id'], request.endpoint)
         if not allow:
-            return ResultDeal(code=403, msg=u'您没有访问权限')
+            abort(403)
 
         return f(*args, **kws)
 

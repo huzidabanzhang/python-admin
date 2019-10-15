@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 
+@Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-10-09 10:49:25
+@LastEditTime: 2019-10-15 09:59:58
 @LastEditors: Zpp
 '''
 from flask import request
@@ -19,7 +19,7 @@ import datetime
 class UserModel():
     def CreateDropRequest(self):
         try:
-            # db.drop_all()
+            db.drop_all()
             db.create_all()
             return True
         except Exception as e:
@@ -43,7 +43,7 @@ class UserModel():
                 User.username.like("%" + params['username'] + "%") if params.has_key('username') else '',
                 User.nickname.like("%" + params['nickname'] + "%") if params.has_key('nickname') else ''
             ).order_by(order_by).paginate(page, page_size, error_out=False)
-            
+
             data = []
             for value in result.items:
                 data.append(value.to_json())
@@ -94,23 +94,25 @@ class UserModel():
             user = s.query(User).filter(User.username == username, User.password == Config().get_md5(password)).first()
             if not user:
                 return str('用户不存在')
+            if not user.isLock:
+                return str('用户被禁用')
 
             data = user.to_json()
-            if user.role_id:
-                role = s.query(Role).filter(Role.id == user.role_id).first()
-                route = []
+            route = []
+            menu = []
+            interface = []
+            role = s.query(Role).filter(Role.id == user.role_id).first()
+            if role:
                 for i in role.routes:
                     route.append(i.to_json())
-                menu = []
-                interface = []
                 for i in role.menus:
                     menu.append(i.to_json())
                     for j in i.interfaces:
                         interface.append(j.to_json())
-                
-                data['routes'] = route
-                data['menus'] = menu
-                data['interface'] = interface
+            
+            data['routes'] = route
+            data['menus'] = menu
+            data['interface'] = interface
 
             return data
         except Exception as e:
@@ -128,6 +130,8 @@ class UserModel():
             user = s.query(User).filter(User.user_id == user_id).first()
             if not user:
                 return str('用户不存在')
+            if not user.isLock:
+                return str('用户被禁用')
 
             AllowableFields = ['password', 'nickname', 'sex', 'role_id', 'avatarUrl']
             data = {}

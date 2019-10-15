@@ -4,7 +4,7 @@
 @Description: 用户API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-10-14 13:52:38
+@LastEditTime: 2019-10-15 10:10:02
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -60,8 +60,8 @@ def Login():
 
     try:
         token = generate_auth_token({
-            'user_id': params['user_id'],
-            'password': params['password']
+            'user_id': result['user_id'],
+            'password': result['password']
         })
 
         session['User'] = token
@@ -73,7 +73,8 @@ def Login():
             'info': {
                 'name': result['nickname'] if result['nickname'] else result['username'],
                 'user_id': result['user_id'],
-                'avatarUrl': result['avatarUrl']
+                'avatarUrl': result['avatarUrl'],
+                'key': result['password']
             }
         })
     except Exception as e:
