@@ -9,4 +9,5 @@
 * 日志（开发中）
 
 ## 启动
-  app.py 启动后 路由/v1/User/CreateDrop来初始化数据库 前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
+  app.py 启动后 路由/v1/User/CreateDrop来初始化数据库 
+  前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
