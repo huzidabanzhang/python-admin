@@ -4,13 +4,14 @@
 @Description: 权限API
 @Author: Zpp
 @Date: 2019-09-12 10:30:39
-@LastEditTime: 2019-10-09 10:48:45
+@LastEditTime: 2019-10-16 09:26:03
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
 from collection.role import RoleModel
 from ..token_auth import auth, validate_current_access
 from libs.error_code import ResultDeal
+import uuid
 
 route_role = Blueprint('Role', __name__, url_prefix='/v1/Role')
 
@@ -20,6 +21,7 @@ route_role = Blueprint('Role', __name__, url_prefix='/v1/Role')
 @validate_current_access
 def CreateRole():
     params = {
+        'role_id': uuid.uuid4(),
         'name': request.form.get('name'),
         'type': request.form.get('type')
     }

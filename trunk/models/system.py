@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-10-15 15:41:59
+@LastEditTime: 2019-10-16 09:55:51
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -57,15 +57,15 @@ class User(db.Model):
 
 MenuToRole = db.Table(
     'db_menu_to_role',
-    db.Column('role_id', db.Integer, db.ForeignKey('db_role.id')),
-    db.Column('menu_id', db.Integer, db.ForeignKey('db_menu.id'))
+    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id')),
+    db.Column('menu_id', db.String(36), db.ForeignKey('db_menu.menu_id'))
 )
 
 
 RouteToRole = db.Table(
     'db_route_to_role',
-    db.Column('route_id', db.Integer, db.ForeignKey('db_route.id')),
-    db.Column('role_id', db.Integer, db.ForeignKey('db_role.id'))
+    db.Column('route_id', db.String(36), db.ForeignKey('db_route.route_id')),
+    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id'))
 )
 
 

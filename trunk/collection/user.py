@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-10-15 15:37:47
+@LastEditTime: 2019-10-16 10:09:32
 @LastEditors: Zpp
 '''
 from flask import request
@@ -33,41 +33,62 @@ class UserModel():
             s.add(admin)
             s.commit()
 
-            role = Role(role_id=uuid.uuid4(), name=u'超级管理员')
+            role_id = uuid.uuid4()
+            role = Role(role_id=role_id, name=u'超级管理员')
             s.add(role)
             s.commit()
 
-            self.__init_routes(init_route, '0')
-            self.__init_menus(init_menu, '0')
+            self.__init_routes(init_route, '0', role_id)
+            self.__init_menus(init_menu, '0', role_id)
             return True
         except Exception as e:
             print e
             return RecordLog(request.url, e)
     
-    def __init_routes(self, data, parentId):
+    def __init_routes(self, data, parentId, role_id):
         s = db.session()
         for r in data:
             route_id = uuid.uuid4()
             route = self.__create_route(r, route_id, parentId)
             s.add(route)
+
+            role = s.query(Role).filter(Role.role_id == role_id).first()
+            routes = []
+            for i in role.routes:
+                routes.append(i)
+            routes.append(route)
+            role.routes = routes
+
             s.commit()
             if r.has_key('children'):
-                return self.__init_routes(r['children'], route_id)
+                return self.__init_routes(r['children'], route_id, role_id)
 
-    def __init_menus(self, data, parentId):
+    def __init_menus(self, data, parentId, role_id):
         s = db.session()
         for m in data:
             menu_id = uuid.uuid4()
             menu = self.__create_menu(m, menu_id, parentId)
-            s.add(menu)
-            s.commit()
+
             if m.has_key('interface'):
+                interfaces = []
                 for f in m['interface']:
                     interface = self.__create_interface(f, uuid.uuid4(), menu_id)
                     s.add(interface)
                     s.commit()
+                    interfaces.append(interface)
+                menu.interfaces = interfaces
+            s.add(menu)
+
+            role = s.query(Role).filter(Role.role_id == role_id).first()
+            menus = []
+            for i in role.menus:
+                menus.append(i)
+            menus.append(menu)
+            role.menus = menus
+
+            s.commit()
             if m.has_key('children'):
-                return self.__init_menus(m['children'], menu_id)
+                return self.__init_menus(m['children'], menu_id, role_id)
 
     def __create_route(self, params, route_id, parentId):
         return Route(
@@ -181,8 +202,8 @@ class UserModel():
                     route.append(i.to_json())
                 for i in role.menus:
                     menu.append(i.to_json())
-                    for j in i.interfaces:
-                        interface.append(j.to_json())
+                    interfaces = s.query(Interface).filter(Interface.menu_id == i.menu_id).all()
+                    interface = interface + [i.to_json() for i in interfaces]
 
             data['routes'] = route
             data['menus'] = menu
