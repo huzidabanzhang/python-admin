@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-10-16 10:09:32
+@LastEditTime: 2019-10-17 09:29:14
 @LastEditors: Zpp
 '''
 from flask import request
@@ -14,6 +14,7 @@ from conf.setting import Config, init_route, init_menu
 from libs.error_code import RecordLog
 import uuid
 import datetime
+import copy
 
 
 class UserModel():
@@ -121,7 +122,7 @@ class UserModel():
             description=params['description']
         )
 
-    def QueryUserByParamRequest(self, params, page=1, page_size=20, order_by='-id'):
+    def QueryUserByParamRequest(self, params, page=1, page_size=20, order_by='id'):
         '''
         用户列表
         '''
@@ -180,7 +181,7 @@ class UserModel():
         finally:
             s.close()
 
-    def GetUserRequest(self, username, password):
+    def GetUserRequest(self, username, password, ip):
         '''
         查询用户
         '''
@@ -191,12 +192,15 @@ class UserModel():
                 return str('用户不存在')
             if not user.isLock:
                 return str('用户被禁用')
+            info = copy.deepcopy(user)
+            user.last_ip = ip
+            s.commit()
 
-            data = user.to_json()
+            data = info.to_json()
             route = []
             menu = []
             interface = []
-            role = s.query(Role).filter(Role.id == user.role_id).first()
+            role = s.query(Role).filter(Role.id == info.role_id).first()
             if role:
                 for i in role.routes:
                     route.append(i.to_json())
@@ -208,7 +212,6 @@ class UserModel():
             data['routes'] = route
             data['menus'] = menu
             data['interface'] = interface
-
             return data
         except Exception as e:
             print e

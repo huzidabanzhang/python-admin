@@ -4,7 +4,7 @@
 @Description: 用户API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-10-15 15:45:10
+@LastEditTime: 2019-10-17 09:17:13
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -58,7 +58,8 @@ def Login():
 
     result = UserModel().GetUserRequest(
         username=request.form.get('username'),
-        password=request.form.get('password')
+        password=request.form.get('password'),
+        ip=request.remote_addr
     )
 
     if type(result).__name__ == 'str':

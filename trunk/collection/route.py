@@ -4,7 +4,7 @@
 @Description: 路由控制器
 @Author: Zpp
 @Date: 2019-09-10 16:00:22
-@LastEditTime: 2019-10-15 15:37:20
+@LastEditTime: 2019-10-17 09:23:04
 @LastEditors: Zpp
 '''
 from flask import request
@@ -15,7 +15,7 @@ import uuid
 
 
 class RouteModel():
-    def QueryRouteByParamRequest(self, params, page=1, page_size=20, order_by='-id'):
+    def QueryRouteByParamRequest(self, params, page=1, page_size=20, order_by='id'):
         '''
         路由列表
         '''

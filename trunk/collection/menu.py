@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2019-09-26 10:39:12
+@LastEditTime: 2019-10-17 09:20:25
 @LastEditors: Zpp
 '''
 from flask import request
@@ -14,13 +14,13 @@ from libs.error_code import RecordLog
 import uuid
 
 class MenuModel():
-    def QueryMenuByParamRequest(self, order_by='-id'):
+    def QueryMenuByParamRequest(self):
         '''
         菜单列表
         '''
         s = db.session()
         try:
-            result = Menu.query.order_by(order_by).all()
+            result = Menu.query.order_by('id', 'sort').all()
 
             data = []
             for value in result:

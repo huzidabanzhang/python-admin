@@ -15,7 +15,7 @@ import uuid
 
 
 class InterfaceModel():
-    def QueryInterfaceByParamRequest(self, params, page=1, page_size=20, order_by='-id'):
+    def QueryInterfaceByParamRequest(self, params, page=1, page_size=20, order_by='id'):
         '''
         接口列表
         '''

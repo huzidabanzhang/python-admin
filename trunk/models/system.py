@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-10-16 09:55:51
+@LastEditTime: 2019-10-17 09:18:03
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -25,6 +25,7 @@ class User(db.Model):
     avatarUrl = db.Column(db.String(255))
     isLock = db.Column(db.Boolean, index=True, default=True)
     role_id = db.Column(db.Integer, db.ForeignKey('db_role.id'))
+    last_ip = db.Column(db.String(255))
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     update_time = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     __table_args__ = ({"useexisting": True})

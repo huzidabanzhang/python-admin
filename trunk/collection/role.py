@@ -4,7 +4,7 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2019-10-09 10:36:41
+@LastEditTime: 2019-10-17 09:22:38
 @LastEditors: Zpp
 '''
 from flask import request
@@ -145,7 +145,7 @@ class RoleModel():
         finally:
             s.close()
 
-    def QueryRoleByParamRequest(self, params, page=1, page_size=20, order_by='-id'):
+    def QueryRoleByParamRequest(self, params, page=1, page_size=20, order_by='id'):
         '''
         权限列表
         '''
