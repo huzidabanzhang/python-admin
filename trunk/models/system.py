@@ -4,20 +4,20 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-10-17 09:18:03
+@LastEditTime: 2019-10-17 16:08:53
 @LastEditors: Zpp
 '''
 from models.base import db
 import datetime
 
 
-class User(db.Model):
+class Admin(db.Model):
     '''
-    用户
+    管理员
     '''
-    __tablename__ = 'db_user'
+    __tablename__ = 'db_admin'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
-    user_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
+    admin_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     username = db.Column(db.String(64), index=True, nullable=False, unique=True)
     password = db.Column(db.String(32), nullable=False)
     nickname = db.Column(db.String(64))
@@ -25,7 +25,6 @@ class User(db.Model):
     avatarUrl = db.Column(db.String(255))
     isLock = db.Column(db.Boolean, index=True, default=True)
     role_id = db.Column(db.Integer, db.ForeignKey('db_role.id'))
-    last_ip = db.Column(db.String(255))
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     update_time = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     __table_args__ = ({"useexisting": True})
@@ -40,7 +39,7 @@ class User(db.Model):
         return False
 
     def get_id(self):
-        return unicode(self.user_id)
+        return unicode(self.admin_id)
 
     def to_json(self):
         dict = self.__dict__
@@ -53,7 +52,7 @@ class User(db.Model):
         return dict
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<admin %r>' % self.username
 
 
 MenuToRole = db.Table(
@@ -80,7 +79,7 @@ class Role(db.Model):
     name = db.Column(db.String(64), nullable=False, unique=True)
     type = db.Column(db.SmallInteger, index=True, default=1)
     isLock = db.Column(db.Boolean, index=True, default=True)
-    users = db.relationship('User', backref='role')
+    admins = db.relationship('Admin', backref='role')
     menus = db.relationship('Menu',
                             secondary=MenuToRole,
                             backref=db.backref('db_role', lazy='dynamic'),
@@ -187,7 +186,7 @@ class Document(db.Model):
     __tablename__ = 'db_document'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     document_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
-    user_id = db.Column(db.String(36), index=True, nullable=False)
+    admin_id = db.Column(db.String(36), index=True, nullable=False)
     name = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False)
     type = db.Column(db.SmallInteger, index=True, default=1)

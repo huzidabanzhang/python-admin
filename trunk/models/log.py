@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-09-12 16:34:07
 @LastEditors: Zpp
-@LastEditTime: 2019-09-17 10:48:31
+@LastEditTime: 2019-10-17 15:16:53
 '''
 from models.base import db
 import datetime
@@ -17,8 +17,15 @@ class Log(db.Model):
     '''
     __tablename__ = 'db_log'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
-    content = db.Column(db.Text, nullable=False)
-    src = db.Column(db.Text, nullable=False)
+    username = db.Column(db.String(64), nullable=False)
+    content = db.Column(db.Text)
+    path = db.Column(db.Text, nullable=False)
+    method = db.Column(db.String(36), nullable=False)
+    params = db.Column(db.Text)
+    ip = db.Column(db.String(255))
+    time = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.SmallInteger, nullable=False, index=True, default=1)
+    type = db.Column(db.SmallInteger, nullable=False, index=True, default=1)
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     __table_args__ = ({"useexisting": True})
 

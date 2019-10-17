@@ -4,26 +4,26 @@
 @Description: 权限判断方法
 @Author: Zpp
 @Date: 2019-09-04 16:55:43
-@LastEditTime: 2019-10-15 13:47:09
+@LastEditTime: 2019-10-17 15:30:26
 @LastEditors: Zpp
 '''
 from models.base import db
-from models.system import User, Role, Route
+from models.system import Admin, Role, Route
 
 
-def is_in_scope(user_id, path):
+def is_in_scope(admin_id, path):
     '''
     路由权限判断
     '''
     s = db.session()
     try:
-        user = s.query(User).filter(User.user_id == user_id).first()
-        if not user:
-            return str('用户不存在')
-        if not user.isLock:
-            return str('用户被禁用')
+        admin = s.query(Admin).filter(Admin.admin_id == admin_id).first()
+        if not admin:
+            return str('管理员不存在')
+        if not admin.isLock:
+            return str('管理员被禁用')
 
-        role = s.query(Role).filter(Role.id == user.role_id).first()
+        role = s.query(Role).filter(Role.id == admin.role_id).first()
         route = []
         if role:
             for i in role.routes:

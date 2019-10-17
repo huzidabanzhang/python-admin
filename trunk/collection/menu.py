@@ -4,13 +4,12 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2019-10-17 09:20:25
+@LastEditTime: 2019-10-17 14:48:08
 @LastEditors: Zpp
 '''
 from flask import request
 from models.base import db
 from models.system import Menu
-from libs.error_code import RecordLog
 import uuid
 
 class MenuModel():
@@ -29,9 +28,7 @@ class MenuModel():
             return data
         except Exception as e:
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def CreateMenuRequest(self, params):
         '''
@@ -54,9 +51,7 @@ class MenuModel():
         except Exception as e:
             s.rollback()
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def GetMenuRequest(self, menu_id):
         '''
@@ -71,9 +66,7 @@ class MenuModel():
             return menu.to_json()
         except Exception as e:
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def ModifyMenuRequest(self, menu_id, params):
         '''
@@ -98,9 +91,7 @@ class MenuModel():
         except Exception as e:
             print e
             s.rollback()
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def LockMenuRequest(self, menu_id):
         '''
@@ -118,6 +109,4 @@ class MenuModel():
         except Exception as e:
             print e
             s.rollback()
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)

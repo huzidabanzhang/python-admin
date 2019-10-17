@@ -12,7 +12,7 @@ from flask import current_app, request, session, abort
 from flask_httpauth import HTTPBasicAuth
 from functools import wraps
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
-from libs.error_code import ResultDeal
+from libs.code import ResultDeal
 from libs.scope import is_in_scope
 
 auth = HTTPBasicAuth()
@@ -30,8 +30,8 @@ def verify_password(token, pwd):
     if not token:
         return False
 
-    user_info = verify_auth_token(token, pwd)
-    if not user_info:
+    admin_info = verify_auth_token(token, pwd)
+    if not admin_info:
         return False
     else:
         return True
@@ -52,7 +52,7 @@ def generate_auth_token(params, expiration=24 * 3600):
 
 
 def verify_auth_token(token, pwd):
-    info = session.get('User')
+    info = session.get('admin')
     if not info or info != token:
         return False
 
@@ -76,11 +76,11 @@ def validate_current_access(f):
     @wraps(f)
     def decorated_function(*args, **kws):
          # 路由权限
-        info = get_auth_token(session.get('User'))
+        info = get_auth_token(session.get('admin'))
         if info['is_admin']:
             return f(*args, **kws)
         
-        allow = is_in_scope(info['user_id'], request.path)
+        allow = is_in_scope(info['admin_id'], request.path)
         if not allow:
             abort(403)
 

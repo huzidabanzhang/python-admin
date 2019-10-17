@@ -10,7 +10,7 @@
 from flask import Blueprint, request
 from collection.interface import InterfaceModel
 from ..token_auth import auth, validate_current_access
-from libs.error_code import ResultDeal
+from libs.code import ResultDeal
 
 route_interface = Blueprint('Interface', __name__, url_prefix='/v1/Interface')
 

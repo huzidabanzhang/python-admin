@@ -1,25 +1,25 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 用户API
+@Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-10-17 09:17:13
+@LastEditTime: 2019-10-17 16:19:12
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
-from collection.user import UserModel
+from collection.admin import AdminModel
 from ..token_auth import auth, generate_auth_token, validate_current_access
-from libs.error_code import ResultDeal, RecordLog
+from libs.code import ResultDeal
 from libs.captcha import Captcha
 from io import BytesIO
 
-route_user = Blueprint('User', __name__, url_prefix='/v1/User')
+route_admin = Blueprint('Admin', __name__, url_prefix='/v1/Admin')
 
 
-@route_user.route('/CreateDrop', methods=['GET'])
+@route_admin.route('/CreateDrop', methods=['GET'])
 def CreateDrop():
-    result = UserModel().CreateDropRequest()
+    result = AdminModel().CreateDropRequest()
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
 
@@ -29,7 +29,7 @@ def CreateDrop():
     })
 
 
-@route_user.route('/Captcha', methods=['GET'])
+@route_admin.route('/Captcha', methods=['GET'])
 def GetCaptcha():
     text, image = Captcha().gen_graph_captcha()
     out = BytesIO()
@@ -42,7 +42,7 @@ def GetCaptcha():
     return resp
 
 
-@route_user.route('/Login', methods=['POST'])
+@route_admin.route('/Login', methods=['POST'])
 def Login():
     # 验证码校验
     captcha = request.form.get('code')
@@ -56,10 +56,9 @@ def Login():
     if session.get('Captcha').lower() != captcha.lower():
         return ResultDeal(msg=u'验证码不正确', code=-1)
 
-    result = UserModel().GetUserRequest(
+    result = AdminModel().GetAdminRequest(
         username=request.form.get('username'),
-        password=request.form.get('password'),
-        ip=request.remote_addr
+        password=request.form.get('password')
     )
 
     if type(result).__name__ == 'str':
@@ -67,12 +66,13 @@ def Login():
 
     try:
         token = generate_auth_token({
-            'user_id': result['user_id'],
+            'admin_id': result['admin_id'],
             'password': result['password'],
             'is_admin': True if result['role_id'] == 1 else False
         })
 
-        session['User'] = token
+        session['admin'] = token
+        session['username'] = result['username']
         return ResultDeal(data={
             'token': token,
             'routes': result['routes'],
@@ -80,26 +80,26 @@ def Login():
             'interface': result['interface'],
             'info': {
                 'name': result['nickname'] if result['nickname'] else result['username'],
-                'user_id': result['user_id'],
+                'user_id': result['admin_id'],
                 'avatarUrl': result['avatarUrl'],
                 'key': result['password']
             }
         })
     except Exception as e:
         print e
-        return RecordLog(request.url, e)
+        return ResultDeal(msg=e.message, code=-1)
 
 
-@route_user.route('/Logout', methods=['GET'])
+@route_admin.route('/Logout', methods=['GET'])
 def Logout():
-    session.pop('User')
+    session.pop('admin')
     return ResultDeal()
 
 
-@route_user.route('/CreateUser', methods=['POST'])
+@route_admin.route('/CreateAdmin', methods=['POST'])
 @auth.login_required
 @validate_current_access
-def CreateUser():
+def CreateAdmin():
     params = {
         'username': request.form.get('username'),
         'password': request.form.get('password'),
@@ -109,7 +109,7 @@ def CreateUser():
         'avatarUrl': request.form.get('avatarUrl', '')
     }
 
-    result = UserModel().CreateUserRequest(params)
+    result = AdminModel().CreateAdminRequest(params)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -117,25 +117,25 @@ def CreateUser():
     return ResultDeal(data=result)
 
 
-@route_user.route('/LockUser', methods=['POST'])
+@route_admin.route('/LockAdmin', methods=['POST'])
 @auth.login_required
 @validate_current_access
-def LockUser():
-    result = UserModel().LockUserRequest(user_id=request.form.getlist('user_id'))
+def LockAdmin():
+    result = AdminModel().LockAdminRequest(admin_id=request.form.getlist('admin_id'))
     return ResultDeal(data=result)
 
 
-@route_user.route('/ModifyUser', methods=['POST'])
+@route_admin.route('/ModifyAdmin', methods=['POST'])
 @auth.login_required
 @validate_current_access
-def ModifyUser():
+def ModifyAdmin():
     params = request.form
     Int = ['sex', 'role_id']
     for i in params:
         if i in Int:
             params[i] = int(params[i])
 
-    result = UserModel().ModifyUserRequest(user_id=request.form.get('user_id'), params=params)
+    result = AdminModel().ModifyAdminRequest(admin_id=request.form.get('admin_id'), params=params)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -143,10 +143,10 @@ def ModifyUser():
     return ResultDeal(data=result)
 
 
-@route_user.route('/QueryUserByParam', methods=['POST'])
+@route_admin.route('/QueryAdminByParam', methods=['POST'])
 @auth.login_required
 @validate_current_access
-def QueryUserByParam():
+def QueryAdminByParam():
     params = request.form
     Int = ['sex', 'role_id']
     Bool = ['isLock']
@@ -156,7 +156,7 @@ def QueryUserByParam():
         if i in Bool:
             params[i] = True if params[i] == 'true' else False
 
-    result = UserModel().QueryUserByParamRequest(
+    result = AdminModel().QueryAdminByParamRequest(
         params=params,
         page=int(request.form.get('page')),
         page_size=int(request.form.get('page_size')),

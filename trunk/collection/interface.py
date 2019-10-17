@@ -5,12 +5,11 @@
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
 @LastEditors: Zpp
-@LastEditTime: 2019-10-14 14:58:13
+@LastEditTime: 2019-10-17 14:47:50
 '''
 from flask import request
 from models.base import db
 from models.system import Interface
-from libs.error_code import RecordLog
 import uuid
 
 
@@ -39,9 +38,7 @@ class InterfaceModel():
             return {'data': data, 'total': result.total}
         except Exception as e:
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def CreateInterfaceRequest(self, params):
         '''
@@ -63,9 +60,7 @@ class InterfaceModel():
         except Exception as e:
             s.rollback()
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def GetInterfaceRequest(self, interface_id):
         '''
@@ -80,9 +75,7 @@ class InterfaceModel():
             return interface.to_json()
         except Exception as e:
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def ModifyInterfaceRequest(self, interface_id, params):
         '''
@@ -107,9 +100,7 @@ class InterfaceModel():
         except Exception as e:
             print e
             s.rollback()
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def LockInterfaceRequest(self, interface_id):
         '''
@@ -127,6 +118,4 @@ class InterfaceModel():
         except Exception as e:
             print e
             s.rollback()
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)

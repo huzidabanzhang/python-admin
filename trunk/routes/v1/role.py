@@ -10,7 +10,7 @@
 from flask import Blueprint, request
 from collection.role import RoleModel
 from ..token_auth import auth, validate_current_access
-from libs.error_code import ResultDeal
+from libs.code import ResultDeal
 import uuid
 
 route_role = Blueprint('Role', __name__, url_prefix='/v1/Role')

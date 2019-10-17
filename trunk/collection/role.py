@@ -4,13 +4,12 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2019-10-17 09:22:38
+@LastEditTime: 2019-10-17 14:48:34
 @LastEditors: Zpp
 '''
 from flask import request
 from models.base import db
 from models.system import Role, Route, Menu
-from libs.error_code import RecordLog
 import uuid
 
 
@@ -32,9 +31,7 @@ class RoleModel():
         except Exception as e:
             s.rollback()
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def GetRoleRequest(self, role_id):
         '''
@@ -49,9 +46,7 @@ class RoleModel():
             return role.to_json()
         except Exception as e:
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def ModifyRoleToRoute(self, role_id, route_id):
         '''
@@ -75,9 +70,7 @@ class RoleModel():
         except Exception as e:
             print e
             s.rollback()
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def ModifyRoleToMenu(self, role_id, menu_id):
         '''
@@ -101,9 +94,7 @@ class RoleModel():
         except Exception as e:
             print e
             s.rollback()
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def ModifyRoleRequest(self, role_id, name):
         '''
@@ -121,9 +112,7 @@ class RoleModel():
         except Exception as e:
             print e
             s.rollback()
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def LockRoleRequest(self, role_id):
         '''
@@ -141,9 +130,7 @@ class RoleModel():
         except Exception as e:
             print e
             s.rollback()
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def QueryRoleByParamRequest(self, params, page=1, page_size=20, order_by='id'):
         '''
@@ -169,6 +156,4 @@ class RoleModel():
             return {'data': data, 'total': result.total}
         except Exception as e:
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)

@@ -4,28 +4,26 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-10-17 09:29:14
+@LastEditTime: 2019-10-17 16:14:18
 @LastEditors: Zpp
 '''
 from flask import request
 from models.base import db
-from models.system import User, Role, Route, Menu, Interface
+from models.system import Admin, Role, Route, Menu, Interface
 from conf.setting import Config, init_route, init_menu
-from libs.error_code import RecordLog
 import uuid
 import datetime
-import copy
 
 
-class UserModel():
+class AdminModel():
     def CreateDropRequest(self):
         try:
             db.drop_all()
             db.create_all()
 
             s = db.session()
-            admin = User(
-                user_id=uuid.uuid4(),
+            admin = Admin(
+                admin_id=uuid.uuid4(),
                 username=u'Admin',
                 password=Config().get_md5('123456'),
                 avatarUrl='',
@@ -44,7 +42,7 @@ class UserModel():
             return True
         except Exception as e:
             print e
-            return RecordLog(request.url, e)
+            return str(e.message)
     
     def __init_routes(self, data, parentId, role_id):
         s = db.session()
@@ -62,7 +60,7 @@ class UserModel():
 
             s.commit()
             if r.has_key('children'):
-                return self.__init_routes(r['children'], route_id, role_id)
+                self.__init_routes(r['children'], route_id, role_id)
 
     def __init_menus(self, data, parentId, role_id):
         s = db.session()
@@ -89,7 +87,7 @@ class UserModel():
 
             s.commit()
             if m.has_key('children'):
-                return self.__init_menus(m['children'], menu_id, role_id)
+                self.__init_menus(m['children'], menu_id, role_id)
 
     def __create_route(self, params, route_id, parentId):
         return Route(
@@ -122,9 +120,9 @@ class UserModel():
             description=params['description']
         )
 
-    def QueryUserByParamRequest(self, params, page=1, page_size=20, order_by='id'):
+    def QueryAdminByParamRequest(self, params, page=1, page_size=20, order_by='id'):
         '''
-        用户列表
+        管理员列表
         '''
         s = db.session()
         try:
@@ -135,9 +133,9 @@ class UserModel():
                 if params.has_key(i):
                     data[i] = params[i]
 
-            result = User.query.filter_by(*data).filter(
-                User.username.like("%" + params['username'] + "%") if params.has_key('username') else '',
-                User.nickname.like("%" + params['nickname'] + "%") if params.has_key('nickname') else ''
+            result = Admin.query.filter_by(*data).filter(
+                Admin.username.like("%" + params['username'] + "%") if params.has_key('username') else '',
+                Admin.nickname.like("%" + params['nickname'] + "%") if params.has_key('nickname') else ''
             ).order_by(order_by).paginate(page, page_size, error_out=False)
 
             data = []
@@ -147,23 +145,21 @@ class UserModel():
             return {'data': data, 'total': result.total}
         except Exception as e:
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
-    def CreateUserRequest(self, params):
+    def CreateAdminRequest(self, params):
         '''
-        新建用户
+        新建管理员
         '''
         s = db.session()
         try:
-            user = s.query(User).filter(User.username == params['username']).first()
+            admin = s.query(Admin).filter(Admin.username == params['username']).first()
 
-            if user:
-                return str('用户已存在')
+            if admin:
+                return str('管理员已存在')
 
-            item = User(
-                user_id=uuid.uuid4(),
+            item = Admin(
+                admin_id=uuid.uuid4(),
                 username=params['username'],
                 password=Config().get_md5(params['password']),
                 sex=int(params['sex']),
@@ -177,30 +173,25 @@ class UserModel():
         except Exception as e:
             s.rollback()
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
-    def GetUserRequest(self, username, password, ip):
+    def GetAdminRequest(self, username, password):
         '''
-        查询用户
+        查询管理员
         '''
         s = db.session()
         try:
-            user = s.query(User).filter(User.username == username, User.password == Config().get_md5(password)).first()
-            if not user:
-                return str('用户不存在')
-            if not user.isLock:
-                return str('用户被禁用')
-            info = copy.deepcopy(user)
-            user.last_ip = ip
-            s.commit()
+            admin = s.query(Admin).filter(Admin.username == username, Admin.password == Config().get_md5(password)).first()
+            if not admin:
+                return str('管理员不存在')
+            if not admin.isLock:
+                return str('管理员被禁用')
 
-            data = info.to_json()
+            data = admin.to_json()
             route = []
             menu = []
             interface = []
-            role = s.query(Role).filter(Role.id == info.role_id).first()
+            role = s.query(Role).filter(Role.id == admin.role_id).first()
             if role:
                 for i in role.routes:
                     route.append(i.to_json())
@@ -215,21 +206,19 @@ class UserModel():
             return data
         except Exception as e:
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
-    def ModifyUserRequest(self, user_id, params):
+    def ModifyAdminRequest(self, admin_id, params):
         '''
-        修改用户信息
+        修改管理员信息
         '''
         s = db.session()
         try:
-            user = s.query(User).filter(User.user_id == user_id).first()
-            if not user:
-                return str('用户不存在')
-            if not user.isLock:
-                return str('用户被禁用')
+            admin = s.query(Admin).filter(Admin.admin_id == admin_id).first()
+            if not admin:
+                return str('管理员不存在')
+            if not admin.isLock:
+                return str('管理员被禁用')
             if params['role_id'] == 1:
                 return str('不能设为为超级管理员')
 
@@ -240,32 +229,28 @@ class UserModel():
                 if i in AllowableFields and params.has_key(i):
                     data[i] = params[i]
 
-            s.query(User).filter(User.user_id == user_id).update(data)
+            s.query(Admin).filter(Admin.admin_id == admin_id).update(data)
             s.commit()
             return True
         except Exception as e:
             print e
             s.rollback()
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
-    def LockUserRequest(self, user_id):
+    def LockAdminRequest(self, admin_id):
         '''
-        禁用用户
+        禁用管理员
         '''
         s = db.session()
         try:
-            for key in user_id:
-                user = s.query(User).filter(User.user_id == key).first()
-                if not user:
+            for key in admin_id:
+                admin = s.query(Admin).filter(Admin.admin_id == key).first()
+                if not admin:
                     continue
-                user.isLock = False
+                admin.isLock = False
                 s.commit()
             return True
         except Exception as e:
             print e
             s.rollback()
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)

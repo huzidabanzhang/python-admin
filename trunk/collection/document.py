@@ -5,12 +5,11 @@
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
 @LastEditors: Zpp
-@LastEditTime: 2019-10-14 16:54:40
+@LastEditTime: 2019-10-17 14:47:27
 '''
 from flask import request
 from models.base import db
 from models.system import Document
-from libs.error_code import RecordLog
 from conf.setting import document_dir
 import uuid
 import time
@@ -41,9 +40,7 @@ class DocumentModel():
             return {'data': data, 'total': result.total}
         except Exception as e:
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def file_extension(self, filename):
         ary = filename.split('.')
@@ -69,7 +66,7 @@ class DocumentModel():
 
             item = Document(
                 document_id=uuid.uuid4,
-                user_id=params['user_id'],
+                admin_id=params['admin_id'],
                 name=file_name,
                 type=params['type'],
                 ext=ext,
@@ -82,9 +79,7 @@ class DocumentModel():
         except Exception as e:
             s.rollback()
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def GetDocumentRequest(self, document_id):
         '''
@@ -99,9 +94,7 @@ class DocumentModel():
             return document.to_json()
         except Exception as e:
             print e
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)
 
     def DelDocumentRequest(self, document_id):
         '''
@@ -119,6 +112,4 @@ class DocumentModel():
         except Exception as e:
             print e
             s.rollback()
-            return RecordLog(request.url, e)
-        finally:
-            s.close()
+            return str(e.message)

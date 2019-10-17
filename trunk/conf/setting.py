@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2019-10-15 15:35:02
+@LastEditTime: 2019-10-17 16:21:00
 @LastEditors: Zpp
 '''
 import hashlib
@@ -74,22 +74,6 @@ init_route = [
                 'cache': True
             },
             {
-                'name': 'RolePage',
-                'path': '/system/role',
-                'component': 'role',
-                'componentPath': 'pages/sys/role/index',
-                'title': u'角色管理',
-                'cache': True
-            },
-            {
-                'name': 'UserPage',
-                'path': '/system/user',
-                'component': 'user',
-                'componentPath': 'pages/sys/user/index',
-                'title': u'用户管理',
-                'cache': True
-            },
-            {
                 'name': 'InterfacePage',
                 'path': '/system/interface',
                 'component': 'interface',
@@ -106,6 +90,66 @@ init_route = [
                 'cache': True
             }
         ]
+    },
+    {
+        'name': 'Role',
+        'path': '/role',
+        'component': 'layoutHeaderAside',
+        'componentPath': 'layout/header-aside/layout',
+        'title': u'权限管理',
+        'cache': True,
+        'children': [
+            {
+                'name': 'AdminPage',
+                'path': '/role/admin',
+                'component': 'admin',
+                'componentPath': 'pages/sys/admin/index',
+                'title': u'管理员用户',
+                'cache': True
+            },
+            {
+                'name': 'RolePage',
+                'path': '/role/role',
+                'component': 'role',
+                'componentPath': 'pages/sys/role/index',
+                'title': u'角色管理',
+                'cache': True
+            }
+        ]
+    },
+    {
+        'name': 'Log',
+        'path': '/log',
+        'component': 'layoutHeaderAside',
+        'componentPath': 'layout/header-aside/layout',
+        'title': u'日志管理',
+        'cache': True,
+        'children': [
+            {
+                'name': 'LogLogin',
+                'path': '/log/login',
+                'component': 'login',
+                'componentPath': 'pages/sys/login/index',
+                'title': u'登录日志',
+                'cache': True
+            },
+            {
+                'name': 'LogHander',
+                'path': '/log/hander',
+                'component': 'hander',
+                'componentPath': 'pages/sys/hander/index',
+                'title': u'操作日志',
+                'cache': True
+            },
+            {
+                'name': 'LorError',
+                'path': '/log/error',
+                'component': 'error',
+                'componentPath': 'pages/sys/error/index',
+                'title': u'异常日志',
+                'cache': True
+            }
+        ]
     }
 ]
 
@@ -114,7 +158,7 @@ init_menu = [
     {
         "title": "系统",
         "path": "/system",
-        "icon": "cogs",
+        "icon": "cog",
         "children": [
             {
                 "title": "菜单管理",
@@ -137,7 +181,7 @@ init_menu = [
                         "path": "/v1/Menu/ModifyMenu",
                         "method": "POST",
                         "name": "ModifyMenu",
-                        "description": "修改菜单"
+                        "description": "修改菜单信息"
                     },
                     {
                         "path": "/v1/Menu/LockMenu",
@@ -174,111 +218,13 @@ init_menu = [
                         "path": "/v1/Route/ModifyRoute",
                         "method": "POST",
                         "name": "ModifyRoute",
-                        "description": "修改路由"
+                        "description": "修改路由信息"
                     },
                     {
                         "path": "/v1/Route/LockRoute",
                         "method": "POST",
                         "name": "LockRoute",
                         "description": "禁用路由"
-                    }
-                ]
-            },
-            {
-                "title": "角色管理",
-                "path": "/system/role",
-                "icon": "group",
-                "interface": [
-                    {
-                        "path": "/v1/Role/CreateRole",
-                        "method": "POST",
-                        "name": "CreateRole",
-                        "description": "添加角色"
-                    },
-                    {
-                        "path": "/v1/Role/QueryRoleByParam",
-                        "method": "POST",
-                        "name": "QueryRoleByParam",
-                        "description": "获取角色列表"
-                    },
-                    {
-                        "path": "/v1/Role/ModifyRoleToRoute",
-                        "method": "POST",
-                        "name": "ModifyRoleToRoute",
-                        "description": "修改角色和路由关系"
-                    },
-                    {
-                        "path": "/v1/Role/ModifyRoleToMenu",
-                        "method": "POST",
-                        "name": "ModifyRoleToMenu",
-                        "description": "修改角色和菜单关系"
-                    },
-                    {
-                        "path": "/v1/Role/ModifyRole",
-                        "method": "POST",
-                        "name": "ModifyRole",
-                        "description": "修改角色"
-                    },
-                    {
-                        "path": "/v1/Role/LockRole",
-                        "method": "POST",
-                        "name": "LockRole",
-                        "description": "禁用角色"
-                    }
-                ]
-            },
-            {
-                "title": "用户管理",
-                "path": "/system/user",
-                "icon": "user",
-                "interface": [
-                    {
-                        "path": "/v1/User/CreateUser",
-                        "method": "POST",
-                        "name": "CreateUser",
-                        "description": "注册用户"
-                    },
-                    {
-                        "path": "/v1/User/QueryUserByParam",
-                        "method": "POST",
-                        "name": "QueryUserByParam",
-                        "description": "获取用户列表"
-                    },
-                    {
-                        "path": "/v1/User/ModifyUser",
-                        "method": "POST",
-                        "name": "ModifyUser",
-                        "description": "修改用户"
-                    },
-                    {
-                        "path": "/v1/User/LockUser",
-                        "method": "POST",
-                        "name": "LockUser",
-                        "description": "禁用用户"
-                    },
-                    {
-                        "path": "/v1/User/Logout",
-                        "method": "GET",
-                        "name": "Logout",
-                        "description": "注销用户"
-                    },
-                    {
-                        "path": "/v1/User/Login",
-                        "method": "POST",
-                        "name": "Login",
-                        "description": "用户登录"
-                    },
-                    {
-                        "path": "/v1/User/Captcha",
-                        "method": "GET",
-                        "name": "Captcha",
-                        "description": "验证码"
-                    },
-                    {
-                        "path": "/v1/User/CreateDrop",
-                        "method": "GET",
-                        "name": "CreateDrop",
-                        "description": "初始化数据库"
                     }
                 ]
             },
@@ -303,7 +249,7 @@ init_menu = [
                         "path": "/v1/Interface/ModifyInterface",
                         "method": "POST",
                         "name": "ModifyInterface",
-                        "description": "修改接口"
+                        "description": "修改接口信息"
                     },
                     {
                         "path": "/v1/Interface/LockInterface",
@@ -351,6 +297,141 @@ init_menu = [
                 ]
             }
         ]
+    },
+    {
+        "title": "权限",
+        "path": "/role",
+        "icon": "shield",
+        "children": [
+            {
+                "title": "管理员用户",
+                "path": "/role/admin",
+                "icon": "user",
+                "interface": [
+                    {
+                        "path": "/v1/Admin/CreateAdmin",
+                        "method": "POST",
+                        "name": "CreateAdmin",
+                        "description": "注册管理员"
+                    },
+                    {
+                        "path": "/v1/Admin/QueryAdminByParam",
+                        "method": "POST",
+                        "name": "QueryAdminByParam",
+                        "description": "获取管理员列表"
+                    },
+                    {
+                        "path": "/v1/Admin/ModifyAdmin",
+                        "method": "POST",
+                        "name": "ModifyAdmin",
+                        "description": "修改管理员信息"
+                    },
+                    {
+                        "path": "/v1/Admin/LockAdmin",
+                        "method": "POST",
+                        "name": "LockAdmin",
+                        "description": "禁用管理员"
+                    },
+                    {
+                        "path": "/v1/Admin/Logout",
+                        "method": "GET",
+                        "name": "Logout",
+                        "description": "注销管理员"
+                    },
+                    {
+                        "path": "/v1/Admin/Login",
+                        "method": "POST",
+                        "name": "Login",
+                        "description": "管理员登录"
+                    },
+                    {
+                        "path": "/v1/Admin/Captcha",
+                        "method": "GET",
+                        "name": "Captcha",
+                        "description": "验证码"
+                    },
+                    {
+                        "path": "/v1/Admin/CreateDrop",
+                        "method": "GET",
+                        "name": "CreateDrop",
+                        "description": "初始化数据库"
+                    }
+                ]
+            },
+            {
+                "title": "角色管理",
+                "path": "/role/role",
+                "icon": "group",
+                "interface": [
+                    {
+                        "path": "/v1/Role/CreateRole",
+                        "method": "POST",
+                        "name": "CreateRole",
+                        "description": "添加角色"
+                    },
+                    {
+                        "path": "/v1/Role/QueryRoleByParam",
+                        "method": "POST",
+                        "name": "QueryRoleByParam",
+                        "description": "获取角色列表"
+                    },
+                    {
+                        "path": "/v1/Role/ModifyRoleToRoute",
+                        "method": "POST",
+                        "name": "ModifyRoleToRoute",
+                        "description": "修改角色和路由关系"
+                    },
+                    {
+                        "path": "/v1/Role/ModifyRoleToMenu",
+                        "method": "POST",
+                        "name": "ModifyRoleToMenu",
+                        "description": "修改角色和菜单关系"
+                    },
+                    {
+                        "path": "/v1/Role/ModifyRole",
+                        "method": "POST",
+                        "name": "ModifyRole",
+                        "description": "修改角色信息"
+                    },
+                    {
+                        "path": "/v1/Role/LockRole",
+                        "method": "POST",
+                        "name": "LockRole",
+                        "description": "禁用角色"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "日志",
+        "path": "/log",
+        "icon": "bullseye",
+        "children": [
+            {
+                "title": "登录日志",
+                "path": "/log/login",
+                "icon": "street-view",
+                "interface": [
+                    {
+                        "path": "/v1/Log/QueryLogByParam",
+                        "method": "POST",
+                        "name": "QueryLogByParam",
+                        "description": "获取日志列表"
+                    }
+                ]
+            },
+            {
+                "title": "操作日志",
+                "path": "/log/hander",
+                "icon": "dot-circle-o"
+            },
+            {
+                "title": "异常日志",
+                "path": "/log/error",
+                "icon": "bug"
+            }
+        ]
     }
 ]
 
@@ -360,13 +441,13 @@ class Config():
         # mysql 配置信息
         self.host = '127.0.0.1'
         self.port = 3306
-        self.user = 'root'
+        self.admin = 'root'
         self.password = 'intersky'
         self.db = 'flask'
         self.charset = 'utf8'
 
     def get_sql_url(self):
-        return "mysql://%s:%s@%s:%s/%s?charset=utf8" % (self.user, self.password, self.host, self.port, self.db)
+        return "mysql://%s:%s@%s:%s/%s?charset=utf8" % (self.admin, self.password, self.host, self.port, self.db)
 
     def get_md5(self, m):
         h = hashlib.md5()

@@ -10,7 +10,7 @@
 from flask import Blueprint, request, send_from_directory, make_response, abort
 from collection.document import DocumentModel
 from ..token_auth import auth, validate_current_access
-from libs.error_code import ResultDeal
+from libs.code import ResultDeal
 from conf.setting import document_dir
 
 route_document = Blueprint('Document', __name__, url_prefix='/v1/Document')
@@ -21,7 +21,7 @@ route_document = Blueprint('Document', __name__, url_prefix='/v1/Document')
 @validate_current_access
 def CreateDocument():
     params = {
-        'user_id': request.form.get('user_id'),
+        'admin_id': request.form.get('admin_id'),
         'type': int(request.form.get('type'))
     }
 
