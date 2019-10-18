@@ -4,15 +4,49 @@
 @Description: response返回处理方法
 @Author: Zpp
 @Date: 2019-09-04 17:09:14
-@LastEditTime: 2019-10-17 14:51:24
+@LastEditTime: 2019-10-18 11:02:49
 @LastEditors: Zpp
 '''
-from flask import jsonify
+from flask import jsonify, request, current_app, session
+from collection.log import LogModel
+from datetime import datetime
+import json
+import time
 
 
 def ResultDeal(code=0, data={}, msg=''):
-    return jsonify({
+    response = jsonify({
         'code': code,
         'data': data,
         'msg': msg
     })
+
+    if response.headers['Content-Type'] == 'application/json' and response.status_code == 200:
+        params = {
+            'ip': request.remote_addr,
+            'method': request.method,
+            'path': request.path,
+            'username': session.get('username'),
+            'time': GetTimestamp() - session.get('requestTime'),
+            'params': request.values.to_dict()
+        }
+
+        body = json.loads(response.data)
+        if body['code'] == 0:
+            params['status'] = 0
+            params['content'] = json.dumps(body['data'])
+            LogModel().CreateLogRequest(params)
+        if body['code'] == -1:
+            params['status'] = 1
+            params['content'] = body['msg']
+            LogModel().CreateLogRequest(params)
+
+    return response
+
+
+def GetTimestamp():
+    now = time.time()
+    local_time = time.localtime(now)
+    date = str(time.strftime("%Y%m%d%H%M%S", local_time))
+    data_secs = (now - int(now)) * 1000
+    return int(date + str("%03d" % data_secs))

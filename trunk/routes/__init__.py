@@ -4,7 +4,7 @@
 @Description: API蓝图初始化注册
 @Author: Zpp
 @Date: 2019-09-04 10:23:46
-@LastEditTime: 2019-10-17 16:59:04
+@LastEditTime: 2019-10-18 10:56:12
 @LastEditors: Zpp
 '''
 from .v1.admin import route_admin
@@ -15,45 +15,17 @@ from .v1.interface import route_interface
 from .v1.document import route_document
 from .v1.log import route_log
 
-from flask import request, current_app, session
-from libs.code import ResultDeal
-from collection.log import LogModel
-from datetime import datetime
+from flask import current_app, session
+from libs.code import ResultDeal, GetTimestamp
 from models.base import db
-import json
+from datetime import datetime
+import time
 
 
 def init_app(app):
     @app.before_request
     def handel_before_request():
-        session['requestTime'] = datetime.now()
-
-
-    @app.after_request
-    def handel_after_request(response):
-        if response.headers['Content-Type'] == 'application/json' and response.status_code == 200:
-            params = {
-                'ip': request.remote_addr,
-                'method': request.method,
-                'path': request.path,
-                'username': session.get('username'),
-                'time': (datetime.now() - session.get('requestTime')).seconds * 1000
-            }
-            print request.path
-            print response.get_data()
-            # body = json.loads(response.data)
-            # print body
-            # print body['data']
-            # if body['code'] == 0:
-            #     params['status'] = 0
-            #     params['content'] = json.dumps(body['data'])
-            #     LogModel().CreateLogRequest(params)
-            # if body['code'] == -1:
-            #     params['status'] = 1
-            #     params['content'] = body['msg']
-            #     LogModel().CreateLogRequest(params)
-
-        return response
+        session['requestTime'] = GetTimestamp()
 
 
     @app.teardown_request
