@@ -4,7 +4,7 @@
 @Description: response返回处理方法
 @Author: Zpp
 @Date: 2019-09-04 17:09:14
-@LastEditTime: 2019-10-18 11:02:49
+@LastEditTime: 2019-10-21 14:40:21
 @LastEditors: Zpp
 '''
 from flask import jsonify, request, current_app, session
@@ -34,7 +34,7 @@ def ResultDeal(code=0, data={}, msg=''):
         body = json.loads(response.data)
         if body['code'] == 0:
             params['status'] = 0
-            params['content'] = json.dumps(body['data'])
+            params['content'] = ''
             LogModel().CreateLogRequest(params)
         if body['code'] == -1:
             params['status'] = 1

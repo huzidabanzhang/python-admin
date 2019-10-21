@@ -133,7 +133,7 @@ class AdminModel():
                 if params.has_key(i):
                     data[i] = params[i]
 
-            result = Admin.query.filter_by(*data).filter(
+            result = Admin.query.filter_by(**data).filter(
                 Admin.username.like("%" + params['username'] + "%") if params.has_key('username') else '',
                 Admin.nickname.like("%" + params['nickname'] + "%") if params.has_key('nickname') else ''
             ).order_by(order_by).paginate(page, page_size, error_out=False)

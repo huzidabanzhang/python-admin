@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
 @LastEditors: Zpp
-@LastEditTime: 2019-10-17 14:47:27
+@LastEditTime: 2019-10-21 14:43:07
 '''
 from flask import request
 from models.base import db
@@ -29,7 +29,7 @@ class DocumentModel():
                 if params.has_key(i):
                     data[i] = params[i]
 
-            result = Document.query.filter_by(*data).filter(
+            result = Document.query.filter_by(**data).filter(
                 Document.name.like("%" + params['name'] + "%") if params.has_key('name') else ''
             ).order_by(order_by).paginate(page, page_size, error_out=False)
 

@@ -4,7 +4,7 @@
 @Description: 路由控制器
 @Author: Zpp
 @Date: 2019-09-10 16:00:22
-@LastEditTime: 2019-10-17 14:48:55
+@LastEditTime: 2019-10-21 14:40:59
 @LastEditors: Zpp
 '''
 from flask import request
@@ -27,7 +27,7 @@ class RouteModel():
                 if params.has_key(i):
                     data[i] = params[i]
 
-            result = Route.query.filter_by(*data).filter(
+            result = Route.query.filter_by(**data).filter(
                 Route.name.like("%" + params['name'] + "%") if params.has_key('name') else ''
             ).order_by(order_by).paginate(page, page_size, error_out=False)
 

@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
 @LastEditors: Zpp
-@LastEditTime: 2019-10-17 14:47:50
+@LastEditTime: 2019-10-21 14:41:10
 '''
 from flask import request
 from models.base import db
@@ -27,7 +27,7 @@ class InterfaceModel():
                 if params.has_key(i):
                     data[i] = params[i]
 
-            result = Interface.query.filter_by(*data).filter(
+            result = Interface.query.filter_by(**data).filter(
                 Interface.name.like("%" + params['name'] + "%") if params.has_key('name') else ''
             ).order_by(order_by).paginate(page, page_size, error_out=False)
 
