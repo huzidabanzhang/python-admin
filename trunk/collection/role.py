@@ -4,12 +4,13 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2019-10-21 14:40:47
+@LastEditTime: 2019-10-22 15:48:21
 @LastEditors: Zpp
 '''
 from flask import request
 from models.base import db
 from models.system import Role, Route, Menu
+from sqlalchemy import text
 import uuid
 
 
@@ -20,10 +21,14 @@ class RoleModel():
         '''
         s = db.session()
         try:
+            route = s.query(Route).filter(Route.route_id.in_(route_id)).all()
+            menu = s.query(Menu).filter(Menu.menu_id.in_(menu_id)).all()
+
             item = Role(
                 name=params['name'],
-                type=int(params['type']),
-                role_id=uuid.uuid4
+                role_id=uuid.uuid4,
+                routes=route,
+                menus=menu
             )
             s.add(item)
             s.commit()
@@ -58,12 +63,7 @@ class RoleModel():
             if not role:
                 return str('数据不存在')
 
-            route = []
-            for key in route_id:
-                item = s.query(Route).filter(Route.role_id == key).first()
-                if item:
-                    route.append(item)
-
+            route = s.query(Route).filter(Route.route_id.in_(route_id)).all()
             role.routes = route
             s.commit()
             return True
@@ -82,12 +82,7 @@ class RoleModel():
             if not role:
                 return str('数据不存在')
 
-            menu = []
-            for key in menu_id:
-                item = s.query(Menu).filter(Menu.menu_id == key).first()
-                if item:
-                    menu.append(item)
-
+            menu = s.query(Menu).filter(Menu.menu_id.in_(menu_id)).all()
             role.menus = menu
             s.commit()
             return True
@@ -132,28 +127,23 @@ class RoleModel():
             s.rollback()
             return str(e.message)
 
-    def QueryRoleByParamRequest(self, params, page=1, page_size=20, order_by='id'):
+    def QueryRoleByParamRequest(self, params):
         '''
         权限列表
         '''
         s = db.session()
         try:
-            Int = ['isLock', 'type']
             data = {}
+            if params.has_key('isLock'):
+                data['isLock'] = params['isLock']
 
-            for i in Int:
-                if params.has_key(i):
-                    data[i] = params[i]
-
-            result = Route.query.filter_by(**data).filter(
-                Route.name.like("%" + params['name'] + "%") if params.has_key('name') else ''
-            ).order_by(order_by).paginate(page, page_size, error_out=False)
+            result = Role.query.filter_by(**data).order_by(text('id')).all()
 
             data = []
-            for value in result.items:
+            for value in result:
                 data.append(value.to_json())
 
-            return {'data': data, 'total': result.total}
+            return data
         except Exception as e:
             print e
             return str(e.message)

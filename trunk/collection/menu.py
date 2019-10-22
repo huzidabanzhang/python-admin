@@ -4,22 +4,27 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2019-10-17 14:48:08
+@LastEditTime: 2019-10-22 15:47:26
 @LastEditors: Zpp
 '''
 from flask import request
 from models.base import db
 from models.system import Menu
+from sqlalchemy import text
 import uuid
 
 class MenuModel():
-    def QueryMenuByParamRequest(self):
+    def QueryMenuByParamRequest(self, params):
         '''
         菜单列表
         '''
         s = db.session()
         try:
-            result = Menu.query.order_by('id', 'sort').all()
+            data = {}
+            if params.has_key('isLock'):
+                data['isLock'] = params['isLock']
+
+            result = Menu.query.filter_by(**data).order_by(text('id'), text('sort')).all()
 
             data = []
             for value in result:

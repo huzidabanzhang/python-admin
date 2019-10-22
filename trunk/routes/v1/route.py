@@ -4,7 +4,7 @@
 @Description: 路由API
 @Author: Zpp
 @Date: 2019-09-11 16:51:59
-@LastEditTime: 2019-10-15 15:37:03
+@LastEditTime: 2019-10-22 16:12:49
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -67,21 +67,13 @@ def ModifyRoute():
 @auth.login_required
 @validate_current_access
 def QueryRouteByParam():
-    params = request.form
-    Int = ['menu_id']
-    Bool = ['isLock']
-    for i in params:
-        if i in Int:
-            params[i] = int(params[i])
-        if i in Bool:
-            params[i] = True if params[i] == 'true' else False
+    params = {}
+    if request.form.get('isLock'):
+        params['isLock'] = True if request.form.get('isLock') == 'true' else False
+    if request.form.get('name'):
+        params['name'] = request.form.get('name')
 
-    result = RouteModel().QueryRouteByParamRequest(
-        params=params,
-        page=int(request.form.get('page')),
-        page_size=int(request.form.get('page_size')),
-        order_by=request.form.get('order_by', None)
-    )
+    result = RouteModel().QueryRouteByParamRequest(params=params)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)

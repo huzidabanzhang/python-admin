@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-10-17 16:08:53
+@LastEditTime: 2019-10-22 15:18:50
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -77,7 +77,6 @@ class Role(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     role_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
-    type = db.Column(db.SmallInteger, index=True, default=1)
     isLock = db.Column(db.Boolean, index=True, default=True)
     admins = db.relationship('Admin', backref='role')
     menus = db.relationship('Menu',

@@ -4,7 +4,7 @@
 @Description: 路由控制器
 @Author: Zpp
 @Date: 2019-09-10 16:00:22
-@LastEditTime: 2019-10-21 14:40:59
+@LastEditTime: 2019-10-22 15:41:14
 @LastEditors: Zpp
 '''
 from flask import request
@@ -14,28 +14,25 @@ import uuid
 
 
 class RouteModel():
-    def QueryRouteByParamRequest(self, params, page=1, page_size=20, order_by='id'):
+    def QueryRouteByParamRequest(self, params):
         '''
         路由列表
         '''
         s = db.session()
         try:
-            Int = ['menu_id', 'isLock']
             data = {}
-
-            for i in Int:
-                if params.has_key(i):
-                    data[i] = params[i]
+            if params.has_key('isLock'):
+                data['isLock'] = params['isLock']
 
             result = Route.query.filter_by(**data).filter(
-                Route.name.like("%" + params['name'] + "%") if params.has_key('name') else ''
-            ).order_by(order_by).paginate(page, page_size, error_out=False)
+                Route.name.like("%" + params['name'] + "%") if params.has_key('name') else text('')
+            ).order_by(text('id'), text('sort')).all()
 
             data = []
-            for value in result.items:
+            for value in result:
                 data.append(value.to_json())
 
-            return {'data': data, 'total': result.total}
+            return data
         except Exception as e:
             print e
             return str(e.message)
