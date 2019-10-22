@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-17 15:46:30
 @LastEditors: Zpp
-@LastEditTime: 2019-10-21 14:27:55
+@LastEditTime: 2019-10-22 10:28:11
 '''
 from flask import Blueprint, request
 from collection.log import LogModel
@@ -19,13 +19,14 @@ route_log = Blueprint('Log', __name__, url_prefix='/v1/Log')
 @auth.login_required
 @validate_current_access
 def QueryLogByParam():
+    lists = [
+        {'name': 'type', 'key': 'type[]'},
+        {'name': 'status', 'key': 'status[]'}
+    ]
     params = {}
-    Int = ['type', 'status']
-    for i in request.form:
-        if i in Int:
-            params[i] = int(request.form[i])
-        else:
-            params[i] = request.form[i]
+    for i in lists:
+        if request.form.getlist(i['key']):
+            params[i['name']] = request.form.getlist(i['key'])
 
     result = LogModel().QueryLogByParamRequest(
         params=params,

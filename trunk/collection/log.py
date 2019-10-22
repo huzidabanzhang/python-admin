@@ -5,11 +5,12 @@
 @Author: Zpp
 @Date: 2019-10-17 14:53:00
 @LastEditors: Zpp
-@LastEditTime: 2019-10-21 14:38:22
+@LastEditTime: 2019-10-22 10:50:06
 '''
 from flask import request
 from models.base import db
 from models.log import Log
+from sqlalchemy import text
 
 
 class LogModel():
@@ -19,14 +20,12 @@ class LogModel():
         '''
         s = db.session()
         try:
-            Int = ['status', 'type']
-            data = {}
-
-            for i in Int:
-                if params.has_key(i):
-                    data[i] = params[i]
-
-            result = Log.query.filter_by(**data).order_by('-id').paginate(page, page_size, error_out=False)
+            filters = {
+                Log.type.in_(params['type']) if params.has_key('type') else text('1 = 1'),
+                Log.status.in_(params['status']) if params.has_key('status') else text('1 = 1')
+            }
+            
+            result = Log.query.filter(*filters).order_by(text('-id')).paginate(page, page_size, error_out=False)
 
             data = []
             for value in result.items:
