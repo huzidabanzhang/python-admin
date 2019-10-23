@@ -4,7 +4,7 @@
 @Description: 菜单API
 @Author: Zpp
 @Date: 2019-09-10 16:16:54
-@LastEditTime: 2019-10-22 16:13:12
+@LastEditTime: 2019-10-23 13:40:50
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -77,6 +77,8 @@ def QueryMenuByParam():
     params = {}
     if request.form.get('isLock'):
         params['isLock'] = True if request.form.get('isLock') == 'true' else False
+    if request.form.get('parentId'):
+        params['parentId'] = str(request.form.get('parentId'))
             
     result = MenuModel().QueryMenuByParamRequest(params=params)
 

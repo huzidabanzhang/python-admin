@@ -4,12 +4,13 @@
 @Description: 路由控制器
 @Author: Zpp
 @Date: 2019-09-10 16:00:22
-@LastEditTime: 2019-10-22 15:41:14
+@LastEditTime: 2019-10-23 14:38:22
 @LastEditors: Zpp
 '''
 from flask import request
 from models.base import db
 from models.system import Route
+from sqlalchemy import text
 import uuid
 
 
@@ -23,10 +24,12 @@ class RouteModel():
             data = {}
             if params.has_key('isLock'):
                 data['isLock'] = params['isLock']
+            if params.has_key('parentId'):
+                data['parentId'] = params['parentId']
 
             result = Route.query.filter_by(**data).filter(
                 Route.name.like("%" + params['name'] + "%") if params.has_key('name') else text('')
-            ).order_by(text('id'), text('sort')).all()
+            ).order_by(text('id')).all()
 
             data = []
             for value in result:

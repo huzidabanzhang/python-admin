@@ -4,7 +4,7 @@
 @Description: 路由API
 @Author: Zpp
 @Date: 2019-09-11 16:51:59
-@LastEditTime: 2019-10-22 16:12:49
+@LastEditTime: 2019-10-23 14:37:52
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -72,6 +72,8 @@ def QueryRouteByParam():
         params['isLock'] = True if request.form.get('isLock') == 'true' else False
     if request.form.get('name'):
         params['name'] = request.form.get('name')
+    if request.form.get('parentId'):
+        params['parentId'] = str(request.form.get('parentId'))
 
     result = RouteModel().QueryRouteByParamRequest(params=params)
 

@@ -4,7 +4,7 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2019-10-22 15:48:21
+@LastEditTime: 2019-10-23 16:50:58
 @LastEditors: Zpp
 '''
 from flask import request
@@ -21,8 +21,8 @@ class RoleModel():
         '''
         s = db.session()
         try:
-            route = s.query(Route).filter(Route.route_id.in_(route_id)).all()
-            menu = s.query(Menu).filter(Menu.menu_id.in_(menu_id)).all()
+            route = s.query(Route).filter(Route.route_id.in_(params['route_id'])).all()
+            menu = s.query(Menu).filter(Menu.menu_id.in_(params['menu_id'])).all()
 
             item = Role(
                 name=params['name'],

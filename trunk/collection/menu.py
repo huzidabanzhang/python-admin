@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2019-10-22 15:47:26
+@LastEditTime: 2019-10-23 13:41:19
 @LastEditors: Zpp
 '''
 from flask import request
@@ -23,6 +23,8 @@ class MenuModel():
             data = {}
             if params.has_key('isLock'):
                 data['isLock'] = params['isLock']
+            if params.has_key('parentId'):
+                data['parentId'] = params['parentId']
 
             result = Menu.query.filter_by(**data).order_by(text('id'), text('sort')).all()
 
