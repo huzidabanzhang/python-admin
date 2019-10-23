@@ -9,5 +9,5 @@
 * 日志（完成 分为三种不同日志）
 
 ## 启动
-  app.py 启动后 路由/v1/admin/CreateDrop来初始化数据库 
+  app.py 启动后 路由/v1/Admin/CreateDrop来初始化数据库 
   前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
