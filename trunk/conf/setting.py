@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2019-10-17 16:21:00
+@LastEditTime: 2019-10-24 10:14:48
 @LastEditors: Zpp
 '''
 import hashlib
@@ -53,7 +53,7 @@ init_route = [
         'name': 'System',
         'path': '/system',
         'component': 'layoutHeaderAside',
-        'componentPath': 'layout/header-aside/layout',
+        'componentPath': 'layout/header-aside',
         'title': u'系统设置',
         'cache': True,
         'children': [
@@ -61,7 +61,7 @@ init_route = [
                 'name': 'MenuPage',
                 'path': '/system/menu',
                 'component': 'menu',
-                'componentPath': 'pages/sys/menu/index',
+                'componentPath': 'sys/menu/index',
                 'title': u'菜单管理',
                 'cache': True
             },
@@ -69,7 +69,7 @@ init_route = [
                 'name': 'RoutePage',
                 'path': '/system/route',
                 'component': 'route',
-                'componentPath': 'pages/sys/route/index',
+                'componentPath': 'sys/route/index',
                 'title': u'路由管理',
                 'cache': True
             },
@@ -77,7 +77,7 @@ init_route = [
                 'name': 'InterfacePage',
                 'path': '/system/interface',
                 'component': 'interface',
-                'componentPath': 'pages/sys/interface/index',
+                'componentPath': 'sys/interface/index',
                 'title': u'接口管理',
                 'cache': True
             },
@@ -85,7 +85,7 @@ init_route = [
                 'name': 'DocumentPage',
                 'path': '/system/document',
                 'component': 'document',
-                'componentPath': 'pages/sys/document/index',
+                'componentPath': 'sys/document/index',
                 'title': u'文档管理',
                 'cache': True
             }
@@ -95,7 +95,7 @@ init_route = [
         'name': 'Role',
         'path': '/role',
         'component': 'layoutHeaderAside',
-        'componentPath': 'layout/header-aside/layout',
+        'componentPath': 'layout/header-aside',
         'title': u'权限管理',
         'cache': True,
         'children': [
@@ -103,7 +103,7 @@ init_route = [
                 'name': 'AdminPage',
                 'path': '/role/admin',
                 'component': 'admin',
-                'componentPath': 'pages/sys/admin/index',
+                'componentPath': 'sys/admin/index',
                 'title': u'管理员用户',
                 'cache': True
             },
@@ -111,7 +111,7 @@ init_route = [
                 'name': 'RolePage',
                 'path': '/role/role',
                 'component': 'role',
-                'componentPath': 'pages/sys/role/index',
+                'componentPath': 'sys/role/index',
                 'title': u'角色管理',
                 'cache': True
             }
@@ -121,7 +121,7 @@ init_route = [
         'name': 'Log',
         'path': '/log',
         'component': 'layoutHeaderAside',
-        'componentPath': 'layout/header-aside/layout',
+        'componentPath': 'layout/header-aside',
         'title': u'日志管理',
         'cache': True,
         'children': [
@@ -129,7 +129,7 @@ init_route = [
                 'name': 'LogLogin',
                 'path': '/log/login',
                 'component': 'login',
-                'componentPath': 'pages/sys/login/index',
+                'componentPath': 'sys/login/index',
                 'title': u'登录日志',
                 'cache': True
             },
@@ -137,7 +137,7 @@ init_route = [
                 'name': 'LogHander',
                 'path': '/log/hander',
                 'component': 'hander',
-                'componentPath': 'pages/sys/hander/index',
+                'componentPath': 'sys/hander/index',
                 'title': u'操作日志',
                 'cache': True
             },
@@ -145,7 +145,7 @@ init_route = [
                 'name': 'LorError',
                 'path': '/log/error',
                 'component': 'error',
-                'componentPath': 'pages/sys/error/index',
+                'componentPath': 'sys/error/index',
                 'title': u'异常日志',
                 'cache': True
             }
@@ -374,18 +374,6 @@ init_menu = [
                         "method": "POST",
                         "name": "QueryRoleByParam",
                         "description": "获取角色列表"
-                    },
-                    {
-                        "path": "/v1/Role/ModifyRoleToRoute",
-                        "method": "POST",
-                        "name": "ModifyRoleToRoute",
-                        "description": "修改角色和路由关系"
-                    },
-                    {
-                        "path": "/v1/Role/ModifyRoleToMenu",
-                        "method": "POST",
-                        "name": "ModifyRoleToMenu",
-                        "description": "修改角色和菜单关系"
                     },
                     {
                         "path": "/v1/Role/ModifyRole",

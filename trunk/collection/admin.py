@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-10-17 16:14:18
+@LastEditTime: 2019-10-24 10:10:17
 @LastEditors: Zpp
 '''
 from flask import request
@@ -33,7 +33,7 @@ class AdminModel():
             s.commit()
 
             role_id = uuid.uuid4()
-            role = Role(role_id=role_id, name=u'超级管理员')
+            role = Role(role_id=role_id, name=u'超级管理员', checkKey='[]')
             s.add(role)
             s.commit()
 

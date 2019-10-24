@@ -4,7 +4,7 @@
 @Description: 权限API
 @Author: Zpp
 @Date: 2019-09-12 10:30:39
-@LastEditTime: 2019-10-22 16:12:36
+@LastEditTime: 2019-10-24 11:19:19
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -12,6 +12,7 @@ from collection.role import RoleModel
 from ..token_auth import auth, validate_current_access
 from libs.code import ResultDeal
 import uuid
+import json
 
 route_role = Blueprint('Role', __name__, url_prefix='/v1/Role')
 
@@ -23,6 +24,7 @@ def CreateRole():
     params = {
         'role_id': uuid.uuid4(),
         'name': request.form.get('name'),
+        'checkKey': request.form.get('checkKey'),
         'menu_id': request.form.getlist('menu_id[]'),
         'route_id': request.form.getlist('route_id[]')
     }
@@ -39,7 +41,10 @@ def CreateRole():
 @auth.login_required
 @validate_current_access
 def LockRole():
-    result = RoleModel().LockRoleRequest(role_id=request.form.getlist('role_id[]'))
+    result = RoleModel().LockRoleRequest(
+        role_id=request.form.getlist('role_id[]'),
+        isLock=True if request.form.get('isLock') == 'true' else False
+    )
     return ResultDeal(data=result)
 
 
@@ -47,31 +52,13 @@ def LockRole():
 @auth.login_required
 @validate_current_access
 def ModifyRole():
-    result = RoleModel().ModifyRoleRequest(role_id=request.form.get('role_id'), name=request.form.get('name'))
-
-    if type(result).__name__ == 'str':
-        return ResultDeal(msg=result, code=-1)
-
-    return ResultDeal(data=result)
-
-
-@route_role.route('/ModifyRoleToRoute', methods=['POST'])
-@auth.login_required
-@validate_current_access
-def ModifyRoleToRoute():
-    result = RoleModel().ModifyRoleToRoute(role_id=request.form.get('role_id'), route_id=request.form.getlist('route_id[]'))
-
-    if type(result).__name__ == 'str':
-        return ResultDeal(msg=result, code=-1)
-
-    return ResultDeal(data=result)
-
-
-@route_role.route('/ModifyRoleToMenu', methods=['POST'])
-@auth.login_required
-@validate_current_access
-def ModifyRoleToMenu():
-    result = RoleModel().ModifyRoleToMenu(role_id=request.form.get('role_id'), menu_id=request.form.getlist('menu_id[]')) 
+    params = {
+        'name': request.form.get('name'),
+        'checkKey': request.form.get('checkKey'),
+        'menu_id': request.form.getlist('menu_id[]'),
+        'route_id': request.form.getlist('route_id[]')
+    }
+    result = RoleModel().ModifyRoleRequest(role_id=request.form.get('role_id'), params=params)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
