@@ -4,13 +4,14 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-10-24 10:10:17
+@LastEditTime: 2019-10-25 10:32:51
 @LastEditors: Zpp
 '''
 from flask import request
 from models.base import db
 from models.system import Admin, Role, Route, Menu, Interface
 from conf.setting import Config, init_route, init_menu
+from sqlalchemy import text
 import uuid
 import datetime
 
@@ -43,7 +44,7 @@ class AdminModel():
         except Exception as e:
             print e
             return str(e.message)
-    
+
     def __init_routes(self, data, parentId, role_id):
         s = db.session()
         for r in data:
@@ -126,17 +127,12 @@ class AdminModel():
         '''
         s = db.session()
         try:
-            Int = ['sex', 'role_id', 'isLock']
             data = {}
-
-            for i in Int:
+            for i in ['role_id', 'isLock']:
                 if params.has_key(i):
                     data[i] = params[i]
 
-            result = Admin.query.filter_by(**data).filter(
-                Admin.username.like("%" + params['username'] + "%") if params.has_key('username') else '',
-                Admin.nickname.like("%" + params['nickname'] + "%") if params.has_key('nickname') else ''
-            ).order_by(order_by).paginate(page, page_size, error_out=False)
+            result = Admin.query.filter_by(**data).order_by(order_by).paginate(page, page_size, error_out=False)
 
             data = []
             for value in result.items:
@@ -153,6 +149,9 @@ class AdminModel():
         '''
         s = db.session()
         try:
+            if params['role_id'] == 1:
+                return str('不能设为为超级管理员')
+
             admin = s.query(Admin).filter(Admin.username == params['username']).first()
 
             if admin:
@@ -214,13 +213,14 @@ class AdminModel():
         '''
         s = db.session()
         try:
+            if params['role_id'] == 1:
+                return str('不能设为为超级管理员')
+
             admin = s.query(Admin).filter(Admin.admin_id == admin_id).first()
             if not admin:
                 return str('管理员不存在')
             if not admin.isLock:
                 return str('管理员被禁用')
-            if params['role_id'] == 1:
-                return str('不能设为为超级管理员')
 
             AllowableFields = ['password', 'nickname', 'sex', 'role_id', 'avatarUrl']
             data = {}
@@ -237,7 +237,7 @@ class AdminModel():
             s.rollback()
             return str(e.message)
 
-    def LockAdminRequest(self, admin_id):
+    def LockAdminRequest(self, admin_id, isLock):
         '''
         禁用管理员
         '''
@@ -247,7 +247,7 @@ class AdminModel():
                 admin = s.query(Admin).filter(Admin.admin_id == key).first()
                 if not admin:
                     continue
-                admin.isLock = False
+                admin.isLock = isLock
                 s.commit()
             return True
         except Exception as e:

@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-10-17 16:19:12
+@LastEditTime: 2019-10-25 09:11:25
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -121,19 +121,42 @@ def CreateAdmin():
 @auth.login_required
 @validate_current_access
 def LockAdmin():
-    result = AdminModel().LockAdminRequest(admin_id=request.form.getlist('admin_id'))
+    result = AdminModel().LockAdminRequest(
+        admin_id=request.form.getlist('admin_id'),
+        isLock=True if request.form.get('isLock') == 'true' else False
+    )
     return ResultDeal(data=result)
+
+
+# @route_admin.route('/ModifyAdmin', methods=['POST'])
+# @auth.login_required
+# @validate_current_access
+# def ModifyAdmin():
+#     params = {
+#         'password': request.form.get('password'),
+#         'nickname': request.form.get('nickname'),
+#         'sex': int(request.form.get('sex')),
+#         'avatarUrl': request.form.get('avatarUrl')
+#     }
+
+#     result = AdminModel().ModifyAdminRequest(admin_id=request.form.get('admin_id'), params=params)
+
+#     if type(result).__name__ == 'str':
+#         return ResultDeal(msg=result, code=-1)
+
+#     return ResultDeal(data=result)
 
 
 @route_admin.route('/ModifyAdmin', methods=['POST'])
 @auth.login_required
 @validate_current_access
 def ModifyAdmin():
-    params = request.form
-    Int = ['sex', 'role_id']
-    for i in params:
-        if i in Int:
-            params[i] = int(params[i])
+    params = {
+        'password': request.form.get('password'),
+        'nickname': request.form.get('nickname'),
+        'sex': int(request.form.get('sex')),
+        'avatarUrl': request.form.get('avatarUrl')
+    }
 
     result = AdminModel().ModifyAdminRequest(admin_id=request.form.get('admin_id'), params=params)
 
@@ -147,14 +170,11 @@ def ModifyAdmin():
 @auth.login_required
 @validate_current_access
 def QueryAdminByParam():
-    params = request.form
-    Int = ['sex', 'role_id']
-    Bool = ['isLock']
-    for i in params:
-        if i in Int:
-            params[i] = int(params[i])
-        if i in Bool:
-            params[i] = True if params[i] == 'true' else False
+    params = {}
+    if request.form.get('isLock'):
+        params['isLock'] = True if request.form.get('isLock') == 'true' else False
+    if request.form.get('role_id'):
+        params['role_id'] = int(params['role_id'])
 
     result = AdminModel().QueryAdminByParamRequest(
         params=params,
