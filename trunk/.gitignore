@@ -1,5 +1,6 @@
 *.pyc
-logs/*.log
+logs
 .vscode/*.json
+document
 sessions
 caches

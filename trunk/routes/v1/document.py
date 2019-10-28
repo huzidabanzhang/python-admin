@@ -5,13 +5,17 @@
 @Author: Zpp
 @Date: 2019-10-14 15:56:20
 @LastEditors: Zpp
-@LastEditTime: 2019-10-14 16:44:25
+@LastEditTime: 2019-10-28 16:19:54
 '''
-from flask import Blueprint, request, send_from_directory, make_response, abort
+from flask import Blueprint, request, make_response, abort
 from collection.document import DocumentModel
 from ..token_auth import auth, validate_current_access
 from libs.code import ResultDeal
 from conf.setting import document_dir
+from libs.utils import readFile
+import os
+import base64
+import mimetypes
 
 route_document = Blueprint('Document', __name__, url_prefix='/v1/Document')
 
@@ -27,7 +31,7 @@ def CreateDocument():
 
     file = request.files['document']
     if not file:
-         return ResultDeal(msg=u'请选择上传文件', code=-1)
+        return ResultDeal(msg=u'请选择上传文件', code=-1)
 
     result = DocumentModel().CreateDocumentRequest(file, params)
 
@@ -41,8 +45,15 @@ def CreateDocument():
 @auth.login_required
 @validate_current_access
 def GetDocument(filename):
-    if os.path.exists(document_dir + filename):
-        return send_from_directory(document_dir, filename)
+    path = document_dir + '/' + filename
+    if os.path.exists(path):
+        steam = ''
+        with open(path, 'rb') as f:
+            steam = base64.b64encode(f.read())
+        return ResultDeal(data={
+            'base64': steam,
+            'mime': mimetypes.guess_type(filename)[0]
+        })
     else:
         abort(404)
 
@@ -51,9 +62,9 @@ def GetDocument(filename):
 @auth.login_required
 @validate_current_access
 def DownDocument(filename, name):
-    path = document_dir + filename
+    path = document_dir + '/' + filename
     if os.path.exists(path):
-        res = make_response(read_file(path, 'rb'))
+        res = make_response(readFile(path, 'rb'))
         res.headers['Content-Type'] = 'application/octet-stream'
         res.headers['Content-Disposition'] = 'attachment; filename=' + name
         return res

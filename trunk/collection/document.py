@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
 @LastEditors: Zpp
-@LastEditTime: 2019-10-21 14:43:07
+@LastEditTime: 2019-10-28 10:40:01
 '''
 from flask import request
 from models.base import db
@@ -13,6 +13,7 @@ from models.system import Document
 from conf.setting import document_dir
 import uuid
 import time
+import os
 
 
 class DocumentModel():
@@ -57,6 +58,7 @@ class DocumentModel():
             file_name = file.filename
             ext = self.file_extension(file_name)
             size = len(file.read())
+            file.seek(0)
 
             fn = '/' + str(time.strftime('%Y/%m/%d'))
             if not os.path.exists(document_dir + fn):
@@ -65,7 +67,7 @@ class DocumentModel():
             file.save(document_dir + path)
 
             item = Document(
-                document_id=uuid.uuid4,
+                document_id=uuid.uuid4(),
                 admin_id=params['admin_id'],
                 name=file_name,
                 type=params['type'],
@@ -75,7 +77,7 @@ class DocumentModel():
             )
             s.add(item)
             s.commit()
-            return True
+            return path
         except Exception as e:
             s.rollback()
             print e

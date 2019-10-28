@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
 @LastEditors: Zpp
-@LastEditTime: 2019-10-21 14:41:10
+@LastEditTime: 2019-10-28 10:38:13
 '''
 from flask import request
 from models.base import db
@@ -47,7 +47,7 @@ class InterfaceModel():
         s = db.session()
         try:
             item = Interface(
-                interface_id=uuid.uuid4,
+                interface_id=uuid.uuid4(),
                 name=params['name'],
                 path=params['path'],
                 method=params['method'],

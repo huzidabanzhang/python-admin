@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-10-25 09:11:25
+@LastEditTime: 2019-10-28 16:29:54
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -174,7 +174,7 @@ def QueryAdminByParam():
     if request.form.get('isLock'):
         params['isLock'] = True if request.form.get('isLock') == 'true' else False
     if request.form.get('role_id'):
-        params['role_id'] = int(params['role_id'])
+        params['role_id'] = int(request.form.get('role_id'))
 
     result = AdminModel().QueryAdminByParamRequest(
         params=params,

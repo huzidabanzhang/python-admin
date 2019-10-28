@@ -47,7 +47,7 @@ class RouteModel():
         s = db.session()
         try:
             item = Route(
-                route_id=uuid.uuid4,
+                route_id=uuid.uuid4(),
                 parentId=params['parentId'],
                 name=params['name'],
                 title=params['title'],

@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-10-24 10:01:34
+@LastEditTime: 2019-10-28 10:26:25
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -187,7 +187,7 @@ class Document(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     document_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     admin_id = db.Column(db.String(36), index=True, nullable=False)
-    name = db.Column(db.String(64), nullable=False, unique=True)
+    name = db.Column(db.String(64), nullable=False)
     path = db.Column(db.String(255), nullable=False)
     type = db.Column(db.SmallInteger, index=True, default=1)
     ext = db.Column(db.String(64), nullable=False)
