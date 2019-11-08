@@ -11,3 +11,7 @@
 ## 启动
   app.py 启动后 路由/v1/Admin/CreateDrop来初始化数据库 
   前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
+
+## 吐槽
+  最近莫得空写准备考试
+  图片预览的API需要修改下
