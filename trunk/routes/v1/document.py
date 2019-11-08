@@ -5,9 +5,9 @@
 @Author: Zpp
 @Date: 2019-10-14 15:56:20
 @LastEditors: Zpp
-@LastEditTime: 2019-10-28 16:19:54
+@LastEditTime: 2019-11-08 14:37:45
 '''
-from flask import Blueprint, request, make_response, abort
+from flask import Blueprint, request, make_response, abort, send_from_directory
 from collection.document import DocumentModel
 from ..token_auth import auth, validate_current_access
 from libs.code import ResultDeal
@@ -42,18 +42,10 @@ def CreateDocument():
 
 
 @route_document.route('/GetDocument/<path:filename>', methods=['GET'])
-@auth.login_required
-@validate_current_access
 def GetDocument(filename):
     path = document_dir + '/' + filename
     if os.path.exists(path):
-        steam = ''
-        with open(path, 'rb') as f:
-            steam = base64.b64encode(f.read())
-        return ResultDeal(data={
-            'base64': steam,
-            'mime': mimetypes.guess_type(filename)[0]
-        })
+        return send_from_directory(document_dir, filename)
     else:
         abort(404)
 

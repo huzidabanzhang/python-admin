@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-10-25 10:32:51
+@LastEditTime: 2019-11-08 15:00:29
 @LastEditors: Zpp
 '''
 from flask import request
@@ -222,7 +222,7 @@ class AdminModel():
             if not admin.isLock:
                 return str('管理员被禁用')
 
-            AllowableFields = ['password', 'nickname', 'sex', 'role_id', 'avatarUrl']
+            AllowableFields = ['nickname', 'sex', 'role_id', 'avatarUrl']
             data = {}
 
             for i in params:

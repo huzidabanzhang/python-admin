@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-10-28 16:29:54
+@LastEditTime: 2019-11-08 15:07:03
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -122,7 +122,7 @@ def CreateAdmin():
 @validate_current_access
 def LockAdmin():
     result = AdminModel().LockAdminRequest(
-        admin_id=request.form.getlist('admin_id'),
+        admin_id=request.form.getlist('admin_id[]'),
         isLock=True if request.form.get('isLock') == 'true' else False
     )
     return ResultDeal(data=result)
@@ -152,10 +152,10 @@ def LockAdmin():
 @validate_current_access
 def ModifyAdmin():
     params = {
-        'password': request.form.get('password'),
         'nickname': request.form.get('nickname'),
         'sex': int(request.form.get('sex')),
-        'avatarUrl': request.form.get('avatarUrl')
+        'avatarUrl': request.form.get('avatarUrl'),
+        'role_id': int(request.form.get('role_id'))
     }
 
     result = AdminModel().ModifyAdminRequest(admin_id=request.form.get('admin_id'), params=params)
