@@ -4,7 +4,7 @@
 @Description: 路由API
 @Author: Zpp
 @Date: 2019-09-11 16:51:59
-@LastEditTime: 2019-10-23 14:37:52
+@LastEditTime: 2019-11-08 15:29:44
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -41,7 +41,7 @@ def CreateRoute():
 @auth.login_required
 @validate_current_access
 def LockRoute():
-    result = RouteModel().LockRouteRequest(route_id=request.form.getlist('route_id'))
+    result = RouteModel().LockRouteRequest(route_id=request.form.getlist('route_id[]'))
     return ResultDeal(data=result)
 
 
@@ -72,8 +72,6 @@ def QueryRouteByParam():
         params['isLock'] = True if request.form.get('isLock') == 'true' else False
     if request.form.get('name'):
         params['name'] = request.form.get('name')
-    if request.form.get('parentId'):
-        params['parentId'] = str(request.form.get('parentId'))
 
     result = RouteModel().QueryRouteByParamRequest(params=params)
 

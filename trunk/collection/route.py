@@ -4,7 +4,7 @@
 @Description: 路由控制器
 @Author: Zpp
 @Date: 2019-09-10 16:00:22
-@LastEditTime: 2019-10-23 14:38:22
+@LastEditTime: 2019-11-08 15:29:33
 @LastEditors: Zpp
 '''
 from flask import request
@@ -24,8 +24,6 @@ class RouteModel():
             data = {}
             if params.has_key('isLock'):
                 data['isLock'] = params['isLock']
-            if params.has_key('parentId'):
-                data['parentId'] = params['parentId']
 
             result = Route.query.filter_by(**data).filter(
                 Route.name.like("%" + params['name'] + "%") if params.has_key('name') else text('')
