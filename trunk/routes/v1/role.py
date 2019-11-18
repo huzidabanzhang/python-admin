@@ -4,7 +4,7 @@
 @Description: 权限API
 @Author: Zpp
 @Date: 2019-09-12 10:30:39
-@LastEditTime: 2019-10-25 10:16:13
+@LastEditTime: 2019-11-18 16:20:06
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -45,6 +45,10 @@ def LockRole():
         role_id=request.form.getlist('role_id[]'),
         isLock=True if request.form.get('isLock') == 'true' else False
     )
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+        
     return ResultDeal(data=result)
 
 

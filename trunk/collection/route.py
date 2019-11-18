@@ -102,7 +102,7 @@ class RouteModel():
             s.rollback()
             return str(e.message)
 
-    def LockRouteRequest(self, route_id):
+    def LockRouteRequest(self, route_id, isLock):
         '''
         禁用路由
         '''
@@ -112,7 +112,7 @@ class RouteModel():
                 route = s.query(Route).filter(Route.route_id == key).first()
                 if not route:
                     continue
-                route.isLock = False
+                route.isLock = isLock
                 s.commit()
             return True
         except Exception as e:

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2019-10-23 13:41:19
+@LastEditTime: 2019-11-18 16:19:11
 @LastEditors: Zpp
 '''
 from flask import request
@@ -23,8 +23,6 @@ class MenuModel():
             data = {}
             if params.has_key('isLock'):
                 data['isLock'] = params['isLock']
-            if params.has_key('parentId'):
-                data['parentId'] = params['parentId']
 
             result = Menu.query.filter_by(**data).order_by(text('id'), text('sort')).all()
 
@@ -100,18 +98,29 @@ class MenuModel():
             s.rollback()
             return str(e.message)
 
-    def LockMenuRequest(self, menu_id):
+    def LockMenuRequest(self, menu_id, isLock):
         '''
         禁用菜单
         '''
         s = db.session()
         try:
-            for key in menu_id:
-                menu = s.query(Menu).filter(Menu.menu_id == key).first()
-                if not menu:
-                    continue
-                menu.isLock = False
-                s.commit()
+            menu = s.query(Menu).filter(Menu.menu_id == menu_id).first()
+
+            if isLock:
+                parent = s.query(Menu).filter(Menu.menu_id == menu.parentId, Menu.isLock == False).first()
+                if parent:
+                    return str('父菜单处于禁用状态, 该菜单不能启用')
+
+            menu.isLock = isLock
+            s.commit()
+
+            if not isLock:
+                children = s.query(Menu).filter(Menu.parentId == menu_id, Menu.isLock == True).all()
+                if children:
+                    for item in children:
+                        item.isLock = False
+                    s.commit()
+
             return True
         except Exception as e:
             print e

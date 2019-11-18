@@ -4,7 +4,7 @@
 @Description: 路由API
 @Author: Zpp
 @Date: 2019-09-11 16:51:59
-@LastEditTime: 2019-11-08 15:29:44
+@LastEditTime: 2019-11-18 15:49:35
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -41,7 +41,14 @@ def CreateRoute():
 @auth.login_required
 @validate_current_access
 def LockRoute():
-    result = RouteModel().LockRouteRequest(route_id=request.form.getlist('route_id[]'))
+    result = RouteModel().LockRouteRequest(
+        route_id=request.form.getlist('route_id[]'),
+        isLock=True if request.form.get('isLock') == 'true' else False
+    )
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+        
     return ResultDeal(data=result)
 
 
@@ -49,11 +56,15 @@ def LockRoute():
 @auth.login_required
 @validate_current_access
 def ModifyRoute():
-    params = request.form
-    Bool = ['cache']
-    for i in params:
-        if i in Bool:
-            params[i] = True if params[i] == 'true' else False
+    params = {
+        'parentId': request.form.get('parentId', '0'),
+        'name': request.form.get('name'),
+        'title': request.form.get('title'),
+        'path': request.form.get('path'),
+        'component': request.form.get('component'),
+        'componentPath': request.form.get('componentPath'),
+        'cache': True if request.form.get('cache') == 'true' else False
+    }
 
     result = RouteModel().ModifyRouteRequest(route_id=request.form.get('route_id'), params=params)
 
