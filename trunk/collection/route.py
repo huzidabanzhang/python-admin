@@ -4,7 +4,7 @@
 @Description: 路由控制器
 @Author: Zpp
 @Date: 2019-09-10 16:00:22
-@LastEditTime: 2019-11-08 15:29:33
+@LastEditTime: 2019-11-19 14:43:31
 @LastEditors: Zpp
 '''
 from flask import request
@@ -27,7 +27,7 @@ class RouteModel():
 
             result = Route.query.filter_by(**data).filter(
                 Route.name.like("%" + params['name'] + "%") if params.has_key('name') else text('')
-            ).order_by(text('id')).all()
+            ).order_by(Route.id).all()
 
             data = []
             for value in result:

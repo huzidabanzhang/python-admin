@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-11-08 15:00:29
+@LastEditTime: 2019-11-19 15:59:17
 @LastEditors: Zpp
 '''
 from flask import request
@@ -192,11 +192,14 @@ class AdminModel():
             interface = []
             role = s.query(Role).filter(Role.id == admin.role_id).first()
             if role:
-                for i in role.routes:
-                    route.append(i.to_json())
-                for i in role.menus:
+                for i in role.routes.filter(Route.isLock == True):
+                    item = i.to_json()
+                    if item['isLock']:
+                        route.append(item)
+
+                for i in role.menus.filter(Menu.isLock == True).order_by(Menu.sort, Menu.id):
                     menu.append(i.to_json())
-                    interfaces = s.query(Interface).filter(Interface.menu_id == i.menu_id).all()
+                    interfaces = s.query(Interface).filter(Interface.menu_id == i.menu_id, Interface.isLock == True).all()
                     interface = interface + [i.to_json() for i in interfaces]
 
             data['routes'] = route
@@ -222,12 +225,16 @@ class AdminModel():
             if not admin.isLock:
                 return str('管理员被禁用')
 
-            AllowableFields = ['nickname', 'sex', 'role_id', 'avatarUrl']
+            AllowableFields = ['nickname', 'sex', 'role_id', 'avatarUrl', 'password']
             data = {}
 
             for i in params:
                 if i in AllowableFields and params.has_key(i):
-                    data[i] = params[i]
+                    if i == 'password':
+                        if params[i] != admin.password:
+                            data[i] = Config().get_md5(params[i])
+                    else:
+                        data[i] = params[i]
 
             s.query(Admin).filter(Admin.admin_id == admin_id).update(data)
             s.commit()

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2019-11-18 16:19:11
+@LastEditTime: 2019-11-19 14:42:15
 @LastEditors: Zpp
 '''
 from flask import request
@@ -24,7 +24,7 @@ class MenuModel():
             if params.has_key('isLock'):
                 data['isLock'] = params['isLock']
 
-            result = Menu.query.filter_by(**data).order_by(text('id'), text('sort')).all()
+            result = Menu.query.filter_by(**data).order_by(Menu.sort, Menu.id).all()
 
             data = []
             for value in result:
@@ -79,7 +79,7 @@ class MenuModel():
         '''
         s = db.session()
         try:
-            menu = s.query(Menu).filter(Menu.id == menu_id).first()
+            menu = s.query(Menu).filter(Menu.menu_id == menu_id).first()
             if not menu:
                 return str('菜单不存在')
 

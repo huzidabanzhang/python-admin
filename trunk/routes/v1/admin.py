@@ -152,6 +152,7 @@ def LockAdmin():
 @validate_current_access
 def ModifyAdmin():
     params = {
+        'password': request.form.get('password'),
         'nickname': request.form.get('nickname'),
         'sex': int(request.form.get('sex')),
         'avatarUrl': request.form.get('avatarUrl'),

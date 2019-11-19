@@ -4,11 +4,11 @@
 @Description: 权限判断方法
 @Author: Zpp
 @Date: 2019-09-04 16:55:43
-@LastEditTime: 2019-10-17 15:30:26
+@LastEditTime: 2019-11-19 16:09:09
 @LastEditors: Zpp
 '''
 from models.base import db
-from models.system import Admin, Role, Route
+from models.system import Admin, Role, Route, Interface, Menu
 
 
 def is_in_scope(admin_id, path):
@@ -23,15 +23,18 @@ def is_in_scope(admin_id, path):
         if not admin.isLock:
             return str('管理员被禁用')
 
-        role = s.query(Role).filter(Role.id == admin.role_id).first()
-        route = []
+        role = s.query(Role).filter(Role.id == admin.role_id, Role.isLock == True).first()
+        path_list = []
         if role:
-            for i in role.routes:
-                route.append(i.to_json())
-                
-        for i in route:
-            if i['path'] == path:
-                return True
+            for i in role.routes.filter(Route.isLock == True):
+                path_list.append(i.to_json()['path'])
+
+        for i in role.menus.filter(Menu.isLock == True).order_by(Menu.sort, Menu.id):
+            interfaces = s.query(Interface).filter(Interface.menu_id == i.menu_id, Interface.isLock == True).all()
+            path_list = path_list + [i.to_json()['path'] for i in interfaces]
+        
+        for i in path_list:
+            if i == path: return True
 
         return False
     except Exception, e:

@@ -4,7 +4,7 @@
 @Description: 菜单API
 @Author: Zpp
 @Date: 2019-09-10 16:16:54
-@LastEditTime: 2019-11-18 16:19:55
+@LastEditTime: 2019-11-19 14:37:47
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -63,11 +63,14 @@ def GetMenu(menu_id):
 @auth.login_required
 @validate_current_access
 def ModifyMenu():
-    params = request.form
-    Int = ['sort', 'type']
-    for i in params:
-        if i in Int:
-            params[i] = int(params[i])
+    params = {
+        'parentId': request.form.get('parentId', '0'),
+        'title': request.form.get('title'),
+        'path': request.form.get('path'),
+        'icon': request.form.get('icon'),
+        'sort': request.form.get('sort'),
+        'type': request.form.get('type', 1)
+    }
 
     result = MenuModel().ModifyMenuRequest(menu_id=request.form.get('menu_id'), params=params)
 

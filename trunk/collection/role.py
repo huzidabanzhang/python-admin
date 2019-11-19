@@ -4,7 +4,7 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2019-10-25 10:16:02
+@LastEditTime: 2019-11-19 14:43:17
 @LastEditors: Zpp
 '''
 from flask import request
@@ -107,7 +107,7 @@ class RoleModel():
             if params.has_key('isLock'):
                 data['isLock'] = params['isLock']
 
-            result = Role.query.filter_by(**data).order_by(text('id')).all()
+            result = Role.query.filter_by(**data).order_by(Role.id).all()
 
             data = []
             for value in result:
