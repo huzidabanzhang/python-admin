@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-11-19 15:59:17
+@LastEditTime: 2019-11-20 14:25:22
 @LastEditors: Zpp
 '''
 from flask import request
@@ -192,7 +192,7 @@ class AdminModel():
             interface = []
             role = s.query(Role).filter(Role.id == admin.role_id).first()
             if role:
-                for i in role.routes.filter(Route.isLock == True):
+                for i in role.routes:
                     item = i.to_json()
                     if item['isLock']:
                         route.append(item)

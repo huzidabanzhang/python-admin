@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-11-19 10:07:32
+@LastEditTime: 2019-11-20 15:19:39
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -110,7 +110,7 @@ class Route(db.Model):
     parentId = db.Column(db.String(36), nullable=False, index=True, default='0')
     name = db.Column(db.String(64), nullable=False, unique=True)
     title = db.Column(db.String(64), nullable=False, unique=True)
-    path = db.Column(db.String(255), nullable=False)
+    path = db.Column(db.String(255), nullable=False, unique=True)
     component = db.Column(db.String(255), nullable=False)
     componentPath = db.Column(db.String(255), nullable=False)
     cache = db.Column(db.Boolean, index=True, default=True)
@@ -136,7 +136,7 @@ class Menu(db.Model):
     menu_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     parentId = db.Column(db.String(36), nullable=False, index=True, default='0')
     title = db.Column(db.String(64), nullable=False, unique=True)
-    path = db.Column(db.String(255), nullable=False)
+    path = db.Column(db.String(255), nullable=False, unique=True)
     icon = db.Column(db.String(255), nullable=False)
     sort = db.Column(db.SmallInteger, index=True, default=1)
     type = db.Column(db.SmallInteger, index=True, default=1)
@@ -163,7 +163,7 @@ class Interface(db.Model):
     interface_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False)
-    method = db.Column(db.String(36), nullable=False)
+    method = db.Column(db.String(36), nullable=False, unique=True)
     description = db.Column(db.String(255), nullable=False)
     isLock = db.Column(db.Boolean, index=True, default=True)
     menu_id = db.Column(db.String(36), db.ForeignKey('db_menu.menu_id'))

@@ -24,7 +24,7 @@ def CreateInterface():
         'path': request.form.get('path'),
         'method': request.form.get('method'),
         'description': request.form.get('description'),
-        'menu_id': int(request.form.get('menu_id'))
+        'menu_id': request.form.get('menu_id')
     }
 
     result = InterfaceModel().CreateInterfaceRequest(params)
@@ -39,7 +39,7 @@ def CreateInterface():
 @auth.login_required
 @validate_current_access
 def LockInterface():
-    result = InterfaceModel().LockInterfaceRequest(interface_id=request.form.getlist('interface_id'))
+    result = InterfaceModel().LockInterfaceRequest(interface_id=request.form.getlist('interface_id[]'), isLock=request.form.get('isLock'))
     return ResultDeal(data=result)
 
 
@@ -47,11 +47,13 @@ def LockInterface():
 @auth.login_required
 @validate_current_access
 def ModifyInterface():
-    params = request.form
-    Int = ['menu_id']
-    for i in params:
-        if i in Int:
-            params[i] = int(params[i])
+    params = {
+        'name': request.form.get('name'),
+        'path': request.form.get('path'),
+        'method': request.form.get('method'),
+        'description': request.form.get('description'),
+        'menu_id': request.form.get('menu_id')
+    }
 
     result = InterfaceModel().ModifyInterfaceRequest(interface_id=request.form.get('interface_id'), params=params)
 
@@ -65,14 +67,13 @@ def ModifyInterface():
 @auth.login_required
 @validate_current_access
 def QueryInterfaceByParam():
-    params = request.form
-    Int = ['menu_id']
-    Bool = ['isLock']
-    for i in params:
-        if i in Int:
-            params[i] = int(params[i])
-        if i in Bool:
-            params[i] = True if params[i] == 'true' else False
+    params = {}
+    if request.form.get('isLock'):
+        params['isLock'] = True if request.form.get('isLock') == 'true' else False
+    Ary = ['name', 'menu_id', 'method']
+    for i in Ary:
+        if request.form.get(i):
+            params[i] = request.form.get(i)
 
     result = InterfaceModel().QueryInterfaceByParamRequest(
         params=params,

@@ -5,11 +5,12 @@
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
 @LastEditors: Zpp
-@LastEditTime: 2019-10-28 10:38:13
+@LastEditTime: 2019-11-20 15:18:35
 '''
 from flask import request
 from models.base import db
 from models.system import Interface
+from sqlalchemy import text
 import uuid
 
 
@@ -28,7 +29,7 @@ class InterfaceModel():
                     data[i] = params[i]
 
             result = Interface.query.filter_by(**data).filter(
-                Interface.name.like("%" + params['name'] + "%") if params.has_key('name') else ''
+                Interface.name.like("%" + params['name'] + "%") if params.has_key('name') else text('')
             ).order_by(order_by).paginate(page, page_size, error_out=False)
 
             data = []
@@ -102,7 +103,7 @@ class InterfaceModel():
             s.rollback()
             return str(e.message)
 
-    def LockInterfaceRequest(self, interface_id):
+    def LockInterfaceRequest(self, interface_id, isLock):
         '''
         禁用接口
         '''
@@ -112,7 +113,7 @@ class InterfaceModel():
                 interface = s.query(Interface).filter(Interface.interface_id == key).first()
                 if not interface:
                     continue
-                interface.isLock = False
+                interface.isLock = isLock
                 s.commit()
             return True
         except Exception as e:
