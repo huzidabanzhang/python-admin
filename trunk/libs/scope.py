@@ -4,7 +4,7 @@
 @Description: 权限判断方法
 @Author: Zpp
 @Date: 2019-09-04 16:55:43
-@LastEditTime: 2019-11-21 09:18:19
+@LastEditTime: 2019-11-25 10:51:26
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -23,11 +23,14 @@ def is_in_scope(admin_id, path):
         if not admin.isLock:
             return str('管理员被禁用')
 
+
         role = s.query(Role).filter(Role.id == admin.role_id, Role.isLock == True).first()
         if role:
             route = role.routes.filter(Route.isLock == True, Route.path == path)
             if route:
-                interface = role.routes.join(Interface).filter(Menu.isLock == True, Interface.path == path)
+                return True
+            else:
+                interface = role.menus.join(Interface).filter(Menu.isLock == True, Interface.path == path)
                 if interface:
                     return True
 

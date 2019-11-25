@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-11-08 15:07:03
+@LastEditTime: 2019-11-25 10:47:50
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -73,6 +73,7 @@ def Login():
 
         session['admin'] = token
         session['username'] = result['username']
+        
         return ResultDeal(data={
             'token': token,
             'routes': result['routes'],
