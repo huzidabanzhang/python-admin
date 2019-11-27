@@ -118,7 +118,8 @@ class AdminModel():
             name=params['name'],
             path=params['path'],
             method=params['method'],
-            description=params['description']
+            description=params['description'],
+            identification=params['identification']
         )
 
     def QueryAdminByParamRequest(self, params, page=1, page_size=20, order_by='id'):

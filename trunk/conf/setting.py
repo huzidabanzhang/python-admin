@@ -169,31 +169,36 @@ init_menu = [
                         "path": "/v1/Menu/CreateMenu",
                         "method": "POST",
                         "name": "CreateMenu",
-                        "description": "添加菜单"
+                        "description": "添加菜单",
+                        "identification": "add_menu"
                     },
                     {
                         "path": "/v1/Menu/QueryMenuByParam",
                         "method": "POST",
                         "name": "QueryMenuByParam",
-                        "description": "获取菜单列表"
+                        "description": "获取菜单列表",
+                        "identification": "get_menu_list"
                     },
                     {
                         "path": "/v1/Menu/ModifyMenu",
                         "method": "POST",
                         "name": "ModifyMenu",
-                        "description": "修改菜单信息"
+                        "description": "修改菜单信息",
+                        "identification": "set_menu"
                     },
                     {
                         "path": "/v1/Menu/LockMenu",
                         "method": "POST",
                         "name": "LockMenu",
-                        "description": "禁用菜单"
+                        "description": "禁用菜单",
+                        "identification": "lock_menu"
                     },
                     {
                         "path": "/v1/Menu/GetMenu/:menu_id",
                         "method": "GET",
                         "name": "GetMenu",
-                        "description": "根据ID获取菜单"
+                        "description": "根据ID获取菜单",
+                        "identification": "get_menu_item"
                     }
                 ]
             },
@@ -206,25 +211,29 @@ init_menu = [
                         "path": "/v1/Route/CreateRoute",
                         "method": "POST",
                         "name": "CreateRoute",
-                        "description": "添加路由"
+                        "description": "添加路由",
+                        "identification": "add_router"
                     },
                     {
                         "path": "/v1/Route/QueryRouteByParam",
                         "method": "POST",
                         "name": "QueryRouteByParam",
-                        "description": "获取路由列表"
+                        "description": "获取路由列表",
+                        "identification": "get_router_list"
                     },
                     {
                         "path": "/v1/Route/ModifyRoute",
                         "method": "POST",
                         "name": "ModifyRoute",
-                        "description": "修改路由信息"
+                        "description": "修改路由信息",
+                        "identification": "set_router"
                     },
                     {
                         "path": "/v1/Route/LockRoute",
                         "method": "POST",
                         "name": "LockRoute",
-                        "description": "禁用路由"
+                        "description": "禁用路由",
+                        "identification": "lock_router"
                     }
                 ]
             },
@@ -237,25 +246,29 @@ init_menu = [
                         "path": "/v1/Interface/CreateInterface",
                         "method": "POST",
                         "name": "CreateInterface",
-                        "description": "添加接口"
+                        "description": "添加接口",
+                        "identification": "add_interface"
                     },
                     {
                         "path": "/v1/Interface/QueryInterfaceByParam",
                         "method": "POST",
                         "name": "QueryInterfaceByParam",
-                        "description": "获取接口列表"
+                        "description": "获取接口列表",
+                        "identification": "get_interface_list"
                     },
                     {
                         "path": "/v1/Interface/ModifyInterface",
                         "method": "POST",
                         "name": "ModifyInterface",
-                        "description": "修改接口信息"
+                        "description": "修改接口信息",
+                        "identification": "set_interface"
                     },
                     {
                         "path": "/v1/Interface/LockInterface",
                         "method": "POST",
                         "name": "LockInterface",
-                        "description": "禁用接口"
+                        "description": "禁用接口",
+                        "identification": "lock_interface"
                     }
                 ]
             },
@@ -268,31 +281,29 @@ init_menu = [
                         "path": "/v1/Document/CreateDocument",
                         "method": "POST",
                         "name": "CreateDocument",
-                        "description": "添加文档"
+                        "description": "添加文档",
+                        "identification": "add_document"
                     },
                     {
                         "path": "/v1/Document/QueryDocumentByParam",
                         "method": "POST",
                         "name": "QueryDocumentByParam",
-                        "description": "获取文档列表"
-                    },
-                    {
-                        "path": "/v1/Document/GetDocument/:filename",
-                        "method": "GET",
-                        "name": "GetDocument",
-                        "description": "预览图片"
+                        "description": "获取文档列表",
+                        "identification": "get_document_list"
                     },
                     {
                         "path": "/v1/Document/DownDocument/:filename",
                         "method": "GET",
                         "name": "DownDocument",
-                        "description": "下载文档"
+                        "description": "下载文档",
+                        "identification": "down_document"
                     },
                     {
                         "path": "/v1/Document/DelDocument",
                         "method": "POST",
                         "name": "DelDocument",
-                        "description": "禁用文档"
+                        "description": "禁用文档",
+                        "identification": "lock_document"
                     }
                 ]
             }
@@ -312,49 +323,43 @@ init_menu = [
                         "path": "/v1/Admin/CreateAdmin",
                         "method": "POST",
                         "name": "CreateAdmin",
-                        "description": "注册管理员"
+                        "description": "注册管理员",
+                        "identification": "add_admin"
                     },
                     {
                         "path": "/v1/Admin/QueryAdminByParam",
                         "method": "POST",
                         "name": "QueryAdminByParam",
-                        "description": "获取管理员列表"
+                        "description": "获取管理员列表",
+                        "identification": "get_admin_list"
                     },
                     {
                         "path": "/v1/Admin/ModifyAdmin",
                         "method": "POST",
                         "name": "ModifyAdmin",
-                        "description": "修改管理员信息"
+                        "description": "修改管理员信息",
+                        "identification": "set_admin"
                     },
                     {
                         "path": "/v1/Admin/LockAdmin",
                         "method": "POST",
                         "name": "LockAdmin",
-                        "description": "禁用管理员"
+                        "description": "禁用管理员",
+                        "identification": "lock_admin"
                     },
                     {
                         "path": "/v1/Admin/Logout",
                         "method": "GET",
                         "name": "Logout",
-                        "description": "注销管理员"
-                    },
-                    {
-                        "path": "/v1/Admin/Login",
-                        "method": "POST",
-                        "name": "Login",
-                        "description": "管理员登录"
-                    },
-                    {
-                        "path": "/v1/Admin/Captcha",
-                        "method": "GET",
-                        "name": "Captcha",
-                        "description": "验证码"
+                        "description": "注销管理员",
+                        "identification": "logout_admin"
                     },
                     {
                         "path": "/v1/Admin/CreateDrop",
                         "method": "GET",
                         "name": "CreateDrop",
-                        "description": "初始化数据库"
+                        "description": "初始化数据库",
+                        "identification": "init_admin"
                     }
                 ]
             },
@@ -367,25 +372,29 @@ init_menu = [
                         "path": "/v1/Role/CreateRole",
                         "method": "POST",
                         "name": "CreateRole",
-                        "description": "添加角色"
+                        "description": "添加角色",
+                        "identification": "add_role"
                     },
                     {
                         "path": "/v1/Role/QueryRoleByParam",
                         "method": "POST",
                         "name": "QueryRoleByParam",
-                        "description": "获取角色列表"
+                        "description": "获取角色列表",
+                        "identification": "get_role_list"
                     },
                     {
                         "path": "/v1/Role/ModifyRole",
                         "method": "POST",
                         "name": "ModifyRole",
-                        "description": "修改角色信息"
+                        "description": "修改角色信息",
+                        "identification": "set_role"
                     },
                     {
                         "path": "/v1/Role/LockRole",
                         "method": "POST",
                         "name": "LockRole",
-                        "description": "禁用角色"
+                        "description": "禁用角色",
+                        "identification": "lock_role"
                     }
                 ]
             }
@@ -405,7 +414,8 @@ init_menu = [
                         "path": "/v1/Log/QueryLogByParam",
                         "method": "POST",
                         "name": "QueryLogByParam",
-                        "description": "获取日志列表"
+                        "description": "获取日志列表",
+                        "identification": "get_log_list"
                     }
                 ]
             },
