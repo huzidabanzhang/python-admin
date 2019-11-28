@@ -9,9 +9,12 @@
 * 日志（完成 分为三种不同日志）
 
 ## 启动
+  setting.py里面修改连接数据库配置
+  然后创建一个新的数据库
+  
   app.py 启动后 路由/v1/Admin/CreateDrop来初始化数据库 
+  
   前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
 
-## 吐槽
-  最近莫得空写准备考试
-  图片预览的API需要修改下
+## 最近
+  新增了接口的标识字段 用来前端的权限判断
