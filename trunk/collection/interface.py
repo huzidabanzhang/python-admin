@@ -53,7 +53,8 @@ class InterfaceModel():
                 path=params['path'],
                 method=params['method'],
                 description=params['description'],
-                menu_id=params['menu_id']
+                menu_id=params['menu_id'],
+                identification=params['identification']
             )
             s.add(item)
             s.commit()
@@ -88,7 +89,7 @@ class InterfaceModel():
             if not interface:
                 return str('接口不存在')
 
-            AllowableFields = ['name', 'path', 'method', 'description', 'menu_id']
+            AllowableFields = ['name', 'path', 'method', 'description', 'menu_id', 'identification']
             data = {}
 
             for i in params:

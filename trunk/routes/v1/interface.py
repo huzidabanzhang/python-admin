@@ -24,7 +24,8 @@ def CreateInterface():
         'path': request.form.get('path'),
         'method': request.form.get('method'),
         'description': request.form.get('description'),
-        'menu_id': request.form.get('menu_id')
+        'menu_id': request.form.get('menu_id'),
+        'identification': request.form.get('identification')
     }
 
     result = InterfaceModel().CreateInterfaceRequest(params)
@@ -52,7 +53,8 @@ def ModifyInterface():
         'path': request.form.get('path'),
         'method': request.form.get('method'),
         'description': request.form.get('description'),
-        'menu_id': request.form.get('menu_id')
+        'menu_id': request.form.get('menu_id'),
+        'identification': request.form.get('identification')
     }
 
     result = InterfaceModel().ModifyInterfaceRequest(interface_id=request.form.get('interface_id'), params=params)
