@@ -72,7 +72,7 @@ def QueryInterfaceByParam():
     params = {}
     if request.form.get('isLock'):
         params['isLock'] = True if request.form.get('isLock') == 'true' else False
-    Ary = ['name', 'menu_id', 'method']
+    Ary = ['name', 'method']
     for i in Ary:
         if request.form.get(i):
             params[i] = request.form.get(i)

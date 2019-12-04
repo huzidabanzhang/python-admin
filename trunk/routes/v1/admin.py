@@ -129,25 +129,6 @@ def LockAdmin():
     return ResultDeal(data=result)
 
 
-# @route_admin.route('/ModifyAdmin', methods=['POST'])
-# @auth.login_required
-# @validate_current_access
-# def ModifyAdmin():
-#     params = {
-#         'password': request.form.get('password'),
-#         'nickname': request.form.get('nickname'),
-#         'sex': int(request.form.get('sex')),
-#         'avatarUrl': request.form.get('avatarUrl')
-#     }
-
-#     result = AdminModel().ModifyAdminRequest(admin_id=request.form.get('admin_id'), params=params)
-
-#     if type(result).__name__ == 'str':
-#         return ResultDeal(msg=result, code=-1)
-
-#     return ResultDeal(data=result)
-
-
 @route_admin.route('/ModifyAdmin', methods=['POST'])
 @auth.login_required
 @validate_current_access
