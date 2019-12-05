@@ -5,12 +5,13 @@
 @Author: Zpp
 @Date: 2019-10-17 14:53:00
 @LastEditors: Zpp
-@LastEditTime: 2019-10-22 10:50:06
+@LastEditTime: 2019-12-05 16:07:49
 '''
 from flask import request
 from models.base import db
 from models.log import Log
 from sqlalchemy import text
+import json
 
 
 class LogModel():
@@ -59,7 +60,7 @@ class LogModel():
                 status=params['status'],
                 time=params['time'],
                 content=str(params['content']),
-                params=str(params['params']),
+                params=json.dumps(params['params']),
                 type=type
             )
             s.add(item)

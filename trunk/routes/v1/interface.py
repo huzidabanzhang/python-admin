@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 13:50:25
 @LastEditors: Zpp
-@LastEditTime: 2019-10-14 16:46:14
+@LastEditTime: 2019-12-05 16:31:56
 '''
 from flask import Blueprint, request
 from collection.interface import InterfaceModel
@@ -40,7 +40,7 @@ def CreateInterface():
 @auth.login_required
 @validate_current_access
 def LockInterface():
-    result = InterfaceModel().LockInterfaceRequest(interface_id=request.form.getlist('interface_id[]'), isLock=request.form.get('isLock'))
+    result = InterfaceModel().LockInterfaceRequest(interface_id=request.form.getlist('interface_id[]'), isLock=True if request.form.get('isLock') == 'true' else False)
     return ResultDeal(data=result)
 
 
