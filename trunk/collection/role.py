@@ -4,7 +4,7 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2019-11-19 14:43:17
+@LastEditTime: 2019-12-09 14:20:39
 @LastEditors: Zpp
 '''
 from flask import request
@@ -85,12 +85,8 @@ class RoleModel():
         '''
         s = db.session()
         try:
-            for key in role_id:
-                role = s.query(Role).filter(Role.role_id == key).first()
-                if not role:
-                    continue
-                role.isLock = isLock
-                s.commit()
+            s.query(Role).filter(Role.role_id.in_(role_id)).update({Role.isLock: isLock})
+            s.commit()
             return True
         except Exception as e:
             print e

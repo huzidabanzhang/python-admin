@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
 @LastEditors: Zpp
-@LastEditTime: 2019-12-05 16:20:16
+@LastEditTime: 2019-12-09 13:38:34
 '''
 from flask import request
 from models.base import db
@@ -110,12 +110,8 @@ class InterfaceModel():
         '''
         s = db.session()
         try:
-            for key in interface_id:
-                interface = s.query(Interface).filter(Interface.interface_id == key).first()
-                if not interface:
-                    continue
-                interface.isLock = isLock
-                s.commit()
+            s.query(Interface).filter(Interface.interface_id.in_(interface_id)).update({Interface.isLock: isLock}, synchronize_session=False)
+            s.commit()
             return True
         except Exception as e:
             print e

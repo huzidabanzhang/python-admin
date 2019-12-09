@@ -4,12 +4,12 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-11-20 14:25:22
+@LastEditTime: 2019-12-09 14:18:13
 @LastEditors: Zpp
 '''
 from flask import request
 from models.base import db
-from models.system import Admin, Role, Route, Menu, Interface
+from models.system import Admin, Role, Route, Menu, Interface, InitSql
 from conf.setting import Config, init_route, init_menu
 from sqlalchemy import text
 import uuid
@@ -17,8 +17,13 @@ import datetime
 
 
 class AdminModel():
-    def CreateDropRequest(self):
+    def CreateDropRequest(self, isInit):
         try:
+            if isInit:
+                res = s.query(InitSql).first()
+                if res.isInit:
+                    return str('已经初始化~~~')
+
             db.drop_all()
             db.create_all()
 
@@ -251,12 +256,8 @@ class AdminModel():
         '''
         s = db.session()
         try:
-            for key in admin_id:
-                admin = s.query(Admin).filter(Admin.admin_id == key).first()
-                if not admin:
-                    continue
-                admin.isLock = isLock
-                s.commit()
+            s.query(Admin).filter(Admin.admin_id.in_(admin_id)).update({Admin.isLock: isLock}, synchronize_session=False)
+            s.commit()
             return True
         except Exception as e:
             print e

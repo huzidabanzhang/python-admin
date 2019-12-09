@@ -4,12 +4,11 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-09 10:47:44
-@LastEditTime: 2019-09-12 11:28:07
+@LastEditTime: 2019-12-09 15:58:24
 @LastEditors: Zpp
 '''
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.pool import NullPool
-
 
 class Pool_SQLAlchemy(SQLAlchemy):
     def apply_driver_hacks(self, app, info, options):

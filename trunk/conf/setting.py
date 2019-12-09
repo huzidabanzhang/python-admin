@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2019-10-24 10:14:48
+@LastEditTime: 2019-12-09 14:40:47
 @LastEditors: Zpp
 '''
 import hashlib
@@ -302,8 +302,15 @@ init_menu = [
                         "path": "/v1/Document/DelDocument",
                         "method": "POST",
                         "name": "DelDocument",
-                        "description": "禁用文档",
-                        "identification": "lock_document"
+                        "description": "删除文档",
+                        "identification": "del_document"
+                    },
+                    {
+                        "path": "/v1/Document/RetrieveDocument",
+                        "method": "POST",
+                        "name": "RetrieveDocument",
+                        "description": "回收文档",
+                        "identification": "retrieve_document"
                     }
                 ]
             }

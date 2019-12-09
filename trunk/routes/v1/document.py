@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 15:56:20
 @LastEditors: Zpp
-@LastEditTime: 2019-11-08 14:37:45
+@LastEditTime: 2019-12-09 10:56:44
 '''
 from flask import Blueprint, request, make_response, abort, send_from_directory
 from collection.document import DocumentModel
@@ -64,11 +64,19 @@ def DownDocument(filename, name):
         abort(404)
 
 
+@route_document.route('/RetrieveDocument', methods=['POST'])
+@auth.login_required
+@validate_current_access
+def RetrieveDocument():
+    result = DocumentModel().RetrieveDocument(document_id=request.form.getlist('document_id'))
+    return ResultDeal(data=result)
+
+
 @route_document.route('/DelDocument', methods=['POST'])
 @auth.login_required
 @validate_current_access
-def LockDocument():
-    result = DocumentModel().DelDocumentRequest(document_id=request.form.getlist('document_id'))
+def DelDocument():
+    result = DocumentModel().DelDocument(document_id=request.form.getlist('document_id'))
     return ResultDeal(data=result)
 
 
@@ -76,11 +84,11 @@ def LockDocument():
 @auth.login_required
 @validate_current_access
 def QueryDocumentByParam():
-    params = request.form
-    Int = ['type', 'deleted']
-    for i in params:
-        if i in Int:
-            params[i] = int(params[i])
+    params = {}
+    Ary = ['type', 'deleted']
+    for i in Ary:
+        if request.form.get(i):
+            params[i] = request.form.get(i)
 
     result = DocumentModel().QueryDocumentByParamRequest(
         params=params,

@@ -4,7 +4,7 @@
 @Description: 路由控制器
 @Author: Zpp
 @Date: 2019-09-10 16:00:22
-@LastEditTime: 2019-11-19 14:43:31
+@LastEditTime: 2019-12-09 14:20:57
 @LastEditors: Zpp
 '''
 from flask import request
@@ -108,12 +108,8 @@ class RouteModel():
         '''
         s = db.session()
         try:
-            for key in route_id:
-                route = s.query(Route).filter(Route.route_id == key).first()
-                if not route:
-                    continue
-                route.isLock = isLock
-                s.commit()
+            s.query(Route).filter(Route.route_id.in_(route_id)).update({Route.isLock: isLock})
+            s.commit()
             return True
         except Exception as e:
             print e

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2019-11-19 14:42:15
+@LastEditTime: 2019-12-09 14:19:45
 @LastEditors: Zpp
 '''
 from flask import request
@@ -12,6 +12,7 @@ from models.base import db
 from models.system import Menu
 from sqlalchemy import text
 import uuid
+
 
 class MenuModel():
     def QueryMenuByParamRequest(self, params):
@@ -115,11 +116,8 @@ class MenuModel():
             s.commit()
 
             if not isLock:
-                children = s.query(Menu).filter(Menu.parentId == menu_id, Menu.isLock == True).all()
-                if children:
-                    for item in children:
-                        item.isLock = False
-                    s.commit()
+                s.query(Menu).filter(Menu.parentId == menu_id, Menu.isLock == True).update({Menu.isLock: False})
+                s.commit()
 
             return True
         except Exception as e:

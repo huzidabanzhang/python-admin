@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-11-20 15:19:39
+@LastEditTime: 2019-12-09 16:07:41
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -204,3 +204,13 @@ class Document(db.Model):
 
     def __repr__(self):
         return '<Document %r>' % self.name
+
+
+class InitSql(db.Model):
+    '''
+    是否已经初始化数据库
+    '''
+    __tablename__ = 'db_init_sql'
+    id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
+    isInit = db.Column(db.Boolean, index=True, default=True)
+    __table_args__ = ({"useexisting": True})

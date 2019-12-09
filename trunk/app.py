@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-05 16:07:19
-@LastEditTime: 2019-10-17 14:58:36
+@LastEditTime: 2019-12-09 15:58:31
 @LastEditors: Zpp
 '''
 from flask import Flask
@@ -33,4 +33,5 @@ try:
     logging.info(u'------启动成功------')
     app.run()
 except Exception as e:
+    print e
     logging.error(u'------启动失败------')

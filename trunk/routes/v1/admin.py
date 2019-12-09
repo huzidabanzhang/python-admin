@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-11-25 10:47:50
+@LastEditTime: 2019-12-09 16:41:55
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -13,13 +13,14 @@ from ..token_auth import auth, generate_auth_token, validate_current_access
 from libs.code import ResultDeal
 from libs.captcha import Captcha
 from io import BytesIO
+from libs.utils import checkDb
 
 route_admin = Blueprint('Admin', __name__, url_prefix='/v1/Admin')
 
 
 @route_admin.route('/CreateDrop', methods=['GET'])
 def CreateDrop():
-    result = AdminModel().CreateDropRequest()
+    result = AdminModel().CreateDropRequest(False)
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
 
@@ -29,12 +30,31 @@ def CreateDrop():
     })
 
 
+@route_admin.route('/AgainCreateDrop', methods=['GET'])
+@auth.login_required
+@validate_current_access
+def AgainCreateDrop():
+    result = AdminModel().CreateDropRequest(True)
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
+    return ResultDeal(data={
+        'username': 'Admin',
+        'password': '123456'
+    })
+
+
+@route_admin.route('/checkDb', methods=['GET'])
+def CheckDb():
+    return ResultDeal(data=checkDb())
+
+
 @route_admin.route('/Captcha', methods=['GET'])
 def GetCaptcha():
     text, image = Captcha().gen_graph_captcha()
     out = BytesIO()
     image.save(out, 'png')
-    out.seek(0) 
+    out.seek(0)
     resp = make_response(out.read())
     resp.content_type = 'image/png'
     # 存入session
@@ -52,7 +72,7 @@ def Login():
 
     if not sesson_captcha:
         return ResultDeal(msg=u'请刷新验证码', code=-1)
-    
+
     if session.get('Captcha').lower() != captcha.lower():
         return ResultDeal(msg=u'验证码不正确', code=-1)
 
@@ -73,7 +93,7 @@ def Login():
 
         session['admin'] = token
         session['username'] = result['username']
-        
+
         return ResultDeal(data={
             'token': token,
             'routes': result['routes'],

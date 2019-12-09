@@ -5,12 +5,13 @@
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
 @LastEditors: Zpp
-@LastEditTime: 2019-10-28 10:40:01
+@LastEditTime: 2019-12-09 14:39:05
 '''
 from flask import request
 from models.base import db
 from models.system import Document
 from conf.setting import document_dir
+from sqlalchemy import text
 import uuid
 import time
 import os
@@ -31,7 +32,7 @@ class DocumentModel():
                     data[i] = params[i]
 
             result = Document.query.filter_by(**data).filter(
-                Document.name.like("%" + params['name'] + "%") if params.has_key('name') else ''
+                Document.name.like("%" + params['name'] + "%") if params.has_key('name') else text('')
             ).order_by(order_by).paginate(page, page_size, error_out=False)
 
             data = []
@@ -98,18 +99,34 @@ class DocumentModel():
             print e
             return str(e.message)
 
-    def DelDocumentRequest(self, document_id):
+    def RetrieveDocument(self, document_id):
         '''
-        删除文档
+        移动文档到回收站
         '''
         s = db.session()
         try:
-            for key in document_id:
-                document = s.query(Document).filter(Document.document_id == key).first()
-                if not document:
-                    continue
-                document.deleted = 1
-                s.commit()
+            s.query(Document).filter(Document.document_id.in_(document_id)).update({Document.deleted: 1}, synchronize_session=False)
+            s.commit()
+            return True
+        except Exception as e:
+            print e
+            s.rollback()
+            return str(e.message)
+
+    def DelDocument(self, document_id):
+        '''
+        删除文档（包括服务器上文件）
+        '''
+        s = db.session()
+        try:
+            res = s.query(Document).filter(Document.document_id.in_(document_id))
+
+            for i in res:
+                if(os.path.exists(document_dir + i.path)):
+                    os.remove(document_dir + i.path)
+
+            res.delete(synchronize_session=False)
+            s.commit()
             return True
         except Exception as e:
             print e

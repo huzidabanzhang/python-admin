@@ -5,8 +5,10 @@
 @Author: Zpp
 @Date: 2019-10-28 11:28:09
 @LastEditors: Zpp
-@LastEditTime: 2019-10-28 11:33:00
+@LastEditTime: 2019-12-09 16:20:17
 '''
+from models.base import db
+from models.system import InitSql
 
 
 def readFile(path, type):
@@ -14,3 +16,13 @@ def readFile(path, type):
     content = f.read()
     f.close()
     return content
+
+
+def checkDb():
+    try:
+        s = db.session()
+        res = s.query(InitSql).first()
+        return res.isInit
+    except:
+        db.create_all()
+        return False
