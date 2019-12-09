@@ -24,5 +24,4 @@ def checkDb():
         res = s.query(InitSql).first()
         return res.isInit
     except:
-        db.create_all()
         return False

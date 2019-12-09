@@ -19,15 +19,19 @@ import datetime
 class AdminModel():
     def CreateDropRequest(self, isInit):
         try:
+            s = db.session()
+
             if isInit:
-                res = s.query(InitSql).first()
-                if res.isInit:
-                    return str('已经初始化~~~')
+                try:
+                    res = s.query(InitSql).first()
+                    if res.isInit:
+                        return str('已经初始化~~~')
+                except:
+                    pass
 
             db.drop_all()
             db.create_all()
 
-            s = db.session()
             admin = Admin(
                 admin_id=uuid.uuid4(),
                 username=u'Admin',
@@ -45,6 +49,12 @@ class AdminModel():
 
             self.__init_routes(init_route, '0', role_id)
             self.__init_menus(init_menu, '0', role_id)
+
+            if not isInit:
+                sql = InitSql(isInit=True)
+                s.add(sql)
+                s.commit()
+
             return True
         except Exception as e:
             print e
