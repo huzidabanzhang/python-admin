@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
 @LastEditors: Zpp
-@LastEditTime: 2019-12-09 14:39:05
+@LastEditTime: 2019-12-11 16:43:35
 '''
 from flask import request
 from models.base import db
@@ -49,36 +49,55 @@ class DocumentModel():
         count = len(ary)
         return ary[count - 1] if count > 1 else ''
 
-    def CreateDocumentRequest(self, file, params):
+    def allowed_file(self, file):
+        ALLOWED_EXTENSIONS = set(['gif', 'jpeg', 'jpg', 'png', 'psd', 'bmp', 'tiff', 'tif',
+                                  'swc', 'iff', 'jpc', 'jp2', 'jpx', 'jb2', 'xbm', 'wbmp'])
+
+        return '.' in file and file.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+    def CreateDocumentRequest(self, files, params):
         '''
         新建文档
         '''
         s = db.session()
         try:
-            # 上传
-            file_name = file.filename
-            ext = self.file_extension(file_name)
-            size = len(file.read())
-            file.seek(0)
+            data = []
+            for file in files:
+                # 上传
+                file_name = file.filename
+                ext = self.file_extension(file_name)
+                size = len(file.read())
+                file_type = params['type']
+                file.seek(0)
 
-            fn = '/' + str(time.strftime('%Y/%m/%d'))
-            if not os.path.exists(document_dir + fn):
-                os.makedirs(document_dir + fn)
-            path = fn + '/' + str(uuid.uuid1()) + '.' + ext
-            file.save(document_dir + path)
+                fn = '/' + str(time.strftime('%Y/%m/%d'))
+                if not os.path.exists(document_dir + fn):
+                    os.makedirs(document_dir + fn)
+                path = fn + '/' + str(uuid.uuid1()) + '.' + ext
+                file.save(document_dir + path)
 
-            item = Document(
-                document_id=uuid.uuid4(),
-                admin_id=params['admin_id'],
-                name=file_name,
-                type=params['type'],
-                ext=ext,
-                path=path,
-                size=size
-            )
-            s.add(item)
-            s.commit()
-            return path
+                if self.allowed_file(file_name):
+                    file_type = 1
+
+                item = Document(
+                    document_id=uuid.uuid4(),
+                    admin_id=params['admin_id'],
+                    name=file_name,
+                    type=file_type,
+                    ext=ext,
+                    path=path,
+                    size=size
+                )
+                s.add(item)
+                s.commit()
+                data.append({
+                    'name': file_name,
+                    'size': size,
+                    'type': file_type,
+                    'src': path
+                })
+
+            return data
         except Exception as e:
             s.rollback()
             print e

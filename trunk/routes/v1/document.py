@@ -29,11 +29,11 @@ def CreateDocument():
         'type': int(request.form.get('type'))
     }
 
-    file = request.files['document']
+    files = request.files.getlist('document')
     if not file:
         return ResultDeal(msg=u'请选择上传文件', code=-1)
 
-    result = DocumentModel().CreateDocumentRequest(file, params)
+    result = DocumentModel().CreateDocumentRequest(files, params)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)

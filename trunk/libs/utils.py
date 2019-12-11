@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-28 11:28:09
 @LastEditors: Zpp
-@LastEditTime: 2019-12-09 16:20:17
+@LastEditTime: 2019-12-11 09:56:41
 '''
 from models.base import db
 from models.system import InitSql
@@ -23,5 +23,5 @@ def checkDb():
         s = db.session()
         res = s.query(InitSql).first()
         return res.isInit
-    except:
-        return False
+    except Exception as e:
+        return str('数据库未连接或者其他错误请查看错误信息：' + e.message)

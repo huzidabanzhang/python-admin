@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-12-09 16:41:55
+@LastEditTime: 2019-12-11 09:57:17
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -46,7 +46,11 @@ def AgainCreateDrop():
 
 @route_admin.route('/checkDb', methods=['GET'])
 def CheckDb():
-    return ResultDeal(data=checkDb())
+    result = checkDb()
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
+    return ResultDeal(data=result)
 
 
 @route_admin.route('/Captcha', methods=['GET'])
