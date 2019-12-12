@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-12-11 14:41:18
+@LastEditTime: 2019-12-12 15:19:54
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -194,12 +194,15 @@ class Document(db.Model):
     ext = db.Column(db.String(64), nullable=False)
     size = db.Column(db.Integer, nullable=False)
     deleted = db.Column(db.Integer, default=0)
+    create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     __table_args__ = ({"useexisting": True})
 
     def to_json(self):
         dict = self.__dict__
         if "_sa_instance_state" in dict:
             del dict["_sa_instance_state"]
+        if "create_time" in dict:
+            dict["create_time"] = dict["create_time"].strftime('%Y-%m-%d %H:%M:%S')
         return dict
 
     def __repr__(self):

@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 15:56:20
 @LastEditors: Zpp
-@LastEditTime: 2019-12-09 10:56:44
+@LastEditTime: 2019-12-12 15:03:54
 '''
 from flask import Blueprint, request, make_response, abort, send_from_directory
 from collection.document import DocumentModel
@@ -26,18 +26,15 @@ route_document = Blueprint('Document', __name__, url_prefix='/v1/Document')
 def CreateDocument():
     params = {
         'admin_id': request.form.get('admin_id'),
-        'type': int(request.form.get('type'))
+        'type': int(request.form.get('type')),
+        'uid': request.form.getlist('uid')
     }
 
     files = request.files.getlist('document')
-    if not file:
+    if not files:
         return ResultDeal(msg=u'请选择上传文件', code=-1)
 
     result = DocumentModel().CreateDocumentRequest(files, params)
-
-    if type(result).__name__ == 'str':
-        return ResultDeal(msg=result, code=-1)
-
     return ResultDeal(data=result)
 
 

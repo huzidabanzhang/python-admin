@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
 @LastEditors: Zpp
-@LastEditTime: 2019-12-11 16:43:35
+@LastEditTime: 2019-12-12 15:14:05
 '''
 from flask import request
 from models.base import db
@@ -18,7 +18,7 @@ import os
 
 
 class DocumentModel():
-    def QueryDocumentByParamRequest(self, params, page=1, page_size=20, order_by='-id'):
+    def QueryDocumentByParamRequest(self, params, page=1, page_size=20, order_by='create_time'):
         '''
         文档列表
         '''
@@ -60,24 +60,24 @@ class DocumentModel():
         新建文档
         '''
         s = db.session()
-        try:
-            data = []
-            for file in files:
-                # 上传
-                file_name = file.filename
-                ext = self.file_extension(file_name)
-                size = len(file.read())
-                file_type = params['type']
-                file.seek(0)
+        data = []
+        uids = params['uid']
+        for i, file in enumerate(files):
+            # 上传
+            file_name = file.filename
+            ext = self.file_extension(file_name)
+            size = len(file.read())
+            file_type = params['type']
+            if not self.allowed_file(file_name):
+                file_type = 2
 
+            try:
+                file.seek(0)
                 fn = '/' + str(time.strftime('%Y/%m/%d'))
                 if not os.path.exists(document_dir + fn):
                     os.makedirs(document_dir + fn)
                 path = fn + '/' + str(uuid.uuid1()) + '.' + ext
                 file.save(document_dir + path)
-
-                if self.allowed_file(file_name):
-                    file_type = 1
 
                 item = Document(
                     document_id=uuid.uuid4(),
@@ -94,14 +94,18 @@ class DocumentModel():
                     'name': file_name,
                     'size': size,
                     'type': file_type,
-                    'src': path
+                    'src': path,
+                    'uid': uids[i],
+                    'res': 1
                 })
-
-            return data
-        except Exception as e:
-            s.rollback()
-            print e
-            return str(e.message)
+            except Exception as e:
+                s.rollback()
+                data.append({
+                    'uid': uids[i],
+                    'res': 2
+                })
+        
+        return data
 
     def GetDocumentRequest(self, document_id):
         '''

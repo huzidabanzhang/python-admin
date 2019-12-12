@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2019-12-09 14:40:47
+@LastEditTime: 2019-12-12 14:39:04
 @LastEditors: Zpp
 '''
 import hashlib
@@ -194,7 +194,7 @@ init_menu = [
                         "identification": "lock_menu"
                     },
                     {
-                        "path": "/v1/Menu/GetMenu/:menu_id",
+                        "path": "/v1/Menu/GetMenu",
                         "method": "GET",
                         "name": "GetMenu",
                         "description": "根据ID获取菜单",
@@ -292,7 +292,7 @@ init_menu = [
                         "identification": "get_document_list"
                     },
                     {
-                        "path": "/v1/Document/DownDocument/:filename",
+                        "path": "/v1/Document/DownDocument",
                         "method": "GET",
                         "name": "DownDocument",
                         "description": "下载文档",

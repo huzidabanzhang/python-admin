@@ -4,7 +4,7 @@
 @Description: API蓝图初始化注册
 @Author: Zpp
 @Date: 2019-09-04 10:23:46
-@LastEditTime: 2019-10-18 10:56:12
+@LastEditTime: 2019-12-12 14:47:04
 @LastEditors: Zpp
 '''
 from .v1.admin import route_admin
@@ -46,7 +46,7 @@ def init_app(app):
 
     @app.errorhandler(404)
     def handle_404_error(error):
-        return ResultDeal(code=404, msg=u'页面不存在')
+        return ResultDeal(code=404, msg=u'文件或者页面不存在')
 
 
     @app.errorhandler(405)

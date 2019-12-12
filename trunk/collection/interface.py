@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
 @LastEditors: Zpp
-@LastEditTime: 2019-12-09 13:38:34
+@LastEditTime: 2019-12-12 14:38:27
 '''
 from flask import request
 from models.base import db
@@ -98,7 +98,7 @@ class InterfaceModel():
 
             s.query(Interface).filter(Interface.interface_id == interface_id).update(data)
             s.commit()
-            return item
+            return True
         except Exception as e:
             print e
             s.rollback()
