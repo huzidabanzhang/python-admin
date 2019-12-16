@@ -16,5 +16,5 @@
   
   前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
 
-## 最近
-  新增了接口的标识字段 用来前端的权限判断
+## 计划
+  新增一个文档的文件夹功能，等域名通过后准备上第一个版本
