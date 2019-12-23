@@ -20,7 +20,7 @@ route_route = Blueprint('Route', __name__, url_prefix='/v1/Route')
 @validate_current_access
 def CreateRoute():
     params = {
-        'parentId': request.form.get('parentId', '0'),
+        'parent_id': request.form.get('parent_id', '0'),
         'name': request.form.get('name'),
         'title': request.form.get('title'),
         'path': request.form.get('path'),
@@ -57,7 +57,7 @@ def LockRoute():
 @validate_current_access
 def ModifyRoute():
     params = {
-        'parentId': request.form.get('parentId', '0'),
+        'parent_id': request.form.get('parent_id', '0'),
         'name': request.form.get('name'),
         'title': request.form.get('title'),
         'path': request.form.get('path'),

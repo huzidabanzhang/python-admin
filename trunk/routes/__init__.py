@@ -4,8 +4,8 @@
 @Description: API蓝图初始化注册
 @Author: Zpp
 @Date: 2019-09-04 10:23:46
-@LastEditTime: 2019-12-12 14:47:04
-@LastEditors: Zpp
+@LastEditTime : 2019-12-23 15:47:09
+@LastEditors  : Zpp
 '''
 from .v1.admin import route_admin
 from .v1.menu import route_menu
@@ -13,6 +13,7 @@ from .v1.route import route_route
 from .v1.role import route_role
 from .v1.interface import route_interface
 from .v1.document import route_document
+from .v1.folder import route_folder
 from .v1.log import route_log
 
 from flask import current_app, session
@@ -69,4 +70,5 @@ def init_app(app):
     app.register_blueprint(route_role)
     app.register_blueprint(route_interface)
     app.register_blueprint(route_document)
+    app.register_blueprint(route_folder)
     app.register_blueprint(route_log)

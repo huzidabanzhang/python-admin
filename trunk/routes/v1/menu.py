@@ -20,7 +20,7 @@ route_menu = Blueprint('Menu', __name__, url_prefix='/v1/Menu')
 @validate_current_access
 def CreateMenu():
     params = {
-        'parentId': request.form.get('parentId', '0'),
+        'parent_id': request.form.get('parent_id', '0'),
         'title': request.form.get('title'),
         'path': request.form.get('path'),
         'icon': request.form.get('icon'),
@@ -64,7 +64,7 @@ def GetMenu(menu_id):
 @validate_current_access
 def ModifyMenu():
     params = {
-        'parentId': request.form.get('parentId', '0'),
+        'parent_id': request.form.get('parent_id', '0'),
         'title': request.form.get('title'),
         'path': request.form.get('path'),
         'icon': request.form.get('icon'),

@@ -4,8 +4,8 @@
 @Description: 路由控制器
 @Author: Zpp
 @Date: 2019-09-10 16:00:22
-@LastEditTime: 2019-12-09 14:20:57
-@LastEditors: Zpp
+@LastEditTime : 2019-12-23 15:51:00
+@LastEditors  : Zpp
 '''
 from flask import request
 from models.base import db
@@ -29,11 +29,7 @@ class RouteModel():
                 Route.name.like("%" + params['name'] + "%") if params.has_key('name') else text('')
             ).order_by(Route.id).all()
 
-            data = []
-            for value in result:
-                data.append(value.to_json())
-
-            return data
+            return [value.to_json() for value in result]
         except Exception as e:
             print e
             return str(e.message)
@@ -46,7 +42,7 @@ class RouteModel():
         try:
             item = Route(
                 route_id=uuid.uuid4(),
-                parentId=params['parentId'],
+                parent_id=params['parent_id'],
                 name=params['name'],
                 title=params['title'],
                 path=params['path'],
@@ -87,7 +83,7 @@ class RouteModel():
             if not route:
                 return str('路由不存在')
 
-            AllowableFields = ['parentId', 'name', 'path', 'title', 'component', 'componentPath', 'cache']
+            AllowableFields = ['parent_id', 'name', 'path', 'title', 'component', 'componentPath', 'cache']
             data = {}
 
             for i in params:

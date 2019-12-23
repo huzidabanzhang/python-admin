@@ -4,8 +4,8 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2019-12-09 14:18:13
-@LastEditors: Zpp
+@LastEditTime : 2019-12-23 15:49:21
+@LastEditors  : Zpp
 '''
 from flask import request
 from models.base import db
@@ -60,17 +60,15 @@ class AdminModel():
             print e
             return str(e.message)
 
-    def __init_routes(self, data, parentId, role_id):
+    def __init_routes(self, data, parent_id, role_id):
         s = db.session()
         for r in data:
             route_id = uuid.uuid4()
-            route = self.__create_route(r, route_id, parentId)
+            route = self.__create_route(r, route_id, parent_id)
             s.add(route)
 
             role = s.query(Role).filter(Role.role_id == role_id).first()
-            routes = []
-            for i in role.routes:
-                routes.append(i)
+            routes = [i for i in role.routes]
             routes.append(route)
             role.routes = routes
 
@@ -78,11 +76,11 @@ class AdminModel():
             if r.has_key('children'):
                 self.__init_routes(r['children'], route_id, role_id)
 
-    def __init_menus(self, data, parentId, role_id):
+    def __init_menus(self, data, parent_id, role_id):
         s = db.session()
         for m in data:
             menu_id = uuid.uuid4()
-            menu = self.__create_menu(m, menu_id, parentId)
+            menu = self.__create_menu(m, menu_id, parent_id)
 
             if m.has_key('interface'):
                 interfaces = []
@@ -95,9 +93,7 @@ class AdminModel():
             s.add(menu)
 
             role = s.query(Role).filter(Role.role_id == role_id).first()
-            menus = []
-            for i in role.menus:
-                menus.append(i)
+            menus = [i for i in role.menus]
             menus.append(menu)
             role.menus = menus
 
@@ -105,10 +101,10 @@ class AdminModel():
             if m.has_key('children'):
                 self.__init_menus(m['children'], menu_id, role_id)
 
-    def __create_route(self, params, route_id, parentId):
+    def __create_route(self, params, route_id, parent_id):
         return Route(
             route_id=route_id,
-            parentId=parentId,
+            parent_id=parent_id,
             name=params['name'],
             title=params['title'],
             path=params['path'],
@@ -117,10 +113,10 @@ class AdminModel():
             cache=params['cache']
         )
 
-    def __create_menu(self, params, menu_id, parentId):
+    def __create_menu(self, params, menu_id, parent_id):
         return Menu(
             menu_id=menu_id,
-            parentId=parentId,
+            parent_id=parent_id,
             title=params['title'],
             path=params['path'],
             icon=params['icon']
@@ -149,12 +145,8 @@ class AdminModel():
                     data[i] = params[i]
 
             result = Admin.query.filter_by(**data).order_by(order_by).paginate(page, page_size, error_out=False)
-
-            data = []
-            for value in result.items:
-                data.append(value.to_json())
-
-            return {'data': data, 'total': result.total}
+            
+            return {'data': [value.to_json() for value in result.items], 'total': result.total}
         except Exception as e:
             print e
             return str(e.message)

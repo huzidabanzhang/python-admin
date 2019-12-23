@@ -4,8 +4,8 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2019-12-12 14:39:04
-@LastEditors: Zpp
+@LastEditTime : 2019-12-23 15:55:53
+@LastEditors  : Zpp
 '''
 import hashlib
 import os
@@ -311,6 +311,41 @@ init_menu = [
                         "name": "RetrieveDocument",
                         "description": "回收文档",
                         "identification": "retrieve_document"
+                    },
+                    {
+                        "path": "/v1/Folder/CreateFolder",
+                        "method": "POST",
+                        "name": "CreateFolder",
+                        "description": "创建文件夹",
+                        "identification": "create_folder"
+                    },
+                    {
+                        "path": "/v1/Folder/DelFolder",
+                        "method": "POST",
+                        "name": "DelFolder",
+                        "description": "删除文件夹",
+                        "identification": "del_folder"
+                    },
+                    {
+                        "path": "/v1/Folder/GetFolder",
+                        "method": "GET",
+                        "name": "GetFolder",
+                        "description": "获取文件夹下文档",
+                        "identification": "get_folder"
+                    },
+                    {
+                        "path": "/v1/Folder/ModifyFolder",
+                        "method": "POST",
+                        "name": "ModifyFolder",
+                        "description": "修改文件夹",
+                        "identification": "modify_folder"
+                    },
+                    {
+                        "path": "/v1/Folder/QueryFolderByParam",
+                        "method": "POST",
+                        "name": "QueryFolderByParam",
+                        "description": "获取文档列表",
+                        "identification": "query_folder"
                     }
                 ]
             }

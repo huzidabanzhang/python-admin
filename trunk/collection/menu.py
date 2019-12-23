@@ -4,8 +4,8 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2019-12-09 14:19:45
-@LastEditors: Zpp
+@LastEditTime : 2019-12-23 15:50:33
+@LastEditors  : Zpp
 '''
 from flask import request
 from models.base import db
@@ -27,11 +27,7 @@ class MenuModel():
 
             result = Menu.query.filter_by(**data).order_by(Menu.sort, Menu.id).all()
 
-            data = []
-            for value in result:
-                data.append(value.to_json())
-
-            return data
+            return [value.to_json() for value in result]
         except Exception as e:
             print e
             return str(e.message)
@@ -44,7 +40,7 @@ class MenuModel():
         try:
             item = Menu(
                 menu_id=uuid.uuid4(),
-                parentId=params['parentId'],
+                parent_id=params['parent_id'],
                 title=params['title'],
                 type=int(params['type']),
                 sort=int(params['sort']),
@@ -84,7 +80,7 @@ class MenuModel():
             if not menu:
                 return str('菜单不存在')
 
-            AllowableFields = ['parentId', 'title', 'path', 'icon', 'sort', 'type']
+            AllowableFields = ['parent_id', 'title', 'path', 'icon', 'sort', 'type']
             data = {}
 
             for i in params:
@@ -108,7 +104,7 @@ class MenuModel():
             menu = s.query(Menu).filter(Menu.menu_id == menu_id).first()
 
             if isLock:
-                parent = s.query(Menu).filter(Menu.menu_id == menu.parentId, Menu.isLock == False).first()
+                parent = s.query(Menu).filter(Menu.menu_id == menu.parent_id, Menu.isLock == False).first()
                 if parent:
                     return str('父菜单处于禁用状态, 该菜单不能启用')
 
@@ -116,7 +112,7 @@ class MenuModel():
             s.commit()
 
             if not isLock:
-                s.query(Menu).filter(Menu.parentId == menu_id, Menu.isLock == True).update({Menu.isLock: False})
+                s.query(Menu).filter(Menu.parent_id == menu_id, Menu.isLock == True).update({Menu.isLock: False})
                 s.commit()
 
             return True

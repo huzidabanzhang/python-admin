@@ -4,8 +4,8 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2019-12-12 15:19:54
-@LastEditors: Zpp
+@LastEditTime : 2019-12-23 14:50:48
+@LastEditors  : Zpp
 '''
 from models.base import db
 import datetime
@@ -107,7 +107,7 @@ class Route(db.Model):
     __tablename__ = 'db_route'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     route_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
-    parentId = db.Column(db.String(36), nullable=False, index=True, default='0')
+    parent_id = db.Column(db.String(36), nullable=False, index=True, default='0')
     name = db.Column(db.String(64), nullable=False, unique=True)
     title = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False, unique=True)
@@ -134,7 +134,7 @@ class Menu(db.Model):
     __tablename__ = 'db_menu'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     menu_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
-    parentId = db.Column(db.String(36), nullable=False, index=True, default='0')
+    parent_id = db.Column(db.String(36), nullable=False, index=True, default='0')
     title = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False, unique=True)
     icon = db.Column(db.String(255), nullable=False)
@@ -190,11 +190,12 @@ class Document(db.Model):
     admin_id = db.Column(db.String(36), index=True, nullable=False)
     name = db.Column(db.String(64), nullable=False)
     path = db.Column(db.String(255), nullable=False)
-    type = db.Column(db.SmallInteger, index=True, default=1) # 1=图片 2=附件 （其他的自己定义了）
+    type = db.Column(db.SmallInteger, index=True, default=1)  # 1=图片 2=附件 （其他的自己定义了）
     ext = db.Column(db.String(64), nullable=False)
     size = db.Column(db.Integer, nullable=False)
     deleted = db.Column(db.Integer, default=0)
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
+    folder_id = db.Column(db.String(36), db.ForeignKey('db_folder.folder_id'))
     __table_args__ = ({"useexisting": True})
 
     def to_json(self):
@@ -207,6 +208,31 @@ class Document(db.Model):
 
     def __repr__(self):
         return '<Document %r>' % self.name
+
+
+class Folder(db.Model):
+    '''
+    文件夹
+    '''
+    __tablename__ = 'db_folder'
+    id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
+    folder_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
+    parent_id = db.Column(db.String(36), nullable=False, index=True, default='0')
+    name = db.Column(db.String(36), nullable=False)
+    create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
+    documents = db.relationship('Document', backref='folder')
+    __table_args__ = ({"useexisting": True})
+
+    def to_json(self):
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        if "create_time" in dict:
+            dict["create_time"] = dict["create_time"].strftime('%Y-%m-%d %H:%M:%S')
+        return dict
+
+    def __repr__(self):
+        return '<Folder %r>' % self.name
 
 
 class InitSql(db.Model):

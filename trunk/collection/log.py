@@ -4,8 +4,8 @@
 @Description: 日志控制器
 @Author: Zpp
 @Date: 2019-10-17 14:53:00
-@LastEditors: Zpp
-@LastEditTime: 2019-12-05 16:07:49
+@LastEditors  : Zpp
+@LastEditTime : 2019-12-23 15:50:15
 '''
 from flask import request
 from models.base import db
@@ -28,11 +28,7 @@ class LogModel():
             
             result = Log.query.filter(*filters).order_by(text('-id')).paginate(page, page_size, error_out=False)
 
-            data = []
-            for value in result.items:
-                data.append(value.to_json())
-
-            return {'data': data, 'total': result.total}
+            return {'data': [value.to_json() for value in result.items], 'total': result.total}
         except Exception as e:
             print e
             return str(e.message)

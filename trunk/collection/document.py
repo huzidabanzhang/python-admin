@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 上传控制层
+@Description: 上传控制器
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
-@LastEditors: Zpp
-@LastEditTime: 2019-12-12 15:14:05
+@LastEditors  : Zpp
+@LastEditTime : 2019-12-23 15:49:39
 '''
 from flask import request
 from models.base import db
@@ -35,11 +35,7 @@ class DocumentModel():
                 Document.name.like("%" + params['name'] + "%") if params.has_key('name') else text('')
             ).order_by(order_by).paginate(page, page_size, error_out=False)
 
-            data = []
-            for value in result.items:
-                data.append(value.to_json())
-
-            return {'data': data, 'total': result.total}
+            return {'data': [value.to_json() for value in result.items], 'total': result.total}
         except Exception as e:
             print e
             return str(e.message)

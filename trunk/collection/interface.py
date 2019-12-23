@@ -4,8 +4,8 @@
 @Description: 接口控制器
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
-@LastEditors: Zpp
-@LastEditTime: 2019-12-12 14:38:27
+@LastEditors  : Zpp
+@LastEditTime : 2019-12-23 15:50:06
 '''
 from flask import request
 from models.base import db
@@ -32,11 +32,7 @@ class InterfaceModel():
                 Interface.name.like("%" + params['name'] + "%") if params.has_key('name') else text('')
             ).order_by(order_by).paginate(page, page_size, error_out=False)
 
-            data = []
-            for value in result.items:
-                data.append(value.to_json())
-
-            return {'data': data, 'total': result.total}
+            return {'data': [value.to_json() for value in result.items], 'total': result.total}
         except Exception as e:
             print e
             return str(e.message)
