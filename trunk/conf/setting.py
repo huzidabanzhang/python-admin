@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime : 2019-12-23 15:55:53
+@LastEditTime : 2019-12-24 10:43:00
 @LastEditors  : Zpp
 '''
 import hashlib
@@ -275,7 +275,7 @@ init_menu = [
             {
                 "title": "文档管理",
                 "path": "/system/document",
-                "icon": "folder",
+                "icon": "folder-open-o",
                 "interface": [
                     {
                         "path": "/v1/Document/CreateDocument",
@@ -325,13 +325,6 @@ init_menu = [
                         "name": "DelFolder",
                         "description": "删除文件夹",
                         "identification": "del_folder"
-                    },
-                    {
-                        "path": "/v1/Folder/GetFolder",
-                        "method": "GET",
-                        "name": "GetFolder",
-                        "description": "获取文件夹下文档",
-                        "identification": "get_folder"
                     },
                     {
                         "path": "/v1/Folder/ModifyFolder",

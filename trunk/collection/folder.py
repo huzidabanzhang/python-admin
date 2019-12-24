@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-12-23 14:53:50
 @LastEditors  : Zpp
-@LastEditTime : 2019-12-23 15:45:07
+@LastEditTime : 2019-12-24 09:48:58
 '''
 from flask import request
 from models.base import db
@@ -15,7 +15,7 @@ import uuid
 
 
 class FolderModel():
-    def QueryFolderByParamRequest(self, params):
+    def QueryFolderByParamRequest(self):
         '''
         文件夹列表
         '''
@@ -44,21 +44,6 @@ class FolderModel():
             return True
         except Exception as e:
             s.rollback()
-            print e
-            return str(e.message)
-
-    def GetFolderRequest(self, folder_id):
-        '''
-        查询文件夹下文档
-        '''
-        s = db.session()
-        try:
-            folder = s.query(Folder).filter(Folder.folder_id == folder_id).first()
-            if not folder:
-                return str('文件夹不存在')
-
-            return [value.to_json() for value in folder.documents]
-        except Exception as e:
             print e
             return str(e.message)
 

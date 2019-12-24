@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
 @LastEditors  : Zpp
-@LastEditTime : 2019-12-23 15:49:39
+@LastEditTime : 2019-12-24 09:40:15
 '''
 from flask import request
 from models.base import db
@@ -24,7 +24,7 @@ class DocumentModel():
         '''
         s = db.session()
         try:
-            Int = ['type', 'deleted']
+            Int = ['type', 'deleted', 'folder_id']
             data = {}
 
             for i in Int:

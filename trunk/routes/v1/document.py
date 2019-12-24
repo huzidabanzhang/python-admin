@@ -4,8 +4,8 @@
 @Description: 文档API
 @Author: Zpp
 @Date: 2019-10-14 15:56:20
-@LastEditors: Zpp
-@LastEditTime: 2019-12-12 15:03:54
+@LastEditors  : Zpp
+@LastEditTime : 2019-12-24 09:40:25
 '''
 from flask import Blueprint, request, make_response, abort, send_from_directory
 from collection.document import DocumentModel
@@ -82,7 +82,7 @@ def DelDocument():
 @validate_current_access
 def QueryDocumentByParam():
     params = {}
-    Ary = ['type', 'deleted']
+    Ary = ['type', 'deleted', 'folder_id']
     for i in Ary:
         if request.form.get(i):
             params[i] = request.form.get(i)

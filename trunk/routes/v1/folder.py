@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-12-23 15:42:19
 @LastEditors  : Zpp
-@LastEditTime : 2019-12-23 15:45:49
+@LastEditTime : 2019-12-24 09:39:16
 '''
 from flask import Blueprint, request
 from collection.folder import FolderModel
@@ -44,14 +44,6 @@ def DelFolder():
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
 
-    return ResultDeal(data=result)
-
-
-@route_folder.route('/GetFolder/<folder_id>', methods=['GET'])
-@auth.login_required
-@validate_current_access
-def GetFolder(folder_id):
-    result = FolderModel().GetFolderRequest(folder_id=folder_id)
     return ResultDeal(data=result)
 
 
