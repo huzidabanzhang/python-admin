@@ -17,5 +17,5 @@
   前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
 
 ## 计划
-  新增一个文档的文件夹功能，等域名通过后准备上第一个版本
-  准备订婚中...
+  域名备案通过了 下星期准备部署上去
+  明天订婚 哈哈
