@@ -17,8 +17,4 @@
   前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
 
 ## 计划
-<<<<<<< HEAD
-  打算重新理一下 权限关系 感觉有点不对劲 menu route role interface之间的联系要重新弄一下
-=======
-  域名备案通过了 下星期准备部署上去
->>>>>>> 1149cb88e37fc84362e8a4630dc8e31fc6487784
+   打算重新理一下 权限关系 感觉有点不对劲 menu route role interface之间的联系要重新弄一下
