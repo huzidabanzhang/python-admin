@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 文档API
+@Description: 附件API
 @Author: Zpp
 @Date: 2019-10-14 15:56:20
 @LastEditors  : Zpp
-@LastEditTime : 2019-12-24 09:40:25
+@LastEditTime : 2020-01-09 13:10:06
 '''
 from flask import Blueprint, request, make_response, abort, send_from_directory
 from collection.document import DocumentModel

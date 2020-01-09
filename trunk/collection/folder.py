@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-12-23 14:53:50
 @LastEditors  : Zpp
-@LastEditTime : 2019-12-24 09:48:58
+@LastEditTime : 2020-01-09 14:21:03
 '''
 from flask import request
 from models.base import db
@@ -15,13 +15,15 @@ import uuid
 
 
 class FolderModel():
-    def QueryFolderByParamRequest(self):
+    def QueryFolderByParamRequest(self, parent_id):
         '''
         文件夹列表
         '''
         s = db.session()
         try:
-            result = Folder.query.order_by(Folder.id).all()
+            result = Folder.query.filter_by(**{
+                'parent_id': parent_id
+            }).order_by(Folder.id).all()
 
             return [value.to_json() for value in result]
         except Exception as e:
@@ -41,7 +43,7 @@ class FolderModel():
             )
             s.add(item)
             s.commit()
-            return True
+            return item.to_json()
         except Exception as e:
             s.rollback()
             print e

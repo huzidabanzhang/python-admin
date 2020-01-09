@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-12-23 15:42:19
 @LastEditors  : Zpp
-@LastEditTime : 2019-12-24 09:39:16
+@LastEditTime : 2020-01-09 14:03:20
 '''
 from flask import Blueprint, request
 from collection.folder import FolderModel
@@ -68,7 +68,7 @@ def ModifyFolder():
 @auth.login_required
 @validate_current_access
 def QueryFolderByParam():
-    result = FolderModel().QueryFolderByParamRequest()
+    result = FolderModel().QueryFolderByParamRequest(parent_id=request.form.get('parent_id', '0'))
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)

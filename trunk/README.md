@@ -5,7 +5,7 @@
 * 路由管理
 * 角色管理
 * 接口管理
-* 文档管理
+* 附件管理
 * 日志（完成 分为三种不同日志）
 
 ## 启动
@@ -17,5 +17,4 @@
   前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
 
 ## 计划
-  域名备案通过了 下星期准备部署上去
-  元旦快乐
+  打算重新理一下 权限关系 感觉有点不对劲 menu route role interface之间的联系要重新弄一下

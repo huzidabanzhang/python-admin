@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime : 2019-12-24 10:43:00
+@LastEditTime : 2020-01-09 13:09:53
 @LastEditors  : Zpp
 '''
 import hashlib
@@ -86,7 +86,7 @@ init_route = [
                 'path': '/system/document',
                 'component': 'document',
                 'componentPath': 'sys/document/index',
-                'title': u'文档管理',
+                'title': u'附件管理',
                 'cache': True
             }
         ]
@@ -273,7 +273,7 @@ init_menu = [
                 ]
             },
             {
-                "title": "文档管理",
+                "title": "附件管理",
                 "path": "/system/document",
                 "icon": "folder-open-o",
                 "interface": [
@@ -281,35 +281,35 @@ init_menu = [
                         "path": "/v1/Document/CreateDocument",
                         "method": "POST",
                         "name": "CreateDocument",
-                        "description": "添加文档",
+                        "description": "添加附件",
                         "identification": "add_document"
                     },
                     {
                         "path": "/v1/Document/QueryDocumentByParam",
                         "method": "POST",
                         "name": "QueryDocumentByParam",
-                        "description": "获取文档列表",
+                        "description": "获取附件列表",
                         "identification": "get_document_list"
                     },
                     {
                         "path": "/v1/Document/DownDocument",
                         "method": "GET",
                         "name": "DownDocument",
-                        "description": "下载文档",
+                        "description": "下载附件",
                         "identification": "down_document"
                     },
                     {
                         "path": "/v1/Document/DelDocument",
                         "method": "POST",
                         "name": "DelDocument",
-                        "description": "删除文档",
+                        "description": "删除附件",
                         "identification": "del_document"
                     },
                     {
                         "path": "/v1/Document/RetrieveDocument",
                         "method": "POST",
                         "name": "RetrieveDocument",
-                        "description": "回收文档",
+                        "description": "回收附件",
                         "identification": "retrieve_document"
                     },
                     {
@@ -337,7 +337,7 @@ init_menu = [
                         "path": "/v1/Folder/QueryFolderByParam",
                         "method": "POST",
                         "name": "QueryFolderByParam",
-                        "description": "获取文档列表",
+                        "description": "获取附件列表",
                         "identification": "query_folder"
                     }
                 ]
