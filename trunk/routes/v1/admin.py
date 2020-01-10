@@ -4,8 +4,8 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2019-12-11 09:57:17
-@LastEditors: Zpp
+@LastEditTime : 2020-01-10 16:33:09
+@LastEditors  : Zpp
 '''
 from flask import Blueprint, request, make_response, session
 from collection.admin import AdminModel
@@ -24,10 +24,7 @@ def CreateDrop():
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
 
-    return ResultDeal(data={
-        'username': 'Admin',
-        'password': '123456'
-    })
+    return ResultDeal(data=result)
 
 
 @route_admin.route('/AgainCreateDrop', methods=['GET'])
@@ -38,10 +35,7 @@ def AgainCreateDrop():
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
 
-    return ResultDeal(data={
-        'username': 'Admin',
-        'password': '123456'
-    })
+    return ResultDeal(data=result)
 
 
 @route_admin.route('/checkDb', methods=['GET'])

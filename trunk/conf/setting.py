@@ -54,7 +54,7 @@ init_route = [
         'path': '/system',
         'component': 'layoutHeaderAside',
         'componentPath': 'layout/header-aside',
-        'title': u'系统设置',
+        'description': u'系统设置',
         'cache': True,
         'children': [
             {
@@ -62,7 +62,7 @@ init_route = [
                 'path': '/system/menu',
                 'component': 'menu',
                 'componentPath': 'sys/menu/index',
-                'title': u'菜单管理',
+                'description': u'菜单管理',
                 'cache': True
             },
             {
@@ -70,7 +70,7 @@ init_route = [
                 'path': '/system/route',
                 'component': 'route',
                 'componentPath': 'sys/route/index',
-                'title': u'路由管理',
+                'description': u'路由管理',
                 'cache': True
             },
             {
@@ -78,7 +78,7 @@ init_route = [
                 'path': '/system/interface',
                 'component': 'interface',
                 'componentPath': 'sys/interface/index',
-                'title': u'接口管理',
+                'description': u'接口管理',
                 'cache': True
             },
             {
@@ -86,7 +86,7 @@ init_route = [
                 'path': '/system/document',
                 'component': 'document',
                 'componentPath': 'sys/document/index',
-                'title': u'附件管理',
+                'description': u'附件管理',
                 'cache': True
             }
         ]
@@ -96,7 +96,7 @@ init_route = [
         'path': '/role',
         'component': 'layoutHeaderAside',
         'componentPath': 'layout/header-aside',
-        'title': u'权限管理',
+        'description': u'权限管理',
         'cache': True,
         'children': [
             {
@@ -104,7 +104,7 @@ init_route = [
                 'path': '/role/admin',
                 'component': 'admin',
                 'componentPath': 'sys/admin/index',
-                'title': u'管理员用户',
+                'description': u'管理员用户',
                 'cache': True
             },
             {
@@ -112,7 +112,7 @@ init_route = [
                 'path': '/role/role',
                 'component': 'role',
                 'componentPath': 'sys/role/index',
-                'title': u'角色管理',
+                'description': u'角色管理',
                 'cache': True
             }
         ]
@@ -122,7 +122,7 @@ init_route = [
         'path': '/log',
         'component': 'layoutHeaderAside',
         'componentPath': 'layout/header-aside',
-        'title': u'日志管理',
+        'description': u'日志管理',
         'cache': True,
         'children': [
             {
@@ -130,7 +130,7 @@ init_route = [
                 'path': '/log/login',
                 'component': 'login',
                 'componentPath': 'sys/login/index',
-                'title': u'登录日志',
+                'description': u'登录日志',
                 'cache': True
             },
             {
@@ -138,7 +138,7 @@ init_route = [
                 'path': '/log/hander',
                 'component': 'hander',
                 'componentPath': 'sys/hander/index',
-                'title': u'操作日志',
+                'description': u'操作日志',
                 'cache': True
             },
             {
@@ -146,7 +146,7 @@ init_route = [
                 'path': '/log/error',
                 'component': 'error',
                 'componentPath': 'sys/error/index',
-                'title': u'异常日志',
+                'description': u'异常日志',
                 'cache': True
             }
         ]
@@ -156,12 +156,12 @@ init_route = [
 # 初始化菜单和下属的接口
 init_menu = [
     {
-        "title": "系统",
+        "name": "系统",
         "path": "/system",
         "icon": "cog",
         "children": [
             {
-                "title": "菜单管理",
+                "name": "菜单管理",
                 "path": "/system/menu",
                 "icon": "th-list",
                 "interface": [
@@ -170,40 +170,40 @@ init_menu = [
                         "method": "POST",
                         "name": "CreateMenu",
                         "description": "添加菜单",
-                        "identification": "add_menu"
+                        "mark": "add_menu"
                     },
                     {
                         "path": "/v1/Menu/QueryMenuByParam",
                         "method": "POST",
                         "name": "QueryMenuByParam",
                         "description": "获取菜单列表",
-                        "identification": "get_menu_list"
+                        "mark": "get_menu_list"
                     },
                     {
                         "path": "/v1/Menu/ModifyMenu",
                         "method": "POST",
                         "name": "ModifyMenu",
                         "description": "修改菜单信息",
-                        "identification": "set_menu"
+                        "mark": "set_menu"
                     },
                     {
                         "path": "/v1/Menu/LockMenu",
                         "method": "POST",
                         "name": "LockMenu",
                         "description": "禁用菜单",
-                        "identification": "lock_menu"
+                        "mark": "lock_menu"
                     },
                     {
                         "path": "/v1/Menu/GetMenu",
                         "method": "GET",
                         "name": "GetMenu",
                         "description": "根据ID获取菜单",
-                        "identification": "get_menu_item"
+                        "mark": "get_menu_item"
                     }
                 ]
             },
             {
-                "title": "路由管理",
+                "name": "路由管理",
                 "path": "/system/route",
                 "icon": "share-alt",
                 "interface": [
@@ -212,33 +212,33 @@ init_menu = [
                         "method": "POST",
                         "name": "CreateRoute",
                         "description": "添加路由",
-                        "identification": "add_router"
+                        "mark": "add_router"
                     },
                     {
                         "path": "/v1/Route/QueryRouteByParam",
                         "method": "POST",
                         "name": "QueryRouteByParam",
                         "description": "获取路由列表",
-                        "identification": "get_router_list"
+                        "mark": "get_router_list"
                     },
                     {
                         "path": "/v1/Route/ModifyRoute",
                         "method": "POST",
                         "name": "ModifyRoute",
                         "description": "修改路由信息",
-                        "identification": "set_router"
+                        "mark": "set_router"
                     },
                     {
                         "path": "/v1/Route/LockRoute",
                         "method": "POST",
                         "name": "LockRoute",
                         "description": "禁用路由",
-                        "identification": "lock_router"
+                        "mark": "lock_router"
                     }
                 ]
             },
             {
-                "title": "接口管理",
+                "name": "接口管理",
                 "path": "/system/interface",
                 "icon": "send",
                 "interface": [
@@ -247,33 +247,33 @@ init_menu = [
                         "method": "POST",
                         "name": "CreateInterface",
                         "description": "添加接口",
-                        "identification": "add_interface"
+                        "mark": "add_interface"
                     },
                     {
                         "path": "/v1/Interface/QueryInterfaceByParam",
                         "method": "POST",
                         "name": "QueryInterfaceByParam",
                         "description": "获取接口列表",
-                        "identification": "get_interface_list"
+                        "mark": "get_interface_list"
                     },
                     {
                         "path": "/v1/Interface/ModifyInterface",
                         "method": "POST",
                         "name": "ModifyInterface",
                         "description": "修改接口信息",
-                        "identification": "set_interface"
+                        "mark": "set_interface"
                     },
                     {
                         "path": "/v1/Interface/LockInterface",
                         "method": "POST",
                         "name": "LockInterface",
                         "description": "禁用接口",
-                        "identification": "lock_interface"
+                        "mark": "lock_interface"
                     }
                 ]
             },
             {
-                "title": "附件管理",
+                "name": "附件管理",
                 "path": "/system/document",
                 "icon": "folder-open-o",
                 "interface": [
@@ -282,75 +282,75 @@ init_menu = [
                         "method": "POST",
                         "name": "CreateDocument",
                         "description": "添加附件",
-                        "identification": "add_document"
+                        "mark": "add_document"
                     },
                     {
                         "path": "/v1/Document/QueryDocumentByParam",
                         "method": "POST",
                         "name": "QueryDocumentByParam",
                         "description": "获取附件列表",
-                        "identification": "get_document_list"
+                        "mark": "get_document_list"
                     },
                     {
                         "path": "/v1/Document/DownDocument",
                         "method": "GET",
                         "name": "DownDocument",
                         "description": "下载附件",
-                        "identification": "down_document"
+                        "mark": "down_document"
                     },
                     {
                         "path": "/v1/Document/DelDocument",
                         "method": "POST",
                         "name": "DelDocument",
                         "description": "删除附件",
-                        "identification": "del_document"
+                        "mark": "del_document"
                     },
                     {
                         "path": "/v1/Document/RetrieveDocument",
                         "method": "POST",
                         "name": "RetrieveDocument",
                         "description": "回收附件",
-                        "identification": "retrieve_document"
+                        "mark": "retrieve_document"
                     },
                     {
                         "path": "/v1/Folder/CreateFolder",
                         "method": "POST",
                         "name": "CreateFolder",
                         "description": "创建文件夹",
-                        "identification": "create_folder"
+                        "mark": "create_folder"
                     },
                     {
                         "path": "/v1/Folder/DelFolder",
                         "method": "POST",
                         "name": "DelFolder",
                         "description": "删除文件夹",
-                        "identification": "del_folder"
+                        "mark": "del_folder"
                     },
                     {
                         "path": "/v1/Folder/ModifyFolder",
                         "method": "POST",
                         "name": "ModifyFolder",
                         "description": "修改文件夹",
-                        "identification": "modify_folder"
+                        "mark": "modify_folder"
                     },
                     {
                         "path": "/v1/Folder/QueryFolderByParam",
                         "method": "POST",
                         "name": "QueryFolderByParam",
                         "description": "获取附件列表",
-                        "identification": "query_folder"
+                        "mark": "query_folder"
                     }
                 ]
             }
         ]
     },
     {
-        "title": "权限",
+        "name": "权限",
         "path": "/role",
         "icon": "shield",
         "children": [
             {
-                "title": "管理员用户",
+                "name": "管理员用户",
                 "path": "/role/admin",
                 "icon": "user",
                 "interface": [
@@ -359,47 +359,47 @@ init_menu = [
                         "method": "POST",
                         "name": "CreateAdmin",
                         "description": "注册管理员",
-                        "identification": "add_admin"
+                        "mark": "add_admin"
                     },
                     {
                         "path": "/v1/Admin/QueryAdminByParam",
                         "method": "POST",
                         "name": "QueryAdminByParam",
                         "description": "获取管理员列表",
-                        "identification": "get_admin_list"
+                        "mark": "get_admin_list"
                     },
                     {
                         "path": "/v1/Admin/ModifyAdmin",
                         "method": "POST",
                         "name": "ModifyAdmin",
                         "description": "修改管理员信息",
-                        "identification": "set_admin"
+                        "mark": "set_admin"
                     },
                     {
                         "path": "/v1/Admin/LockAdmin",
                         "method": "POST",
                         "name": "LockAdmin",
                         "description": "禁用管理员",
-                        "identification": "lock_admin"
+                        "mark": "lock_admin"
                     },
                     {
                         "path": "/v1/Admin/Logout",
                         "method": "GET",
                         "name": "Logout",
                         "description": "注销管理员",
-                        "identification": "logout_admin"
+                        "mark": "logout_admin"
                     },
                     {
                         "path": "/v1/Admin/CreateDrop",
                         "method": "GET",
                         "name": "CreateDrop",
                         "description": "初始化数据库",
-                        "identification": "init_admin"
+                        "mark": "init_admin"
                     }
                 ]
             },
             {
-                "title": "角色管理",
+                "name": "角色管理",
                 "path": "/role/role",
                 "icon": "group",
                 "interface": [
@@ -408,40 +408,40 @@ init_menu = [
                         "method": "POST",
                         "name": "CreateRole",
                         "description": "添加角色",
-                        "identification": "add_role"
+                        "mark": "add_role"
                     },
                     {
                         "path": "/v1/Role/QueryRoleByParam",
                         "method": "POST",
                         "name": "QueryRoleByParam",
                         "description": "获取角色列表",
-                        "identification": "get_role_list"
+                        "mark": "get_role_list"
                     },
                     {
                         "path": "/v1/Role/ModifyRole",
                         "method": "POST",
                         "name": "ModifyRole",
                         "description": "修改角色信息",
-                        "identification": "set_role"
+                        "mark": "set_role"
                     },
                     {
                         "path": "/v1/Role/LockRole",
                         "method": "POST",
                         "name": "LockRole",
                         "description": "禁用角色",
-                        "identification": "lock_role"
+                        "mark": "lock_role"
                     }
                 ]
             }
         ]
     },
     {
-        "title": "日志",
+        "name": "日志",
         "path": "/log",
         "icon": "bullseye",
         "children": [
             {
-                "title": "登录日志",
+                "name": "登录日志",
                 "path": "/log/login",
                 "icon": "street-view",
                 "interface": [
@@ -450,17 +450,17 @@ init_menu = [
                         "method": "POST",
                         "name": "QueryLogByParam",
                         "description": "获取日志列表",
-                        "identification": "get_log_list"
+                        "mark": "get_log_list"
                     }
                 ]
             },
             {
-                "title": "操作日志",
+                "name": "操作日志",
                 "path": "/log/hander",
                 "icon": "dot-circle-o"
             },
             {
-                "title": "异常日志",
+                "name": "异常日志",
                 "path": "/log/error",
                 "icon": "bug"
             }

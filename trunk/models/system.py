@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime : 2019-12-23 14:50:48
+@LastEditTime : 2020-01-10 16:53:04
 @LastEditors  : Zpp
 '''
 from models.base import db
@@ -21,12 +21,15 @@ class Admin(db.Model):
     username = db.Column(db.String(64), index=True, nullable=False, unique=True)
     password = db.Column(db.String(32), nullable=False)
     nickname = db.Column(db.String(64))
+    email = db.Column(db.String(255))
     sex = db.Column(db.SmallInteger, default=1)
     avatarUrl = db.Column(db.String(255))
-    isLock = db.Column(db.Boolean, index=True, default=True)
-    role_id = db.Column(db.Integer, db.ForeignKey('db_role.id'))
+    is_disabled = db.Column(db.Boolean, index=True, default=True)
+    deleted = db.Column(db.Boolean, index=True, default=False)
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     update_time = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    last_login_time = db.Column(db.DateTime, index=True)
+    login_time = db.Column(db.DateTime, index=True)
     __table_args__ = ({"useexisting": True})
 
     def is_authenticated(self):
@@ -49,6 +52,10 @@ class Admin(db.Model):
             dict["update_time"] = dict["update_time"].strftime('%Y-%m-%d %H:%M:%S')
         if "create_time" in dict:
             dict["create_time"] = dict["create_time"].strftime('%Y-%m-%d %H:%M:%S')
+        if "last_login_time" in dict:
+            dict["last_login_time"] = dict["last_login_time"].strftime('%Y-%m-%d %H:%M:%S')
+        if "login_time" in dict:
+            dict["login_time"] = dict["login_time"].strftime('%Y-%m-%d %H:%M:%S')
         return dict
 
     def __repr__(self):
@@ -61,11 +68,17 @@ MenuToRole = db.Table(
     db.Column('menu_id', db.String(36), db.ForeignKey('db_menu.menu_id'))
 )
 
+AdminToRole = db.Table(
+    'db_admin_to_role',
+    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id')),
+    db.Column('admin_id', db.String(36), db.ForeignKey('db_admin.admin_id'))
+)
 
-RouteToRole = db.Table(
-    'db_route_to_role',
-    db.Column('route_id', db.String(36), db.ForeignKey('db_route.route_id')),
-    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id'))
+
+InterfaceToRole = db.Table(
+    'db_interface_to_role',
+    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id')),
+    db.Column('interface_id', db.String(36), db.ForeignKey('db_interface.interface_id'))
 )
 
 
@@ -77,17 +90,21 @@ class Role(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     role_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
-    isLock = db.Column(db.Boolean, index=True, default=True)
-    checkKey = db.Column(db.Text, nullable=False)
-    admins = db.relationship('Admin', backref='role')
+    mark = db.Column(db.String(64), nullable=False, unique=True)
+    check_key = db.Column(db.Text, nullable=False)
+    is_disabled = db.Column(db.Boolean, index=True, default=True)
+    admins = db.relationship('Admin',
+                             secondary=AdminToRole,
+                             backref=db.backref('db_role', lazy='dynamic'),
+                             lazy='dynamic')
     menus = db.relationship('Menu',
                             secondary=MenuToRole,
                             backref=db.backref('db_role', lazy='dynamic'),
                             lazy='dynamic')
-    routes = db.relationship('Route',
-                             secondary=RouteToRole,
-                             backref=db.backref('db_route', lazy='dynamic'),
-                             lazy='dynamic')
+    interfaces = db.relationship('Interface',
+                                 secondary=InterfaceToRole,
+                                 backref=db.backref('db_interface', lazy='dynamic'),
+                                 lazy='dynamic')
     __table_args__ = ({"useexisting": True})
 
     def to_json(self):
@@ -107,14 +124,14 @@ class Route(db.Model):
     __tablename__ = 'db_route'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     route_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
-    parent_id = db.Column(db.String(36), nullable=False, index=True, default='0')
+    pid = db.Column(db.String(36), nullable=False, index=True, default='0')
     name = db.Column(db.String(64), nullable=False, unique=True)
-    title = db.Column(db.String(64), nullable=False, unique=True)
+    description = db.Column(db.String(255), nullable=False)
     path = db.Column(db.String(255), nullable=False, unique=True)
     component = db.Column(db.String(255), nullable=False)
     componentPath = db.Column(db.String(255), nullable=False)
     cache = db.Column(db.Boolean, index=True, default=True)
-    isLock = db.Column(db.Boolean, index=True, default=True)
+    is_disabled = db.Column(db.Boolean, index=True, default=True)
     __table_args__ = ({"useexisting": True})
 
     def to_json(self):
@@ -134,13 +151,12 @@ class Menu(db.Model):
     __tablename__ = 'db_menu'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     menu_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
-    parent_id = db.Column(db.String(36), nullable=False, index=True, default='0')
-    title = db.Column(db.String(64), nullable=False, unique=True)
+    pid = db.Column(db.String(36), nullable=False, index=True, default='0')
+    name = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False, unique=True)
     icon = db.Column(db.String(255), nullable=False)
     sort = db.Column(db.SmallInteger, index=True, default=1)
-    type = db.Column(db.SmallInteger, index=True, default=1)
-    isLock = db.Column(db.Boolean, index=True, default=True)
+    is_disabled = db.Column(db.Boolean, index=True, default=True)
     interfaces = db.relationship('Interface', backref='menu')
     __table_args__ = ({"useexisting": True})
 
@@ -165,8 +181,8 @@ class Interface(db.Model):
     path = db.Column(db.String(255), nullable=False, unique=True)
     method = db.Column(db.String(36), nullable=False)
     description = db.Column(db.String(255), nullable=False)
-    identification = db.Column(db.String(255), nullable=False, unique=True)
-    isLock = db.Column(db.Boolean, index=True, default=True)
+    mark = db.Column(db.String(255), nullable=False, unique=True)
+    is_disabled = db.Column(db.Boolean, index=True, default=True)
     menu_id = db.Column(db.String(36), db.ForeignKey('db_menu.menu_id'))
     __table_args__ = ({"useexisting": True})
 
@@ -182,7 +198,7 @@ class Interface(db.Model):
 
 class Document(db.Model):
     '''
-    文档
+    附件
     '''
     __tablename__ = 'db_document'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
@@ -190,10 +206,10 @@ class Document(db.Model):
     admin_id = db.Column(db.String(36), index=True, nullable=False)
     name = db.Column(db.String(64), nullable=False)
     path = db.Column(db.String(255), nullable=False)
-    type = db.Column(db.SmallInteger, index=True, default=1)  # 1=图片 2=附件 （其他的自己定义了）
+    status = db.Column(db.SmallInteger, index=True, default=1)  # 1=图片 2=附件 （其他的自己定义了）
     ext = db.Column(db.String(64), nullable=False)
     size = db.Column(db.Integer, nullable=False)
-    deleted = db.Column(db.Integer, default=0)
+    deleted = db.Column(db.Boolean, index=True, default=False)
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     folder_id = db.Column(db.String(36), db.ForeignKey('db_folder.folder_id'))
     __table_args__ = ({"useexisting": True})
@@ -217,7 +233,7 @@ class Folder(db.Model):
     __tablename__ = 'db_folder'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     folder_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
-    parent_id = db.Column(db.String(36), nullable=False, index=True, default='0')
+    pid = db.Column(db.String(36), nullable=False, index=True, default='0')
     name = db.Column(db.String(36), nullable=False)
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     documents = db.relationship('Document', backref='folder')

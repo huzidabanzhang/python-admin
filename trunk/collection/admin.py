@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime : 2019-12-23 15:49:21
+@LastEditTime : 2020-01-10 16:53:34
 @LastEditors  : Zpp
 '''
 from flask import request
@@ -14,6 +14,7 @@ from conf.setting import Config, init_route, init_menu
 from sqlalchemy import text
 import uuid
 import datetime
+import random
 
 
 class AdminModel():
@@ -31,19 +32,25 @@ class AdminModel():
 
             db.drop_all()
             db.create_all()
+            password = self.__get_code()
 
             admin = Admin(
                 admin_id=uuid.uuid4(),
                 username=u'Admin',
-                password=Config().get_md5('123456'),
-                avatarUrl='',
-                role_id=1
+                password=Config().get_md5(password),
+                avatarUrl=''
             )
             s.add(admin)
             s.commit()
 
             role_id = uuid.uuid4()
-            role = Role(role_id=role_id, name=u'超级管理员', checkKey='[]')
+            role = Role(
+                role_id=role_id, 
+                name=u'超级管理员', 
+                check_key='[]', 
+                admins=[admin],
+                mark=u'SYS_ADMIN'
+            )
             s.add(role)
             s.commit()
 
@@ -55,44 +62,57 @@ class AdminModel():
                 s.add(sql)
                 s.commit()
 
-            return True
+            return {
+                'username': 'Admin',
+                'password': password
+            }
         except Exception as e:
             print e
             return str(e.message)
 
-    def __init_routes(self, data, parent_id, role_id):
+    def __get_code(self):
+        code_list = []
+        for i in range(10):   # 0~9
+            code_list.append(str(i))
+        for i in range(65, 91):  # A-Z
+            code_list.append(chr(i))
+        for i in range(97, 123):  # a-z
+            code_list.append(chr(i))
+        code = random.sample(code_list, 6)  # 随机取6位数
+        code_num = ''.join(code)
+        return code_num
+
+    def __init_routes(self, data, pid, role_id):
         s = db.session()
         for r in data:
             route_id = uuid.uuid4()
-            route = self.__create_route(r, route_id, parent_id)
+            route = self.__create_route(r, route_id, pid)
             s.add(route)
-
-            role = s.query(Role).filter(Role.role_id == role_id).first()
-            routes = [i for i in role.routes]
-            routes.append(route)
-            role.routes = routes
-
             s.commit()
             if r.has_key('children'):
                 self.__init_routes(r['children'], route_id, role_id)
 
-    def __init_menus(self, data, parent_id, role_id):
+    def __init_menus(self, data, pid, role_id):
         s = db.session()
         for m in data:
+            role = s.query(Role).filter(Role.role_id == role_id).first()
+
             menu_id = uuid.uuid4()
-            menu = self.__create_menu(m, menu_id, parent_id)
+            menu = self.__create_menu(m, menu_id, pid)
 
             if m.has_key('interface'):
                 interfaces = []
                 for f in m['interface']:
                     interface = self.__create_interface(f, uuid.uuid4(), menu_id)
                     s.add(interface)
-                    s.commit()
                     interfaces.append(interface)
                 menu.interfaces = interfaces
+
+                role_interfaces = [i for i in role.interfaces]
+                role.interfaces = role_interfaces + interfaces
+
             s.add(menu)
 
-            role = s.query(Role).filter(Role.role_id == role_id).first()
             menus = [i for i in role.menus]
             menus.append(menu)
             role.menus = menus
@@ -101,23 +121,23 @@ class AdminModel():
             if m.has_key('children'):
                 self.__init_menus(m['children'], menu_id, role_id)
 
-    def __create_route(self, params, route_id, parent_id):
+    def __create_route(self, params, route_id, pid):
         return Route(
             route_id=route_id,
-            parent_id=parent_id,
+            pid=pid,
             name=params['name'],
-            title=params['title'],
+            description=params['description'],
             path=params['path'],
             component=params['component'],
             componentPath=params['componentPath'],
             cache=params['cache']
         )
 
-    def __create_menu(self, params, menu_id, parent_id):
+    def __create_menu(self, params, menu_id, pid):
         return Menu(
             menu_id=menu_id,
-            parent_id=parent_id,
-            title=params['title'],
+            pid=pid,
+            name=params['name'],
             path=params['path'],
             icon=params['icon']
         )
@@ -130,7 +150,7 @@ class AdminModel():
             path=params['path'],
             method=params['method'],
             description=params['description'],
-            identification=params['identification']
+            mark=params['mark']
         )
 
     def QueryAdminByParamRequest(self, params, page=1, page_size=20, order_by='id'):
@@ -145,7 +165,7 @@ class AdminModel():
                     data[i] = params[i]
 
             result = Admin.query.filter_by(**data).order_by(order_by).paginate(page, page_size, error_out=False)
-            
+
             return {'data': [value.to_json() for value in result.items], 'total': result.total}
         except Exception as e:
             print e
