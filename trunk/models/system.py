@@ -4,11 +4,31 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime : 2020-01-10 16:53:04
+@LastEditTime : 2020-01-13 14:48:35
 @LastEditors  : Zpp
 '''
 from models.base import db
 import datetime
+
+
+MenuToRole = db.Table(
+    'db_menu_to_role',
+    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id')),
+    db.Column('menu_id', db.String(36), db.ForeignKey('db_menu.menu_id'))
+)
+
+AdminToRole = db.Table(
+    'db_admin_to_role',
+    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id')),
+    db.Column('admin_id', db.String(36), db.ForeignKey('db_admin.admin_id'))
+)
+
+
+InterfaceToRole = db.Table(
+    'db_interface_to_role',
+    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id')),
+    db.Column('interface_id', db.String(36), db.ForeignKey('db_interface.interface_id'))
+)
 
 
 class Admin(db.Model):
@@ -30,6 +50,10 @@ class Admin(db.Model):
     update_time = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     last_login_time = db.Column(db.DateTime, index=True)
     login_time = db.Column(db.DateTime, index=True)
+    roles = db.relationship('Role',
+                            secondary=AdminToRole,
+                            backref=db.backref('db_admin', lazy='dynamic'),
+                            lazy='dynamic')
     __table_args__ = ({"useexisting": True})
 
     def is_authenticated(self):
@@ -62,26 +86,6 @@ class Admin(db.Model):
         return '<admin %r>' % self.username
 
 
-MenuToRole = db.Table(
-    'db_menu_to_role',
-    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id')),
-    db.Column('menu_id', db.String(36), db.ForeignKey('db_menu.menu_id'))
-)
-
-AdminToRole = db.Table(
-    'db_admin_to_role',
-    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id')),
-    db.Column('admin_id', db.String(36), db.ForeignKey('db_admin.admin_id'))
-)
-
-
-InterfaceToRole = db.Table(
-    'db_interface_to_role',
-    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id')),
-    db.Column('interface_id', db.String(36), db.ForeignKey('db_interface.interface_id'))
-)
-
-
 class Role(db.Model):
     '''
     权限
@@ -93,10 +97,6 @@ class Role(db.Model):
     mark = db.Column(db.String(64), nullable=False, unique=True)
     check_key = db.Column(db.Text, nullable=False)
     is_disabled = db.Column(db.Boolean, index=True, default=True)
-    admins = db.relationship('Admin',
-                             secondary=AdminToRole,
-                             backref=db.backref('db_role', lazy='dynamic'),
-                             lazy='dynamic')
     menus = db.relationship('Menu',
                             secondary=MenuToRole,
                             backref=db.backref('db_role', lazy='dynamic'),

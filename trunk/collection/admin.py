@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime : 2020-01-10 16:53:34
+@LastEditTime : 2020-01-13 14:48:00
 @LastEditors  : Zpp
 '''
 from flask import request
@@ -34,24 +34,24 @@ class AdminModel():
             db.create_all()
             password = self.__get_code()
 
-            admin = Admin(
-                admin_id=uuid.uuid4(),
-                username=u'Admin',
-                password=Config().get_md5(password),
-                avatarUrl=''
-            )
-            s.add(admin)
-            s.commit()
-
             role_id = uuid.uuid4()
             role = Role(
                 role_id=role_id, 
                 name=u'超级管理员', 
-                check_key='[]', 
-                admins=[admin],
+                check_key='[]',
                 mark=u'SYS_ADMIN'
             )
             s.add(role)
+            s.commit()
+
+            admin = Admin(
+                admin_id=uuid.uuid4(),
+                username=u'Admin',
+                password=Config().get_md5(password),
+                avatarUrl='',
+                roles=[role]
+            )
+            s.add(admin)
             s.commit()
 
             self.__init_routes(init_route, '0', role_id)
@@ -177,8 +177,14 @@ class AdminModel():
         '''
         s = db.session()
         try:
-            if params['role_id'] == 1:
-                return str('不能设为为超级管理员')
+            role = s.query(Role).filter(Role.role_id.in_(params['role_id']))
+
+            if not role:
+                return str('角色不存在')
+
+            for i in role:
+                if i.mark == 'SYS_ADMIN':
+                    return str('不能设为为超级管理员')
 
             admin = s.query(Admin).filter(Admin.username == params['username']).first()
 
@@ -190,9 +196,10 @@ class AdminModel():
                 username=params['username'],
                 password=Config().get_md5(params['password']),
                 sex=int(params['sex']),
+                email=params['email'],
                 nickname=params['nickname'],
-                role_id=int(params['role_id']),
-                avatarUrl=params['avatarUrl']
+                avatarUrl=params['avatarUrl'],
+                roles=role
             )
             s.add(item)
             s.commit()
@@ -215,24 +222,25 @@ class AdminModel():
                 return str('管理员被禁用')
 
             data = admin.to_json()
-            route = []
-            menu = []
-            interface = []
-            role = s.query(Role).filter(Role.id == admin.role_id).first()
-            if role:
-                for i in role.routes:
-                    item = i.to_json()
-                    if item['isLock']:
-                        route.append(item)
+            print data
+            # route = []
+            # menu = []
+            # interface = []
+            # role = s.query(Role).filter(Role.id == admin.role_id).first()
+            # if role:
+            #     for i in role.routes:
+            #         item = i.to_json()
+            #         if item['isLock']:
+            #             route.append(item)
 
-                for i in role.menus.filter(Menu.isLock == True).order_by(Menu.sort, Menu.id):
-                    menu.append(i.to_json())
-                    interfaces = s.query(Interface).filter(Interface.menu_id == i.menu_id, Interface.isLock == True).all()
-                    interface = interface + [i.to_json() for i in interfaces]
+            #     for i in role.menus.filter(Menu.isLock == True).order_by(Menu.sort, Menu.id):
+            #         menu.append(i.to_json())
+            #         interfaces = s.query(Interface).filter(Interface.menu_id == i.menu_id, Interface.isLock == True).all()
+            #         interface = interface + [i.to_json() for i in interfaces]
 
-            data['routes'] = route
-            data['menus'] = menu
-            data['interface'] = interface
+            # data['routes'] = route
+            # data['menus'] = menu
+            # data['interface'] = interface
             return data
         except Exception as e:
             print e
@@ -244,16 +252,22 @@ class AdminModel():
         '''
         s = db.session()
         try:
-            if params['role_id'] == 1:
-                return str('不能设为为超级管理员')
-
             admin = s.query(Admin).filter(Admin.admin_id == admin_id).first()
             if not admin:
                 return str('管理员不存在')
             if not admin.isLock:
                 return str('管理员被禁用')
+            
+            role = s.query(Role).filter(Role.role_id.in_(params['role_id']))
 
-            AllowableFields = ['nickname', 'sex', 'role_id', 'avatarUrl', 'password']
+            if not role:
+                return str('角色不存在')
+
+            for i in role:
+                if i.mark == 'SYS_ADMIN':
+                    return str('不能设为为超级管理员')
+
+            AllowableFields = ['nickname', 'sex', 'role_id', 'avatarUrl', 'password', 'email']
             data = {}
 
             for i in params:
@@ -261,6 +275,8 @@ class AdminModel():
                     if i == 'password':
                         if params[i] != admin.password:
                             data[i] = Config().get_md5(params[i])
+                    elif i == 'role_id':
+                        data[i] = role
                     else:
                         data[i] = params[i]
 
