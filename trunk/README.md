@@ -17,5 +17,5 @@
   前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
 
 ## 计划
-   打算重新理一下 权限关系 感觉有点不对劲 menu route role interface之间的联系要重新弄一下
-   马上过年 暂停 暂停
+   明天将新增 角色组表 用来建立角色和权限间多对多的关系
+   这病毒弄的人心惶惶 每天窝在家里很难受！！！
