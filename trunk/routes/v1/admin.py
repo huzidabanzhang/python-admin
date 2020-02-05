@@ -4,8 +4,8 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime : 2020-01-10 16:33:09
-@LastEditors  : Zpp
+@LastEditTime : 2020-02-05 14:28:28
+@LastEditors  : Please set LastEditors
 '''
 from flask import Blueprint, request, make_response, session
 from collection.admin import AdminModel
@@ -63,16 +63,16 @@ def GetCaptcha():
 @route_admin.route('/Login', methods=['POST'])
 def Login():
     # 验证码校验
-    captcha = request.form.get('code')
-    sesson_captcha = session.get('Captcha')
-    if not captcha:
-        return ResultDeal(msg=u'请输入验证码', code=-1)
+    # captcha = request.form.get('code')
+    # sesson_captcha = session.get('Captcha')
+    # if not captcha:
+    #     return ResultDeal(msg=u'请输入验证码', code=-1)
 
-    if not sesson_captcha:
-        return ResultDeal(msg=u'请刷新验证码', code=-1)
+    # if not sesson_captcha:
+    #     return ResultDeal(msg=u'请刷新验证码', code=-1)
 
-    if session.get('Captcha').lower() != captcha.lower():
-        return ResultDeal(msg=u'验证码不正确', code=-1)
+    # if session.get('Captcha').lower() != captcha.lower():
+    #     return ResultDeal(msg=u'验证码不正确', code=-1)
 
     result = AdminModel().GetAdminRequest(
         username=request.form.get('username'),

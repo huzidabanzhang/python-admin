@@ -4,8 +4,8 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime : 2020-01-13 14:48:00
-@LastEditors  : Zpp
+@LastEditTime : 2020-02-05 15:08:11
+@LastEditors  : Please set LastEditors
 '''
 from flask import request
 from models.base import db
@@ -37,8 +37,7 @@ class AdminModel():
             role_id = uuid.uuid4()
             role = Role(
                 role_id=role_id, 
-                name=u'超级管理员', 
-                check_key='[]',
+                name=u'超级管理员',
                 mark=u'SYS_ADMIN'
             )
             s.add(role)
@@ -49,7 +48,7 @@ class AdminModel():
                 username=u'Admin',
                 password=Config().get_md5(password),
                 avatarUrl='',
-                roles=[role]
+                role_id=role_id
             )
             s.add(admin)
             s.commit()
@@ -160,7 +159,7 @@ class AdminModel():
         s = db.session()
         try:
             data = {}
-            for i in ['role_id', 'isLock']:
+            for i in ['role_id', 'is_disabled']:
                 if params.has_key(i):
                     data[i] = params[i]
 
@@ -177,14 +176,13 @@ class AdminModel():
         '''
         s = db.session()
         try:
-            role = s.query(Role).filter(Role.role_id.in_(params['role_id']))
+            role = s.query(Role).filter(Role.role_id.in_(params['role_id'])).first()
 
             if not role:
                 return str('角色不存在')
 
-            for i in role:
-                if i.mark == 'SYS_ADMIN':
-                    return str('不能设为为超级管理员')
+            if role.mark == 'SYS_ADMIN':
+                return str('不能设为为超级管理员')
 
             admin = s.query(Admin).filter(Admin.username == params['username']).first()
 
@@ -199,7 +197,7 @@ class AdminModel():
                 email=params['email'],
                 nickname=params['nickname'],
                 avatarUrl=params['avatarUrl'],
-                roles=role
+                role_id=params['role_id']
             )
             s.add(item)
             s.commit()
@@ -218,30 +216,34 @@ class AdminModel():
             admin = s.query(Admin).filter(Admin.username == username, Admin.password == Config().get_md5(password)).first()
             if not admin:
                 return str('管理员不存在')
-            if not admin.isLock:
+            if not admin.is_disabled:
                 return str('管理员被禁用')
 
-            data = admin.to_json()
-            print data
-            # route = []
-            # menu = []
-            # interface = []
-            # role = s.query(Role).filter(Role.id == admin.role_id).first()
-            # if role:
-            #     for i in role.routes:
-            #         item = i.to_json()
-            #         if item['isLock']:
-            #             route.append(item)
+            route = []
+            menu = []
+            interface = []
 
-            #     for i in role.menus.filter(Menu.isLock == True).order_by(Menu.sort, Menu.id):
-            #         menu.append(i.to_json())
-            #         interfaces = s.query(Interface).filter(Interface.menu_id == i.menu_id, Interface.isLock == True).all()
-            #         interface = interface + [i.to_json() for i in interfaces]
+            routes = s.query(Route).filter(Route.is_disabled == True)
+            for i in routes:
+                route.append(i.to_json())
 
-            # data['routes'] = route
-            # data['menus'] = menu
-            # data['interface'] = interface
-            return data
+            role = s.query(Role).filter(Role.id == admin.role_id).first()
+            if role:
+                for i in role.menus.filter(Menu.is_disabled == True).order_by(Menu.sort, Menu.id):
+                    menu.append(i.to_json())
+                for i in role.interfaces.filter(Interface.is_disabled == True):
+                    interface.append(i.to_json())
+
+            # 更新登录Ip和时间
+            admin.login_time = datetime.datetime.now
+            admin.login_ip = request.remote_addr
+            s.commit()
+                    
+            return {
+                'routes': route,
+                'menus': menu,
+                'interface': interface
+            }
         except Exception as e:
             print e
             return str(e.message)
@@ -255,17 +257,16 @@ class AdminModel():
             admin = s.query(Admin).filter(Admin.admin_id == admin_id).first()
             if not admin:
                 return str('管理员不存在')
-            if not admin.isLock:
+            if not admin.is_disabled:
                 return str('管理员被禁用')
             
-            role = s.query(Role).filter(Role.role_id.in_(params['role_id']))
+            role = s.query(Role).filter(Role.role_id.in_(params['role_id'])).first()
 
             if not role:
                 return str('角色不存在')
 
-            for i in role:
-                if i.mark == 'SYS_ADMIN':
-                    return str('不能设为为超级管理员')
+            if role.mark == 'SYS_ADMIN':
+                return str('不能设为为超级管理员')
 
             AllowableFields = ['nickname', 'sex', 'role_id', 'avatarUrl', 'password', 'email']
             data = {}
@@ -275,8 +276,6 @@ class AdminModel():
                     if i == 'password':
                         if params[i] != admin.password:
                             data[i] = Config().get_md5(params[i])
-                    elif i == 'role_id':
-                        data[i] = role
                     else:
                         data[i] = params[i]
 
@@ -288,13 +287,13 @@ class AdminModel():
             s.rollback()
             return str(e.message)
 
-    def LockAdminRequest(self, admin_id, isLock):
+    def LockAdminRequest(self, admin_id, is_disabled):
         '''
         禁用管理员
         '''
         s = db.session()
         try:
-            s.query(Admin).filter(Admin.admin_id.in_(admin_id)).update({Admin.isLock: isLock}, synchronize_session=False)
+            s.query(Admin).filter(Admin.admin_id.in_(admin_id)).update({Admin.is_disabled: is_disabled}, synchronize_session=False)
             s.commit()
             return True
         except Exception as e:

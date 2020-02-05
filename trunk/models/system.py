@@ -4,8 +4,8 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime : 2020-01-13 14:48:35
-@LastEditors  : Zpp
+@LastEditTime : 2020-02-05 14:45:38
+@LastEditors  : Please set LastEditors
 '''
 from models.base import db
 import datetime
@@ -15,12 +15,6 @@ MenuToRole = db.Table(
     'db_menu_to_role',
     db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id')),
     db.Column('menu_id', db.String(36), db.ForeignKey('db_menu.menu_id'))
-)
-
-AdminToRole = db.Table(
-    'db_admin_to_role',
-    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id')),
-    db.Column('admin_id', db.String(36), db.ForeignKey('db_admin.admin_id'))
 )
 
 
@@ -48,12 +42,9 @@ class Admin(db.Model):
     deleted = db.Column(db.Boolean, index=True, default=False)
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     update_time = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
-    last_login_time = db.Column(db.DateTime, index=True)
+    login_ip = db.Column(db.String(255), index=True)
     login_time = db.Column(db.DateTime, index=True)
-    roles = db.relationship('Role',
-                            secondary=AdminToRole,
-                            backref=db.backref('db_admin', lazy='dynamic'),
-                            lazy='dynamic')
+    role_id = db.Column(db.String(36), db.ForeignKey('db_role.role_id'))
     __table_args__ = ({"useexisting": True})
 
     def is_authenticated(self):
@@ -95,8 +86,8 @@ class Role(db.Model):
     role_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
     mark = db.Column(db.String(64), nullable=False, unique=True)
-    check_key = db.Column(db.Text, nullable=False)
     is_disabled = db.Column(db.Boolean, index=True, default=True)
+    admins = db.relationship('Admin', backref='role')
     menus = db.relationship('Menu',
                             secondary=MenuToRole,
                             backref=db.backref('db_role', lazy='dynamic'),
