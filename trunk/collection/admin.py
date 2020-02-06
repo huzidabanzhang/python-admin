@@ -4,13 +4,13 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime : 2020-02-05 15:08:11
+@LastEditTime : 2020-02-06 16:26:02
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
 from models.base import db
-from models.system import Admin, Role, Route, Menu, Interface, InitSql
-from conf.setting import Config, init_route, init_menu
+from models.system import Admin, Role, Route, Menu, Interface, InitSql, LoginLock
+from conf.setting import Config, init_route, init_menu, base_info
 from sqlalchemy import text
 import uuid
 import datetime
@@ -209,13 +209,41 @@ class AdminModel():
 
     def GetAdminRequest(self, username, password):
         '''
-        查询管理员
+        登录管理员
         '''
         s = db.session()
         try:
-            admin = s.query(Admin).filter(Admin.username == username, Admin.password == Config().get_md5(password)).first()
+            admin = s.query(Admin).filter(Admin.username == username).first()
             if not admin:
                 return str('管理员不存在')
+
+            is_lock = s.query(LoginLock).filter(LoginLock.user_id == admin.admin_id).first()
+            if is_lock and is_lock.number >= base_info['lock_times']:
+                if datetime.datetime.now() < is_lock.lock_time:
+                    return str('账号锁定中, 请在%s分钟后重试' % (is_lock.lock_time - datetime.datetime.now()).minute)
+
+            if admin.password != Config().get_md5(password):
+                number = 1
+                if is_lock:
+                    number = is_lock.number + 1
+                    if number >= base_info['lock_times']:
+                        add_minutes = (number - base_info['lock_times']) + 1
+                        is_lock.lock_time = datetime.datetime.now() + datetime.timedelta(minutes=add_minutes)
+                    is_lock.number = number
+                else:
+                    s.add(LoginLock(
+                        lock_id=uuid.uuid4(),
+                        user_id=admin.admin_id,
+                        flag=False,
+                        number=number,
+                        ip=request.remote_addr
+                    ))
+                s.commit()
+                if number - base_info['lock_times'] == 0:
+                    return str('密码不正确, 您的账号已经被锁定, 请在%s分钟后重试' % add_minutes)
+                else:
+                    return str('密码不正确, 还有%s次机会' % (number - base_info['lock_times']))
+
             if not admin.is_disabled:
                 return str('管理员被禁用')
 
@@ -234,10 +262,10 @@ class AdminModel():
                 for i in role.interfaces.filter(Interface.is_disabled == True):
                     interface.append(i.to_json())
 
-            # 更新登录Ip和时间
-            admin.login_time = datetime.datetime.now
-            admin.login_ip = request.remote_addr
-            s.commit()
+            # 登录成功删除掉原来的锁定记录
+            if is_lock:
+                is_lock.delete()
+                s.commit()
                     
             return {
                 'routes': route,

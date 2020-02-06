@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime : 2020-02-05 14:45:38
+@LastEditTime : 2020-02-06 16:22:02
 @LastEditors  : Please set LastEditors
 '''
 from models.base import db
@@ -42,8 +42,6 @@ class Admin(db.Model):
     deleted = db.Column(db.Boolean, index=True, default=False)
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     update_time = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
-    login_ip = db.Column(db.String(255), index=True)
-    login_time = db.Column(db.DateTime, index=True)
     role_id = db.Column(db.String(36), db.ForeignKey('db_role.role_id'))
     __table_args__ = ({"useexisting": True})
 
@@ -67,14 +65,36 @@ class Admin(db.Model):
             dict["update_time"] = dict["update_time"].strftime('%Y-%m-%d %H:%M:%S')
         if "create_time" in dict:
             dict["create_time"] = dict["create_time"].strftime('%Y-%m-%d %H:%M:%S')
-        if "last_login_time" in dict:
-            dict["last_login_time"] = dict["last_login_time"].strftime('%Y-%m-%d %H:%M:%S')
-        if "login_time" in dict:
-            dict["login_time"] = dict["login_time"].strftime('%Y-%m-%d %H:%M:%S')
         return dict
 
     def __repr__(self):
         return '<admin %r>' % self.username
+
+
+class LoginLock(db.Model):
+    '''
+    登录锁定
+    '''
+    __tablename__ = 'db_login_lock'
+    id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
+    lock_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
+    user_id = db.Column(db.String(36), index=True, nullable=False)
+    flag = db.Column(db.Boolean, index=True, default=False) # 是否锁定
+    number = db.Column(db.Integer, primary_key=True, default=0)
+    ip = db.Column(db.String(36), index=True)
+    lock_time = db.Column(db.DateTime)
+    __table_args__ = ({"useexisting": True})
+
+    def to_json(self):
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        if "lock_time" in dict:
+            dict["lock_time"] = dict["lock_time"].strftime('%Y-%m-%d %H:%M:%S')
+        return dict
+
+    def __repr__(self):
+        return '<LoginLock %r>' % self.lock_id
 
 
 class Role(db.Model):

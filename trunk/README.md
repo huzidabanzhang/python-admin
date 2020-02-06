@@ -17,5 +17,4 @@
   前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
 
 ## 计划
-   管理员和权限关系改为 一对多关系
-    增加登录记录表和登录错误次数锁定
+   修改所有API接口的字段让接口能正常获取

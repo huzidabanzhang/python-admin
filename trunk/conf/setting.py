@@ -4,13 +4,18 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime : 2020-01-09 13:09:53
-@LastEditors  : Zpp
+@LastEditTime : 2020-02-06 16:05:49
+@LastEditors  : Please set LastEditors
 '''
 import hashlib
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__) + '/..')
+
+base_info = {
+    'lock_times': 5,
+    'lock_every_time': 5
+}
 
 token_info = {
     'expiration': 30 * 24 * 3600,
