@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime : 2020-02-06 16:05:49
+@LastEditTime : 2020-02-07 14:26:06
 @LastEditors  : Please set LastEditors
 '''
 import hashlib
@@ -13,8 +13,8 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__) + '/..')
 
 base_info = {
-    'lock_times': 5,
-    'lock_every_time': 5
+    'lock_times': 5, # 开始锁定的次数
+    'lock_every_time': 5 # 超过锁定次数每次加的时间
 }
 
 token_info = {
