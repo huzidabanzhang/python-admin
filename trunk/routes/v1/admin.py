@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime : 2020-02-05 14:28:28
+@LastEditTime : 2020-02-09 14:44:59
 @LastEditors  : Please set LastEditors
 '''
 from flask import Blueprint, request, make_response, session
@@ -63,16 +63,16 @@ def GetCaptcha():
 @route_admin.route('/Login', methods=['POST'])
 def Login():
     # 验证码校验
-    # captcha = request.form.get('code')
-    # sesson_captcha = session.get('Captcha')
-    # if not captcha:
-    #     return ResultDeal(msg=u'请输入验证码', code=-1)
+    captcha = request.form.get('code')
+    sesson_captcha = session.get('Captcha')
+    if not captcha:
+        return ResultDeal(msg=u'请输入验证码', code=-1)
 
-    # if not sesson_captcha:
-    #     return ResultDeal(msg=u'请刷新验证码', code=-1)
+    if not sesson_captcha:
+        return ResultDeal(msg=u'请刷新验证码', code=-1)
 
-    # if session.get('Captcha').lower() != captcha.lower():
-    #     return ResultDeal(msg=u'验证码不正确', code=-1)
+    if session.get('Captcha').lower() != captcha.lower():
+        return ResultDeal(msg=u'验证码不正确', code=-1)
 
     result = AdminModel().GetAdminRequest(
         username=request.form.get('username'),
@@ -83,26 +83,23 @@ def Login():
         return ResultDeal(msg=result, code=-1)
 
     try:
+        user = result['user']
+
         token = generate_auth_token({
-            'admin_id': result['admin_id'],
-            'password': result['password'],
-            'is_admin': True if result['role_id'] == 1 else False
+            'admin_id': user['admin_id'],
+            'password': user['password'],
+            'is_admin': True if user['role_type'] == 'SYS_ADMIN' else False
         })
 
         session['admin'] = token
-        session['username'] = result['username']
+        session['username'] = user['username']
 
         return ResultDeal(data={
             'token': token,
             'routes': result['routes'],
             'menus': result['menus'],
             'interface': result['interface'],
-            'info': {
-                'name': result['nickname'] if result['nickname'] else result['username'],
-                'user_id': result['admin_id'],
-                'avatarUrl': result['avatarUrl'],
-                'key': result['password']
-            }
+            'info': user
         })
     except Exception as e:
         print e

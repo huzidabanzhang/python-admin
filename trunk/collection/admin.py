@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime : 2020-02-06 16:26:02
+@LastEditTime : 2020-02-09 14:35:20
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
@@ -15,6 +15,7 @@ from sqlalchemy import text
 import uuid
 import datetime
 import random
+import copy
 
 
 class AdminModel():
@@ -244,7 +245,7 @@ class AdminModel():
                 else:
                     return str('密码不正确, 还有%s次机会' % (number - base_info['lock_times']))
 
-            if not admin.is_disabled:
+            if admin.is_disabled:
                 return str('管理员被禁用')
 
             route = []
@@ -255,12 +256,18 @@ class AdminModel():
             for i in routes:
                 route.append(i.to_json())
 
-            role = s.query(Role).filter(Role.id == admin.role_id).first()
+            role = s.query(Role).filter(Role.role_id == admin.role_id).first()
             if role:
                 for i in role.menus.filter(Menu.is_disabled == True).order_by(Menu.sort, Menu.id):
                     menu.append(i.to_json())
                 for i in role.interfaces.filter(Interface.is_disabled == True):
                     interface.append(i.to_json())
+
+            user = copy.deepcopy(admin.to_json())
+            del user['id']
+            del user['create_time']
+            del user['update_time']
+            user['role_type'] = role.mark
 
             # 登录成功删除掉原来的锁定记录
             if is_lock:
@@ -270,7 +277,8 @@ class AdminModel():
             return {
                 'routes': route,
                 'menus': menu,
-                'interface': interface
+                'interface': interface,
+                'user': user
             }
         except Exception as e:
             print e
@@ -285,7 +293,7 @@ class AdminModel():
             admin = s.query(Admin).filter(Admin.admin_id == admin_id).first()
             if not admin:
                 return str('管理员不存在')
-            if not admin.is_disabled:
+            if admin.is_disabled:
                 return str('管理员被禁用')
             
             role = s.query(Role).filter(Role.role_id.in_(params['role_id'])).first()
