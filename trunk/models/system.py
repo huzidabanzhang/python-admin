@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime : 2020-02-06 16:22:02
+@LastEditTime : 2020-02-10 19:28:18
 @LastEditors  : Please set LastEditors
 '''
 from models.base import db
@@ -105,7 +105,7 @@ class Role(db.Model):
     role_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
     mark = db.Column(db.String(64), nullable=False, unique=True)
-    is_disabled = db.Column(db.Boolean, index=True, default=True)
+    is_disabled = db.Column(db.Boolean, index=True, default=False)
     admins = db.relationship('Admin', backref='role')
     menus = db.relationship('Menu',
                             secondary=MenuToRole,
@@ -136,12 +136,12 @@ class Route(db.Model):
     route_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     pid = db.Column(db.String(36), nullable=False, index=True, default='0')
     name = db.Column(db.String(64), nullable=False, unique=True)
-    description = db.Column(db.String(255), nullable=False)
+    title = db.Column(db.String(255), nullable=False)
     path = db.Column(db.String(255), nullable=False, unique=True)
     component = db.Column(db.String(255), nullable=False)
     componentPath = db.Column(db.String(255), nullable=False)
     cache = db.Column(db.Boolean, index=True, default=True)
-    is_disabled = db.Column(db.Boolean, index=True, default=True)
+    is_disabled = db.Column(db.Boolean, index=True, default=False)
     __table_args__ = ({"useexisting": True})
 
     def to_json(self):
@@ -162,11 +162,11 @@ class Menu(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     menu_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     pid = db.Column(db.String(36), nullable=False, index=True, default='0')
-    name = db.Column(db.String(64), nullable=False, unique=True)
+    title = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False, unique=True)
     icon = db.Column(db.String(255), nullable=False)
     sort = db.Column(db.SmallInteger, index=True, default=1)
-    is_disabled = db.Column(db.Boolean, index=True, default=True)
+    is_disabled = db.Column(db.Boolean, index=True, default=False)
     interfaces = db.relationship('Interface', backref='menu')
     __table_args__ = ({"useexisting": True})
 
@@ -192,7 +192,7 @@ class Interface(db.Model):
     method = db.Column(db.String(36), nullable=False)
     description = db.Column(db.String(255), nullable=False)
     mark = db.Column(db.String(255), nullable=False, unique=True)
-    is_disabled = db.Column(db.Boolean, index=True, default=True)
+    is_disabled = db.Column(db.Boolean, index=True, default=False)
     menu_id = db.Column(db.String(36), db.ForeignKey('db_menu.menu_id'))
     __table_args__ = ({"useexisting": True})
 

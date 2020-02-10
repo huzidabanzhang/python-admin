@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime : 2020-02-07 14:26:06
+@LastEditTime : 2020-02-10 19:31:00
 @LastEditors  : Please set LastEditors
 '''
 import hashlib
@@ -59,7 +59,7 @@ init_route = [
         'path': '/system',
         'component': 'layoutHeaderAside',
         'componentPath': 'layout/header-aside',
-        'description': u'系统设置',
+        'title': u'系统设置',
         'cache': True,
         'children': [
             {
@@ -67,7 +67,7 @@ init_route = [
                 'path': '/system/menu',
                 'component': 'menu',
                 'componentPath': 'sys/menu/index',
-                'description': u'菜单管理',
+                'title': u'菜单管理',
                 'cache': True
             },
             {
@@ -75,7 +75,7 @@ init_route = [
                 'path': '/system/route',
                 'component': 'route',
                 'componentPath': 'sys/route/index',
-                'description': u'路由管理',
+                'title': u'路由管理',
                 'cache': True
             },
             {
@@ -83,7 +83,7 @@ init_route = [
                 'path': '/system/interface',
                 'component': 'interface',
                 'componentPath': 'sys/interface/index',
-                'description': u'接口管理',
+                'title': u'接口管理',
                 'cache': True
             },
             {
@@ -91,7 +91,7 @@ init_route = [
                 'path': '/system/document',
                 'component': 'document',
                 'componentPath': 'sys/document/index',
-                'description': u'附件管理',
+                'title': u'附件管理',
                 'cache': True
             }
         ]
@@ -101,7 +101,7 @@ init_route = [
         'path': '/role',
         'component': 'layoutHeaderAside',
         'componentPath': 'layout/header-aside',
-        'description': u'权限管理',
+        'title': u'权限管理',
         'cache': True,
         'children': [
             {
@@ -109,7 +109,7 @@ init_route = [
                 'path': '/role/admin',
                 'component': 'admin',
                 'componentPath': 'sys/admin/index',
-                'description': u'管理员用户',
+                'title': u'管理员用户',
                 'cache': True
             },
             {
@@ -117,7 +117,7 @@ init_route = [
                 'path': '/role/role',
                 'component': 'role',
                 'componentPath': 'sys/role/index',
-                'description': u'角色管理',
+                'title': u'角色管理',
                 'cache': True
             }
         ]
@@ -127,7 +127,7 @@ init_route = [
         'path': '/log',
         'component': 'layoutHeaderAside',
         'componentPath': 'layout/header-aside',
-        'description': u'日志管理',
+        'title': u'日志管理',
         'cache': True,
         'children': [
             {
@@ -135,7 +135,7 @@ init_route = [
                 'path': '/log/login',
                 'component': 'login',
                 'componentPath': 'sys/login/index',
-                'description': u'登录日志',
+                'title': u'登录日志',
                 'cache': True
             },
             {
@@ -143,7 +143,7 @@ init_route = [
                 'path': '/log/hander',
                 'component': 'hander',
                 'componentPath': 'sys/hander/index',
-                'description': u'操作日志',
+                'title': u'操作日志',
                 'cache': True
             },
             {
@@ -151,7 +151,7 @@ init_route = [
                 'path': '/log/error',
                 'component': 'error',
                 'componentPath': 'sys/error/index',
-                'description': u'异常日志',
+                'title': u'异常日志',
                 'cache': True
             }
         ]
@@ -161,12 +161,12 @@ init_route = [
 # 初始化菜单和下属的接口
 init_menu = [
     {
-        "name": "系统",
+        "title": "系统",
         "path": "/system",
         "icon": "cog",
         "children": [
             {
-                "name": "菜单管理",
+                "title": "菜单管理",
                 "path": "/system/menu",
                 "icon": "th-list",
                 "interface": [
@@ -208,7 +208,7 @@ init_menu = [
                 ]
             },
             {
-                "name": "路由管理",
+                "title": "路由管理",
                 "path": "/system/route",
                 "icon": "share-alt",
                 "interface": [
@@ -243,7 +243,7 @@ init_menu = [
                 ]
             },
             {
-                "name": "接口管理",
+                "title": "接口管理",
                 "path": "/system/interface",
                 "icon": "send",
                 "interface": [
@@ -278,7 +278,7 @@ init_menu = [
                 ]
             },
             {
-                "name": "附件管理",
+                "title": "附件管理",
                 "path": "/system/document",
                 "icon": "folder-open-o",
                 "interface": [
@@ -350,12 +350,12 @@ init_menu = [
         ]
     },
     {
-        "name": "权限",
+        "title": "权限",
         "path": "/role",
         "icon": "shield",
         "children": [
             {
-                "name": "管理员用户",
+                "title": "管理员用户",
                 "path": "/role/admin",
                 "icon": "user",
                 "interface": [
@@ -404,7 +404,7 @@ init_menu = [
                 ]
             },
             {
-                "name": "角色管理",
+                "title": "角色管理",
                 "path": "/role/role",
                 "icon": "group",
                 "interface": [
@@ -441,12 +441,12 @@ init_menu = [
         ]
     },
     {
-        "name": "日志",
+        "title": "日志",
         "path": "/log",
         "icon": "bullseye",
         "children": [
             {
-                "name": "登录日志",
+                "title": "登录日志",
                 "path": "/log/login",
                 "icon": "street-view",
                 "interface": [
@@ -460,12 +460,12 @@ init_menu = [
                 ]
             },
             {
-                "name": "操作日志",
+                "title": "操作日志",
                 "path": "/log/hander",
                 "icon": "dot-circle-o"
             },
             {
-                "name": "异常日志",
+                "title": "异常日志",
                 "path": "/log/error",
                 "icon": "bug"
             }
