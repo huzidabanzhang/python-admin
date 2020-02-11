@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime : 2020-02-09 14:44:59
+@LastEditTime : 2020-02-11 15:18:55
 @LastEditors  : Please set LastEditors
 '''
 from flask import Blueprint, request, make_response, session
@@ -120,8 +120,9 @@ def CreateAdmin():
         'username': request.form.get('username'),
         'password': request.form.get('password'),
         'nickname': request.form.get('nickname', ''),
+        'email': request.form.get('email', ''),
         'sex': request.form.get('sex', 1),
-        'role_id': request.form.get('role_id', 1),
+        'role_id': request.form.get('role_id'),
         'avatarUrl': request.form.get('avatarUrl', '')
     }
 
@@ -139,7 +140,7 @@ def CreateAdmin():
 def LockAdmin():
     result = AdminModel().LockAdminRequest(
         admin_id=request.form.getlist('admin_id[]'),
-        isLock=True if request.form.get('isLock') == 'true' else False
+        is_disabled=True if request.form.get('is_disabled') == 'true' else False
     )
     return ResultDeal(data=result)
 
@@ -151,9 +152,10 @@ def ModifyAdmin():
     params = {
         'password': request.form.get('password'),
         'nickname': request.form.get('nickname'),
+        'email': request.form.get('email', ''),
         'sex': int(request.form.get('sex')),
-        'avatarUrl': request.form.get('avatarUrl'),
-        'role_id': int(request.form.get('role_id'))
+        'avatarUrl': request.form.get('avatarUrl', ''),
+        'role_id': request.form.get('role_id')
     }
 
     result = AdminModel().ModifyAdminRequest(admin_id=request.form.get('admin_id'), params=params)
@@ -169,10 +171,10 @@ def ModifyAdmin():
 @validate_current_access
 def QueryAdminByParam():
     params = {}
-    if request.form.get('isLock'):
-        params['isLock'] = True if request.form.get('isLock') == 'true' else False
+    if request.form.get('is_disabled'):
+        params['is_disabled'] = True if request.form.get('is_disabled') == 'true' else False
     if request.form.get('role_id'):
-        params['role_id'] = int(request.form.get('role_id'))
+        params['role_id'] = request.form.get('role_id')
 
     result = AdminModel().QueryAdminByParamRequest(
         params=params,

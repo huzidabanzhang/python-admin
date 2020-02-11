@@ -4,8 +4,8 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2019-12-09 14:20:39
-@LastEditors: Zpp
+@LastEditTime : 2020-02-11 14:52:29
+@LastEditors  : Please set LastEditors
 '''
 from flask import request
 from models.base import db
@@ -100,16 +100,14 @@ class RoleModel():
         s = db.session()
         try:
             data = {}
-            if params.has_key('isLock'):
-                data['isLock'] = params['isLock']
+            if params.has_key('is_disabled'):
+                data['is_disabled'] = params['is_disabled']
 
             result = Role.query.filter_by(**data).order_by(Role.id).all()
 
             data = []
             for value in result:
-                item = value.to_json()
-                item['checkKey'] = json.loads(item['checkKey'])
-                data.append(item)
+                data.append(value.to_json())
 
             return data
         except Exception as e:

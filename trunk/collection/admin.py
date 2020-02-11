@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime : 2020-02-10 19:32:49
+@LastEditTime : 2020-02-11 15:12:24
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
@@ -296,7 +296,7 @@ class AdminModel():
             if admin.is_disabled:
                 return str('管理员被禁用')
             
-            role = s.query(Role).filter(Role.role_id.in_(params['role_id'])).first()
+            role = s.query(Role).filter(Role.role_id == params['role_id']).first()
 
             if not role:
                 return str('角色不存在')
