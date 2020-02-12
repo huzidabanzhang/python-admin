@@ -4,7 +4,7 @@
 @Description: 菜单API
 @Author: Zpp
 @Date: 2019-09-10 16:16:54
-@LastEditTime : 2020-02-12 14:05:36
+@LastEditTime : 2020-02-12 19:17:39
 @LastEditors  : Please set LastEditors
 '''
 from flask import Blueprint, request
@@ -87,6 +87,8 @@ def QueryMenuByParam():
     params = {}
     if request.form.get('is_disabled'):
         params['is_disabled'] = True if request.form.get('is_disabled') == 'true' else False
+    if request.form.get('role_id'):
+        params['role_id'] = request.form.get('role_id')
             
     result = MenuModel().QueryMenuByParamRequest(
         params=params, 

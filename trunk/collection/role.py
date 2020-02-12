@@ -4,7 +4,7 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime : 2020-02-12 16:02:45
+@LastEditTime : 2020-02-12 19:56:26
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
@@ -85,7 +85,7 @@ class RoleModel():
         '''
         s = db.session()
         try:
-            s.query(Role).filter(Role.role_id.in_(role_id)).update({Role.is_disabled: is_disabled})
+            s.query(Role).filter(Role.role_id.in_(role_id)).update({Role.is_disabled: is_disabled}, synchronize_session=False)
             s.commit()
             return True
         except Exception as e:

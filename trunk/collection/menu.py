@@ -4,12 +4,12 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime : 2020-02-12 15:21:25
+@LastEditTime : 2020-02-12 20:03:49
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
 from models.base import db
-from models.system import Menu
+from models.system import Menu, Role
 from sqlalchemy import text
 import uuid
 
@@ -28,6 +28,7 @@ class MenuModel():
             result = Menu.query.filter_by(**data).order_by(Menu.sort, Menu.id).all()
 
             if is_interface:
+                select = []
                 menus = []
                 for value in result:
                     interfaces = []
@@ -44,7 +45,18 @@ class MenuModel():
                         'pid': value.pid,
                         'children': interfaces
                     })
-                return menus
+                
+                if params.has_key('role_id'):
+                    role = Role.query.filter(Role.role_id == params['role_id']).first()
+                    result = role.menus.filter(Menu.is_disabled == params['is_disabled'])
+                    for value in result:
+                        for item in value.interfaces:
+                            select.append(item.interface_id)
+
+                return {
+                    'data': menus,
+                    'select': select
+                }
             else:
                 return [value.to_json() for value in result]
         except Exception as e:
