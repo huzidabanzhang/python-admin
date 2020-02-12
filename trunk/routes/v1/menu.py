@@ -4,8 +4,8 @@
 @Description: 菜单API
 @Author: Zpp
 @Date: 2019-09-10 16:16:54
-@LastEditTime: 2019-11-19 14:37:47
-@LastEditors: Zpp
+@LastEditTime : 2020-02-12 14:05:36
+@LastEditors  : Please set LastEditors
 '''
 from flask import Blueprint, request
 from collection.menu import MenuModel
@@ -85,10 +85,13 @@ def ModifyMenu():
 @validate_current_access
 def QueryMenuByParam():
     params = {}
-    if request.form.get('isLock'):
-        params['isLock'] = True if request.form.get('isLock') == 'true' else False
+    if request.form.get('is_disabled'):
+        params['is_disabled'] = True if request.form.get('is_disabled') == 'true' else False
             
-    result = MenuModel().QueryMenuByParamRequest(params=params)
+    result = MenuModel().QueryMenuByParamRequest(
+        params=params, 
+        is_interface=True if request.form.get('is_interface') == 'true' else False
+    )
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)

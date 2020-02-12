@@ -4,14 +4,13 @@
 @Description: 权限API
 @Author: Zpp
 @Date: 2019-09-12 10:30:39
-@LastEditTime: 2019-11-18 16:20:06
-@LastEditors: Zpp
+@LastEditTime : 2020-02-12 15:00:14
+@LastEditors  : Please set LastEditors
 '''
 from flask import Blueprint, request
 from collection.role import RoleModel
 from ..token_auth import auth, validate_current_access
 from libs.code import ResultDeal
-import uuid
 import json
 
 route_role = Blueprint('Role', __name__, url_prefix='/v1/Role')
@@ -22,11 +21,10 @@ route_role = Blueprint('Role', __name__, url_prefix='/v1/Role')
 @validate_current_access
 def CreateRole():
     params = {
-        'role_id': uuid.uuid4(),
         'name': request.form.get('name'),
-        'checkKey': request.form.get('checkKey'),
+        'mark': request.form.get('mark'),
         'menu_id': request.form.getlist('menu_id[]'),
-        'route_id': request.form.getlist('route_id[]')
+        'interface_id': request.form.getlist('interface_id[]')
     }
 
     result = RoleModel().CreateRoleRequest(params)
@@ -43,7 +41,7 @@ def CreateRole():
 def LockRole():
     result = RoleModel().LockRoleRequest(
         role_id=request.form.getlist('role_id[]'),
-        isLock=True if request.form.get('isLock') == 'true' else False
+        is_disabled=True if request.form.get('is_disabled') == 'true' else False
     )
 
     if type(result).__name__ == 'str':
@@ -58,9 +56,9 @@ def LockRole():
 def ModifyRole():
     params = {
         'name': request.form.get('name'),
-        'checkKey': request.form.get('checkKey'),
+        'mark': request.form.get('mark'),
         'menu_id': request.form.getlist('menu_id[]'),
-        'route_id': request.form.getlist('route_id[]')
+        'interface_id': request.form.getlist('interface_id[]')
     }
     result = RoleModel().ModifyRoleRequest(role_id=request.form.get('role_id'), params=params)
 
@@ -75,8 +73,8 @@ def ModifyRole():
 @validate_current_access
 def QueryRoleByParam():
     params = {}
-    if request.form.get('isLock'):
-        params['isLock'] = True if request.form.get('isLock') == 'true' else False
+    if request.form.get('is_disabled'):
+        params['is_disabled'] = True if request.form.get('is_disabled') == 'true' else False
 
     result = RoleModel().QueryRoleByParamRequest(params=params)
 

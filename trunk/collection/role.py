@@ -4,12 +4,12 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime : 2020-02-11 14:52:29
+@LastEditTime : 2020-02-12 16:02:45
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
 from models.base import db
-from models.system import Role, Route, Menu
+from models.system import Role, Interface, Menu
 from sqlalchemy import text
 import uuid
 import json
@@ -22,14 +22,14 @@ class RoleModel():
         '''
         s = db.session()
         try:
-            route = s.query(Route).filter(Route.route_id.in_(params['route_id'])).all()
+            interface = s.query(Interface).filter(Interface.interface_id.in_(params['interface_id'])).all()
             menu = s.query(Menu).filter(Menu.menu_id.in_(params['menu_id'])).all()
 
             item = Role(
                 name=params['name'],
+                mark=params['mark'],
                 role_id=uuid.uuid4(),
-                checkKey=params['checkKey'],
-                routes=route,
+                interfaces=interface,
                 menus=menu
             )
             s.add(item)
@@ -65,12 +65,12 @@ class RoleModel():
             if not role:
                 return str('数据不存在')
 
-            route = s.query(Route).filter(Route.route_id.in_(params['route_id'])).all()
+            interface = s.query(Interface).filter(Interface.interface_id.in_(params['interface_id'])).all()
             menu = s.query(Menu).filter(Menu.menu_id.in_(params['menu_id'])).all()
 
             role.name = params['name']
-            role.checkKey = params['checkKey']
-            role.routes = route
+            role.mark = params['mark']
+            role.interfaces = interface
             role.menus = menu
             s.commit()
             return True
@@ -79,13 +79,28 @@ class RoleModel():
             s.rollback()
             return str(e.message)
 
-    def LockRoleRequest(self, role_id, isLock):
+    def LockRoleRequest(self, role_id, is_disabled):
         '''
         禁用权限
         '''
         s = db.session()
         try:
-            s.query(Role).filter(Role.role_id.in_(role_id)).update({Role.isLock: isLock})
+            s.query(Role).filter(Role.role_id.in_(role_id)).update({Role.is_disabled: is_disabled})
+            s.commit()
+            return True
+        except Exception as e:
+            print e
+            s.rollback()
+            return str(e.message)
+
+    def delRoleRequest(self, role_id):
+        '''
+        删除权限
+        '''
+        s = db.session()
+        try:
+            result = s.query(Role).filter(Role.role_id.in_(role_id)).all()
+            result.delete()
             s.commit()
             return True
         except Exception as e:

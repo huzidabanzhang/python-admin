@@ -4,8 +4,8 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime : 2019-12-23 15:50:33
-@LastEditors  : Zpp
+@LastEditTime : 2020-02-12 15:21:25
+@LastEditors  : Please set LastEditors
 '''
 from flask import request
 from models.base import db
@@ -15,19 +15,38 @@ import uuid
 
 
 class MenuModel():
-    def QueryMenuByParamRequest(self, params):
+    def QueryMenuByParamRequest(self, params, is_interface=False):
         '''
         菜单列表
         '''
         s = db.session()
         try:
             data = {}
-            if params.has_key('isLock'):
-                data['isLock'] = params['isLock']
+            if params.has_key('is_disabled'):
+                data['is_disabled'] = params['is_disabled']
 
             result = Menu.query.filter_by(**data).order_by(Menu.sort, Menu.id).all()
 
-            return [value.to_json() for value in result]
+            if is_interface:
+                menus = []
+                for value in result:
+                    interfaces = []
+                    for item in value.interfaces:
+                        interfaces.append({
+                            'type': 'INTERFACE',
+                            'title': item.description,
+                            'menu_id': item.interface_id
+                        })
+                    menus.append({
+                        'type': 'MENU',
+                        'title': value.title,
+                        'menu_id': value.menu_id,
+                        'pid': value.pid,
+                        'children': interfaces
+                    })
+                return menus
+            else:
+                return [value.to_json() for value in result]
         except Exception as e:
             print e
             return str(e.message)
