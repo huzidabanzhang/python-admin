@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime : 2020-02-11 15:12:24
+@LastEditTime : 2020-02-13 14:29:38
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
@@ -330,6 +330,24 @@ class AdminModel():
         s = db.session()
         try:
             s.query(Admin).filter(Admin.admin_id.in_(admin_id)).update({Admin.is_disabled: is_disabled}, synchronize_session=False)
+            s.commit()
+            return True
+        except Exception as e:
+            print e
+            s.rollback()
+            return str(e.message)
+
+    def DelAdminRequest(self, admin_id, role_id):
+        '''
+        删除管理员
+        '''
+        s = db.session()
+        try:
+            admins = s.query(Admin).filter(Admin.admin_id.in_(admin_id)).all()
+            role = s.query(Role).filter(Role.role_id == role_id).first()
+
+            role.admins.remove(admins)
+            admins.delete()
             s.commit()
             return True
         except Exception as e:

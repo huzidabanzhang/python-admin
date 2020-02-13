@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime : 2020-02-10 19:31:00
+@LastEditTime : 2020-02-13 14:33:49
 @LastEditors  : Please set LastEditors
 '''
 import hashlib
@@ -388,17 +388,17 @@ init_menu = [
                         "mark": "lock_admin"
                     },
                     {
-                        "path": "/v1/Admin/Logout",
-                        "method": "GET",
-                        "name": "Logout",
-                        "description": "注销管理员",
-                        "mark": "logout_admin"
+                        "path": "/v1/Admin/DelAdmin",
+                        "method": "POST",
+                        "name": "DelAdmin",
+                        "description": "删除管理员",
+                        "mark": "del_admin"
                     },
                     {
-                        "path": "/v1/Admin/CreateDrop",
+                        "path": "/v1/Admin/AgainCreateDrop",
                         "method": "GET",
-                        "name": "CreateDrop",
-                        "description": "初始化数据库",
+                        "name": "AgainCreateDrop",
+                        "description": "重新初始化数据库",
                         "mark": "init_admin"
                     }
                 ]
@@ -435,6 +435,13 @@ init_menu = [
                         "name": "LockRole",
                         "description": "禁用角色",
                         "mark": "lock_role"
+                    },
+                    {
+                        "path": "/v1/Role/DelRole",
+                        "method": "POST",
+                        "name": "DelRole",
+                        "description": "删除角色",
+                        "mark": "del_role"
                     }
                 ]
             }
@@ -444,20 +451,20 @@ init_menu = [
         "title": "日志",
         "path": "/log",
         "icon": "bullseye",
+        "interface": [
+            {
+                "path": "/v1/Log/QueryLogByParam",
+                "method": "POST",
+                "name": "QueryLogByParam",
+                "description": "获取日志列表",
+                "mark": "get_log_list"
+            }
+        ],
         "children": [
             {
                 "title": "登录日志",
                 "path": "/log/login",
-                "icon": "street-view",
-                "interface": [
-                    {
-                        "path": "/v1/Log/QueryLogByParam",
-                        "method": "POST",
-                        "name": "QueryLogByParam",
-                        "description": "获取日志列表",
-                        "mark": "get_log_list"
-                    }
-                ]
+                "icon": "street-view"
             },
             {
                 "title": "操作日志",

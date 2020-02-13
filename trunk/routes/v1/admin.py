@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime : 2020-02-11 15:18:55
+@LastEditTime : 2020-02-13 14:27:27
 @LastEditors  : Please set LastEditors
 '''
 from flask import Blueprint, request, make_response, session
@@ -142,6 +142,25 @@ def LockAdmin():
         admin_id=request.form.getlist('admin_id[]'),
         is_disabled=True if request.form.get('is_disabled') == 'true' else False
     )
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
+    return ResultDeal(data=result)
+
+
+@route_admin.route('/DelAdmin', methods=['POST'])
+@auth.login_required
+@validate_current_access
+def DelAdmin():
+    result = AdminModel().DelAdminRequest(
+        admin_id=request.form.getlist('admin_id[]'),
+        role_id=request.form.get('role_id')
+    )
+    
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+        
     return ResultDeal(data=result)
 
 

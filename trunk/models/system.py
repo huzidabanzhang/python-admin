@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime : 2020-02-10 19:28:18
+@LastEditTime : 2020-02-13 15:31:16
 @LastEditors  : Please set LastEditors
 '''
 from models.base import db
@@ -13,15 +13,15 @@ import datetime
 
 MenuToRole = db.Table(
     'db_menu_to_role',
-    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id')),
-    db.Column('menu_id', db.String(36), db.ForeignKey('db_menu.menu_id'))
+    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id', ondelete='CASCADE')),
+    db.Column('menu_id', db.String(36), db.ForeignKey('db_menu.menu_id', ondelete='CASCADE'))
 )
 
 
 InterfaceToRole = db.Table(
     'db_interface_to_role',
-    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id')),
-    db.Column('interface_id', db.String(36), db.ForeignKey('db_interface.interface_id'))
+    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id', ondelete='CASCADE')),
+    db.Column('interface_id', db.String(36), db.ForeignKey('db_interface.interface_id', ondelete='CASCADE'))
 )
 
 

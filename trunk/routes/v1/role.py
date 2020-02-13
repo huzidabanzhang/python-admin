@@ -4,7 +4,7 @@
 @Description: 权限API
 @Author: Zpp
 @Date: 2019-09-12 10:30:39
-@LastEditTime : 2020-02-12 15:00:14
+@LastEditTime : 2020-02-13 13:54:18
 @LastEditors  : Please set LastEditors
 '''
 from flask import Blueprint, request
@@ -42,6 +42,20 @@ def LockRole():
     result = RoleModel().LockRoleRequest(
         role_id=request.form.getlist('role_id[]'),
         is_disabled=True if request.form.get('is_disabled') == 'true' else False
+    )
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+        
+    return ResultDeal(data=result)
+
+
+@route_role.route('/DelRole', methods=['POST'])
+@auth.login_required
+@validate_current_access
+def DelRole():
+    result = RoleModel().DelRoleRequest(
+        role_id=request.form.getlist('role_id[]')
     )
 
     if type(result).__name__ == 'str':

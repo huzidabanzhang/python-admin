@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime : 2020-02-12 20:03:49
+@LastEditTime : 2020-02-13 14:36:41
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
@@ -50,8 +50,11 @@ class MenuModel():
                     role = Role.query.filter(Role.role_id == params['role_id']).first()
                     result = role.menus.filter(Menu.is_disabled == params['is_disabled'])
                     for value in result:
-                        for item in value.interfaces:
-                            select.append(item.interface_id)
+                        if len(value.interfaces) == 0:
+                            select.append(item.menu_id)
+                        else:
+                            for item in value.interfaces:
+                                select.append(item.interface_id)
 
                 return {
                     'data': menus,

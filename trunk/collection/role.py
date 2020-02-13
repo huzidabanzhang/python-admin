@@ -4,7 +4,7 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime : 2020-02-12 19:56:26
+@LastEditTime : 2020-02-13 15:38:35
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
@@ -93,14 +93,15 @@ class RoleModel():
             s.rollback()
             return str(e.message)
 
-    def delRoleRequest(self, role_id):
+    def DelRoleRequest(self, role_id):
         '''
         删除权限
         '''
         s = db.session()
         try:
-            result = s.query(Role).filter(Role.role_id.in_(role_id)).all()
-            result.delete()
+            role = s.query(Role).filter(Role.role_id.in_(role_id)).all()
+            for i in role:
+                s.delete(i)
             s.commit()
             return True
         except Exception as e:
