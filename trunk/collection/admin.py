@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime : 2020-02-13 14:29:38
+@LastEditTime : 2020-02-13 19:54:29
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
@@ -177,7 +177,7 @@ class AdminModel():
         '''
         s = db.session()
         try:
-            role = s.query(Role).filter(Role.role_id.in_(params['role_id'])).first()
+            role = s.query(Role).filter(Role.role_id == params['role_id']).first()
 
             if not role:
                 return str('角色不存在')
@@ -201,6 +201,7 @@ class AdminModel():
                 role_id=params['role_id']
             )
             s.add(item)
+            role.admins.append(item)
             s.commit()
             return True
         except Exception as e:
@@ -337,17 +338,18 @@ class AdminModel():
             s.rollback()
             return str(e.message)
 
-    def DelAdminRequest(self, admin_id, role_id):
+    def DelAdminRequest(self, admins):
         '''
         删除管理员
         '''
         s = db.session()
         try:
-            admins = s.query(Admin).filter(Admin.admin_id.in_(admin_id)).all()
-            role = s.query(Role).filter(Role.role_id == role_id).first()
-
-            role.admins.remove(admins)
-            admins.delete()
+            for admin in admins:
+                result = s.query(Admin).filter(Admin.admin_id == admin['admin_id']).first()
+                if admin['role_id']:
+                    role = s.query(Role).filter(Role.role_id == admin['role_id']).first()
+                    role.admins.remove(result)
+                s.delete(result)
             s.commit()
             return True
         except Exception as e:

@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime : 2020-02-13 15:31:16
+@LastEditTime : 2020-02-13 19:42:07
 @LastEditors  : Please set LastEditors
 '''
 from models.base import db
@@ -41,7 +41,7 @@ class Admin(db.Model):
     is_disabled = db.Column(db.Boolean, index=True, default=False)
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     update_time = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
-    role_id = db.Column(db.String(36), db.ForeignKey('db_role.role_id'))
+    role_id = db.Column(db.String(36), db.ForeignKey('db_role.role_id', ondelete='CASCADE'))
     __table_args__ = ({"useexisting": True})
 
     def is_authenticated(self):

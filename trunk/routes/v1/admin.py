@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime : 2020-02-13 14:27:27
+@LastEditTime : 2020-02-13 19:51:57
 @LastEditors  : Please set LastEditors
 '''
 from flask import Blueprint, request, make_response, session
@@ -14,6 +14,7 @@ from libs.code import ResultDeal
 from libs.captcha import Captcha
 from io import BytesIO
 from libs.utils import checkDb
+import json
 
 route_admin = Blueprint('Admin', __name__, url_prefix='/v1/Admin')
 
@@ -154,8 +155,7 @@ def LockAdmin():
 @validate_current_access
 def DelAdmin():
     result = AdminModel().DelAdminRequest(
-        admin_id=request.form.getlist('admin_id[]'),
-        role_id=request.form.get('role_id')
+        admins=json.loads(request.form.get('admins'))
     )
     
     if type(result).__name__ == 'str':
