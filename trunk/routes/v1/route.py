@@ -4,8 +4,8 @@
 @Description: 路由API
 @Author: Zpp
 @Date: 2019-09-11 16:51:59
-@LastEditTime: 2019-11-18 15:49:35
-@LastEditors: Zpp
+@LastEditTime : 2020-02-14 14:20:46
+@LastEditors  : Please set LastEditors
 '''
 from flask import Blueprint, request
 from collection.route import RouteModel
@@ -20,7 +20,7 @@ route_route = Blueprint('Route', __name__, url_prefix='/v1/Route')
 @validate_current_access
 def CreateRoute():
     params = {
-        'parent_id': request.form.get('parent_id', '0'),
+        'pid': request.form.get('pid', '0'),
         'name': request.form.get('name'),
         'title': request.form.get('title'),
         'path': request.form.get('path'),
@@ -43,8 +43,20 @@ def CreateRoute():
 def LockRoute():
     result = RouteModel().LockRouteRequest(
         route_id=request.form.getlist('route_id[]'),
-        isLock=True if request.form.get('isLock') == 'true' else False
+        is_disabled=True if request.form.get('is_disabled') == 'true' else False
     )
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+        
+    return ResultDeal(data=result)
+
+
+@route_route.route('/DelRoute', methods=['POST'])
+@auth.login_required
+@validate_current_access
+def DelRoute():
+    result = RouteModel().DelRouteRequest(route_id=request.form.getlist('route_id[]'))
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -57,7 +69,7 @@ def LockRoute():
 @validate_current_access
 def ModifyRoute():
     params = {
-        'parent_id': request.form.get('parent_id', '0'),
+        'pid': request.form.get('pid', '0'),
         'name': request.form.get('name'),
         'title': request.form.get('title'),
         'path': request.form.get('path'),
@@ -79,8 +91,8 @@ def ModifyRoute():
 @validate_current_access
 def QueryRouteByParam():
     params = {}
-    if request.form.get('isLock'):
-        params['isLock'] = True if request.form.get('isLock') == 'true' else False
+    if request.form.get('is_disabled'):
+        params['is_disabled'] = True if request.form.get('is_disabled') == 'true' else False
     if request.form.get('name'):
         params['name'] = request.form.get('name')
 

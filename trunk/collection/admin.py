@@ -4,12 +4,12 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime : 2020-02-13 19:54:29
+@LastEditTime : 2020-02-14 15:03:29
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
 from models.base import db
-from models.system import Admin, Role, Route, Menu, Interface, InitSql, LoginLock
+from models.system import Admin, Role, Route, Menu, Interface, InitSql, LoginLock, Folder
 from conf.setting import Config, init_route, init_menu, base_info
 from sqlalchemy import text
 import uuid
@@ -56,6 +56,15 @@ class AdminModel():
 
             self.__init_routes(init_route, '0', role_id)
             self.__init_menus(init_menu, '0', role_id)
+
+            folder = Folder(
+                folder_id=uuid.uuid4(),
+                admin_id=None,
+                name=u'系统文件',
+                is_sys=True
+            )
+            s.add(folder)
+            s.commit()
 
             if not isInit:
                 sql = InitSql(isInit=True)
@@ -346,9 +355,6 @@ class AdminModel():
         try:
             for admin in admins:
                 result = s.query(Admin).filter(Admin.admin_id == admin['admin_id']).first()
-                if admin['role_id']:
-                    role = s.query(Role).filter(Role.role_id == admin['role_id']).first()
-                    role.admins.remove(result)
                 s.delete(result)
             s.commit()
             return True

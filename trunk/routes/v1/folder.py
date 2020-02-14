@@ -4,10 +4,10 @@
 @Description: 文件夹API
 @Author: Zpp
 @Date: 2019-12-23 15:42:19
-@LastEditors  : Zpp
-@LastEditTime : 2020-01-09 14:03:20
+@LastEditors  : Please set LastEditors
+@LastEditTime : 2020-02-14 14:51:54
 '''
-from flask import Blueprint, request
+from flask import Blueprint, request, session
 from collection.folder import FolderModel
 from ..token_auth import auth, validate_current_access
 from libs.code import ResultDeal
@@ -19,9 +19,11 @@ route_folder = Blueprint('Folder', __name__, url_prefix='/v1/Folder')
 @auth.login_required
 @validate_current_access
 def CreateFolder():
+    admin = session.get('admin')
     params = {
-        'parent_id': request.form.get('parent_id', '0'),
-        'name': request.form.get('name')
+        'pid': request.form.get('pid', '0'),
+        'name': request.form.get('name'),
+        'admin_id': admin['admin_id']
     }
 
     result = FolderModel().CreateFolderRequest(params)
@@ -36,10 +38,7 @@ def CreateFolder():
 @auth.login_required
 @validate_current_access
 def DelFolder():
-    result = FolderModel().DelFolderRequest(
-        folder_id=request.form.get('folder_id'),
-        isFolder=True if request.form.get('isFolder') == 'true' else False
-    )
+    result = FolderModel().DelFolderRequest(folder_id=request.form.get('folder_id'))
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -52,7 +51,7 @@ def DelFolder():
 @validate_current_access
 def ModifyFolder():
     params = {
-        'parent_id': request.form.get('parent_id', '0'),
+        'pid': request.form.get('pid', '0'),
         'name': request.form.get('name')
     }
 
@@ -68,7 +67,11 @@ def ModifyFolder():
 @auth.login_required
 @validate_current_access
 def QueryFolderByParam():
-    result = FolderModel().QueryFolderByParamRequest(parent_id=request.form.get('parent_id', '0'))
+    admin = session.get('admin')
+    result = FolderModel().QueryFolderByParamRequest(
+        pid=request.form.get('pid', '0'),
+        admin_id=admin['admin_id']
+    )
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)

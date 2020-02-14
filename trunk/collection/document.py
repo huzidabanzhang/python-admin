@@ -4,8 +4,8 @@
 @Description: 上传控制器
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
-@LastEditors  : Zpp
-@LastEditTime : 2019-12-24 09:40:15
+@LastEditors  : Please set LastEditors
+@LastEditTime : 2020-02-14 15:01:10
 '''
 from flask import request
 from models.base import db
@@ -24,7 +24,7 @@ class DocumentModel():
         '''
         s = db.session()
         try:
-            Int = ['type', 'deleted', 'folder_id']
+            Int = ['status', 'deleted', 'folder_id']
             data = {}
 
             for i in Int:
@@ -63,9 +63,9 @@ class DocumentModel():
             file_name = file.filename
             ext = self.file_extension(file_name)
             size = len(file.read())
-            file_type = params['type']
+            file_status = params['status']
             if not self.allowed_file(file_name):
-                file_type = 2
+                file_status = 2
 
             try:
                 file.seek(0)
@@ -79,17 +79,18 @@ class DocumentModel():
                     document_id=uuid.uuid4(),
                     admin_id=params['admin_id'],
                     name=file_name,
-                    type=file_type,
+                    status=file_status,
                     ext=ext,
                     path=path,
-                    size=size
+                    size=size,
+                    folder_id=params['folder_id']
                 )
                 s.add(item)
                 s.commit()
                 data.append({
                     'name': file_name,
                     'size': size,
-                    'type': file_type,
+                    'status': file_status,
                     'src': path,
                     'uid': uids[i],
                     'res': 1
@@ -124,7 +125,7 @@ class DocumentModel():
         '''
         s = db.session()
         try:
-            s.query(Document).filter(Document.document_id.in_(document_id)).update({Document.deleted: 1}, synchronize_session=False)
+            s.query(Document).filter(Document.document_id.in_(document_id)).update({Document.deleted: True}, synchronize_session=False)
             s.commit()
             return True
         except Exception as e:
@@ -144,7 +145,8 @@ class DocumentModel():
                 if(os.path.exists(document_dir + i.path)):
                     os.remove(document_dir + i.path)
 
-            res.delete(synchronize_session=False)
+            for i in res:
+                s.delete(i)
             s.commit()
             return True
         except Exception as e:

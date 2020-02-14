@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime : 2020-02-13 14:36:41
+@LastEditTime : 2020-02-14 13:50:11
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
@@ -74,9 +74,8 @@ class MenuModel():
         try:
             item = Menu(
                 menu_id=uuid.uuid4(),
-                parent_id=params['parent_id'],
+                pid=params['pid'],
                 title=params['title'],
-                type=int(params['type']),
                 sort=int(params['sort']),
                 path=params['path'],
                 icon=params['icon']
@@ -86,21 +85,6 @@ class MenuModel():
             return True
         except Exception as e:
             s.rollback()
-            print e
-            return str(e.message)
-
-    def GetMenuRequest(self, menu_id):
-        '''
-        查询菜单
-        '''
-        s = db.session()
-        try:
-            menu = s.query(Menu).filter(Menu.menu_id == menu_id).first()
-            if not menu:
-                return str('菜单不存在')
-
-            return menu.to_json()
-        except Exception as e:
             print e
             return str(e.message)
 
@@ -114,7 +98,7 @@ class MenuModel():
             if not menu:
                 return str('菜单不存在')
 
-            AllowableFields = ['parent_id', 'title', 'path', 'icon', 'sort', 'type']
+            AllowableFields = ['pid', 'title', 'path', 'icon', 'sort']
             data = {}
 
             for i in params:
@@ -129,7 +113,7 @@ class MenuModel():
             s.rollback()
             return str(e.message)
 
-    def LockMenuRequest(self, menu_id, isLock):
+    def LockMenuRequest(self, menu_id, is_disabled):
         '''
         禁用菜单
         '''
@@ -137,19 +121,47 @@ class MenuModel():
         try:
             menu = s.query(Menu).filter(Menu.menu_id == menu_id).first()
 
-            if isLock:
-                parent = s.query(Menu).filter(Menu.menu_id == menu.parent_id, Menu.isLock == False).first()
+            if not is_disabled:
+                parent = s.query(Menu).filter(Menu.menu_id == menu.pid, Menu.is_disabled == True).first()
                 if parent:
                     return str('父菜单处于禁用状态, 该菜单不能启用')
 
-            menu.isLock = isLock
+            menu.is_disabled = is_disabled
             s.commit()
-
-            if not isLock:
-                s.query(Menu).filter(Menu.parent_id == menu_id, Menu.isLock == True).update({Menu.isLock: False})
-                s.commit()
-
             return True
+        except Exception as e:
+            print e
+            s.rollback()
+            return str(e.message)
+
+    def DelMenuRequest(self, menu_id):
+        '''
+        删除菜单
+        '''
+        s = db.session()
+        try:
+            menu = s.query(Menu).filter(Menu.menu_id == menu_id).first()
+            s.delete(menu)
+
+            # 子菜单移动到根目录
+            s.query(Menu).filter(Menu.pid == menu_id).update({
+                'pid': '0'
+            })
+            s.commit()
+            return True
+        except Exception as e:
+            print e
+            s.rollback()
+            return str(e.message)
+
+    def GetMenuToInterfaceRequest(self, menu_id):
+        '''
+        获取菜单下级联的API接口
+        '''
+        s = db.session()
+        try:
+            menu = s.query(Menu).filter(Menu.menu_id == menu_id).first()
+            return [i.to_json() for i in menu.interfaces]
         except Exception as e:
             print e
             s.rollback()

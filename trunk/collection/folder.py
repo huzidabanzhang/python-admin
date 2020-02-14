@@ -4,26 +4,33 @@
 @Description: 文件夹控制器
 @Author: Zpp
 @Date: 2019-12-23 14:53:50
-@LastEditors  : Zpp
-@LastEditTime : 2020-01-09 14:21:03
+@LastEditors  : Please set LastEditors
+@LastEditTime : 2020-02-14 14:49:46
 '''
 from flask import request
 from models.base import db
-from models.system import Folder
-from sqlalchemy import text
+from models.system import Folder, Document
+from sqlalchemy import text, or_, and_
 import uuid
 
 
 class FolderModel():
-    def QueryFolderByParamRequest(self, parent_id):
+    def QueryFolderByParamRequest(self, pid, admin_id):
         '''
         文件夹列表
         '''
         s = db.session()
         try:
-            result = Folder.query.filter_by(**{
-                'parent_id': parent_id
-            }).order_by(Folder.id).all()
+            result = Folder.query.filter(
+                or_(
+                    Folder.is_sys == True,
+                    and_(
+                        Folder.is_sys == False,
+                        Folder.pid == pid,
+                        Folder.admin_id == admin_id
+                    )
+                )
+            ).order_by(Folder.id).all()
 
             return [value.to_json() for value in result]
         except Exception as e:
@@ -38,8 +45,9 @@ class FolderModel():
         try:
             item = Folder(
                 folder_id=uuid.uuid4(),
-                parent_id=params['parent_id'],
-                name=params['name']
+                pid=params['pid'],
+                name=params['name'],
+                admin_id=params['admin_id']
             )
             s.add(item)
             s.commit()
@@ -60,7 +68,7 @@ class FolderModel():
                 return str('文件夹不存在')
 
             folder.name = params['name']
-            folder.parent_id = params['parent_id']
+            folder.pid = params['pid']
             s.commit()
             return True
         except Exception as e:
@@ -68,10 +76,9 @@ class FolderModel():
             s.rollback()
             return str(e.message)
 
-    def DelFolderRequest(self, folder_id, isFolder=True):
+    def DelFolderRequest(self, folder_id):
         '''
         删除文件夹
-        isFolder True：删除关联文件夹 False：关联文件夹移到根目录
         关联文档默认到根目录
         '''
         s = db.session()
@@ -80,13 +87,9 @@ class FolderModel():
             if not folder:
                 return str('文件夹不存在')
 
-            folder_list = s.query(Folder).filter(Folder.parent_id == folder_id).all()
-            if not isFolder:
-                for i in folder_list:
-                    s.query(Document).filter(Document.folder_id == i.folder_id).update({Document.folder_id: '0'})
-                folder_list.update({Folder.parent_id: '0'})
-            else:
-                folder_list.delete()
+            res = s.query(Folder).filter(Folder.pid == folder_id).all()
+            for i in res:
+                i.pid = '0'
 
             s.commit()
             return True

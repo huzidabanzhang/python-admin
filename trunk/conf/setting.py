@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime : 2020-02-13 14:33:49
+@LastEditTime : 2020-02-14 14:21:31
 @LastEditors  : Please set LastEditors
 '''
 import hashlib
@@ -199,11 +199,18 @@ init_menu = [
                         "mark": "lock_menu"
                     },
                     {
-                        "path": "/v1/Menu/GetMenu",
+                        "path": "/v1/Menu/DelMenu",
+                        "method": "POST",
+                        "name": "DelMenu",
+                        "description": "删除菜单",
+                        "mark": "del_menu"
+                    },
+                    {
+                        "path": "/v1/Menu/GetMenuToInterface",
                         "method": "GET",
-                        "name": "GetMenu",
-                        "description": "根据ID获取菜单",
-                        "mark": "get_menu_item"
+                        "name": "GetMenuToInterface",
+                        "description": "获取菜单下级联的API接口",
+                        "mark": "get_menu_to_interface"
                     }
                 ]
             },
@@ -239,6 +246,13 @@ init_menu = [
                         "name": "LockRoute",
                         "description": "禁用路由",
                         "mark": "lock_router"
+                    },
+                    {
+                        "path": "/v1/Route/DelRoute",
+                        "method": "POST",
+                        "name": "DelRoute",
+                        "description": "删除路由",
+                        "mark": "del_router"
                     }
                 ]
             },
@@ -274,6 +288,13 @@ init_menu = [
                         "name": "LockInterface",
                         "description": "禁用接口",
                         "mark": "lock_interface"
+                    },
+                    {
+                        "path": "/v1/Interface/DelInterface",
+                        "method": "POST",
+                        "name": "DelInterface",
+                        "description": "删除接口",
+                        "mark": "del_interface"
                     }
                 ]
             },

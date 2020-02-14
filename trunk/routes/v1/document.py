@@ -4,8 +4,8 @@
 @Description: 附件API
 @Author: Zpp
 @Date: 2019-10-14 15:56:20
-@LastEditors  : Zpp
-@LastEditTime : 2020-01-09 13:10:06
+@LastEditors  : Please set LastEditors
+@LastEditTime : 2020-02-14 14:59:26
 '''
 from flask import Blueprint, request, make_response, abort, send_from_directory
 from collection.document import DocumentModel
@@ -27,7 +27,8 @@ def CreateDocument():
     params = {
         'admin_id': request.form.get('admin_id'),
         'type': int(request.form.get('type')),
-        'uid': request.form.getlist('uid')
+        'uid': request.form.getlist('uid'),
+        'folder_id': request.form.get('folder_id', None)
     }
 
     files = request.files.getlist('document')
@@ -82,7 +83,7 @@ def DelDocument():
 @validate_current_access
 def QueryDocumentByParam():
     params = {}
-    Ary = ['type', 'deleted', 'folder_id']
+    Ary = ['status', 'deleted', 'folder_id']
     for i in Ary:
         if request.form.get(i):
             params[i] = request.form.get(i)

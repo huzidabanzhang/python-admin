@@ -4,8 +4,8 @@
 @Description: 接口API
 @Author: Zpp
 @Date: 2019-10-14 13:50:25
-@LastEditors: Zpp
-@LastEditTime: 2019-12-05 16:31:56
+@LastEditors  : Please set LastEditors
+@LastEditTime : 2020-02-14 14:07:50
 '''
 from flask import Blueprint, request
 from collection.interface import InterfaceModel
@@ -25,7 +25,7 @@ def CreateInterface():
         'method': request.form.get('method'),
         'description': request.form.get('description'),
         'menu_id': request.form.get('menu_id'),
-        'identification': request.form.get('identification')
+        'mark': request.form.get('mark')
     }
 
     result = InterfaceModel().CreateInterfaceRequest(params)
@@ -40,7 +40,26 @@ def CreateInterface():
 @auth.login_required
 @validate_current_access
 def LockInterface():
-    result = InterfaceModel().LockInterfaceRequest(interface_id=request.form.getlist('interface_id[]'), isLock=True if request.form.get('isLock') == 'true' else False)
+    result = InterfaceModel().LockInterfaceRequest(
+        interface_id=request.form.getlist('interface_id[]'), 
+        is_disabled=True if request.form.get('is_disabled') == 'true' else False
+    )
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+        
+    return ResultDeal(data=result)
+
+
+@route_interface.route('/DelInterface', methods=['POST'])
+@auth.login_required
+@validate_current_access
+def DelInterface():
+    result = InterfaceModel().DelInterfaceRequest(interface_id=request.form.getlist('interface_id[]'))
+    
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+        
     return ResultDeal(data=result)
 
 
@@ -54,7 +73,7 @@ def ModifyInterface():
         'method': request.form.get('method'),
         'description': request.form.get('description'),
         'menu_id': request.form.get('menu_id'),
-        'identification': request.form.get('identification')
+        'mark': request.form.get('mark')
     }
 
     result = InterfaceModel().ModifyInterfaceRequest(interface_id=request.form.get('interface_id'), params=params)
@@ -70,8 +89,8 @@ def ModifyInterface():
 @validate_current_access
 def QueryInterfaceByParam():
     params = {}
-    if request.form.get('isLock'):
-        params['isLock'] = True if request.form.get('isLock') == 'true' else False
+    if request.form.get('is_disabled'):
+        params['is_disabled'] = True if request.form.get('is_disabled') == 'true' else False
     Ary = ['name', 'method']
     for i in Ary:
         if request.form.get(i):

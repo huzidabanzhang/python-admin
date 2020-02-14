@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime : 2020-02-13 19:42:07
+@LastEditTime : 2020-02-14 15:47:12
 @LastEditors  : Please set LastEditors
 '''
 from models.base import db
@@ -193,7 +193,7 @@ class Interface(db.Model):
     description = db.Column(db.String(255), nullable=False)
     mark = db.Column(db.String(255), nullable=False, unique=True)
     is_disabled = db.Column(db.Boolean, index=True, default=False)
-    menu_id = db.Column(db.String(36), db.ForeignKey('db_menu.menu_id'))
+    menu_id = db.Column(db.String(36), db.ForeignKey('db_menu.menu_id', ondelete='CASCADE'))
     __table_args__ = ({"useexisting": True})
 
     def to_json(self):
@@ -219,9 +219,9 @@ class Document(db.Model):
     status = db.Column(db.SmallInteger, index=True, default=1)  # 1=图片 2=附件 （其他的自己定义了）
     ext = db.Column(db.String(64), nullable=False)
     size = db.Column(db.Integer, nullable=False)
-    deleted = db.Column(db.Boolean, index=True, default=False)
+    deleted = db.Column(db.Boolean, index=True, default=False) # True = 回收站
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
-    folder_id = db.Column(db.String(36), db.ForeignKey('db_folder.folder_id'))
+    folder_id = db.Column(db.String(36), db.ForeignKey('db_folder.folder_id', ondelete='CASCADE'))
     __table_args__ = ({"useexisting": True})
 
     def to_json(self):
@@ -243,8 +243,10 @@ class Folder(db.Model):
     __tablename__ = 'db_folder'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     folder_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
+    admin_id = db.Column(db.String(36), index=True)
     pid = db.Column(db.String(36), nullable=False, index=True, default='0')
     name = db.Column(db.String(36), nullable=False)
+    is_sys = db.Column(db.Boolean, index=True, default=True) # True = 系统文件夹
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     documents = db.relationship('Document', backref='folder')
     __table_args__ = ({"useexisting": True})

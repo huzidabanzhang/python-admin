@@ -4,8 +4,8 @@
 @Description: 接口控制器
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
-@LastEditors  : Zpp
-@LastEditTime : 2019-12-23 15:50:06
+@LastEditors  : Please set LastEditors
+@LastEditTime : 2020-02-14 14:06:24
 '''
 from flask import request
 from models.base import db
@@ -21,7 +21,7 @@ class InterfaceModel():
         '''
         s = db.session()
         try:
-            Int = ['menu_id', 'isLock', 'method']
+            Int = ['menu_id', 'is_disabled', 'method']
             data = {}
 
             for i in Int:
@@ -50,28 +50,13 @@ class InterfaceModel():
                 method=params['method'],
                 description=params['description'],
                 menu_id=params['menu_id'],
-                identification=params['identification']
+                mark=params['mark']
             )
             s.add(item)
             s.commit()
             return item
         except Exception as e:
             s.rollback()
-            print e
-            return str(e.message)
-
-    def GetInterfaceRequest(self, interface_id):
-        '''
-        查询接口
-        '''
-        s = db.session()
-        try:
-            interface = s.query(Interface).filter(Interface.interface_id == interface_id).first()
-            if not interface:
-                return str('接口不存在')
-
-            return interface.to_json()
-        except Exception as e:
             print e
             return str(e.message)
 
@@ -85,7 +70,7 @@ class InterfaceModel():
             if not interface:
                 return str('接口不存在')
 
-            AllowableFields = ['name', 'path', 'method', 'description', 'menu_id', 'identification']
+            AllowableFields = ['name', 'path', 'method', 'description', 'menu_id', 'mark']
             data = {}
 
             for i in params:
@@ -100,13 +85,29 @@ class InterfaceModel():
             s.rollback()
             return str(e.message)
 
-    def LockInterfaceRequest(self, interface_id, isLock):
+    def LockInterfaceRequest(self, interface_id, is_disabled):
         '''
         禁用接口
         '''
         s = db.session()
         try:
-            s.query(Interface).filter(Interface.interface_id.in_(interface_id)).update({Interface.isLock: isLock}, synchronize_session=False)
+            s.query(Interface).filter(Interface.interface_id.in_(interface_id)).update({Interface.is_disabled: is_disabled}, synchronize_session=False)
+            s.commit()
+            return True
+        except Exception as e:
+            print e
+            s.rollback()
+            return str(e.message)
+
+    def DelInterfaceRequest(self, interface_id):
+        '''
+        删除接口
+        '''
+        s = db.session()
+        try:
+            result = s.query(Interface).filter(Interface.interface_id.in_(interface_id)).all()
+            for i in result:
+                s.delete(i)
             s.commit()
             return True
         except Exception as e:

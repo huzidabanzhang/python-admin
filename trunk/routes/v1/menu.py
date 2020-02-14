@@ -4,7 +4,7 @@
 @Description: 菜单API
 @Author: Zpp
 @Date: 2019-09-10 16:16:54
-@LastEditTime : 2020-02-12 19:17:39
+@LastEditTime : 2020-02-14 13:52:28
 @LastEditors  : Please set LastEditors
 '''
 from flask import Blueprint, request
@@ -20,12 +20,11 @@ route_menu = Blueprint('Menu', __name__, url_prefix='/v1/Menu')
 @validate_current_access
 def CreateMenu():
     params = {
-        'parent_id': request.form.get('parent_id', '0'),
+        'pid': request.form.get('pid', '0'),
         'title': request.form.get('title'),
         'path': request.form.get('path'),
         'icon': request.form.get('icon'),
-        'sort': request.form.get('sort'),
-        'type': request.form.get('type', 1)
+        'sort': request.form.get('sort')
     }
 
     result = MenuModel().CreateMenuRequest(params)
@@ -42,7 +41,7 @@ def CreateMenu():
 def LockMenu():
     result = MenuModel().LockMenuRequest(
         menu_id=request.form.get('menu_id'),
-        isLock=True if request.form.get('isLock') == 'true' else False
+        is_disabled=True if request.form.get('is_disabled') == 'true' else False
     )
     
     if type(result).__name__ == 'str':
@@ -51,11 +50,27 @@ def LockMenu():
     return ResultDeal(data=result)
 
 
-@route_menu.route('/GetMenu/<menu_id>', methods=['GET'])
+@route_menu.route('/DelMenu', methods=['POST'])
 @auth.login_required
 @validate_current_access
-def GetMenu(menu_id):
-    result = MenuModel().GetMenuRequest(menu_id=menu_id)
+def DelMenu():
+    result = MenuModel().DelMenuRequest(menu_id=request.form.get('menu_id'))
+    
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+        
+    return ResultDeal(data=result)
+
+
+@route_menu.route('/GetMenuToInterface/<menu_id>', methods=['GET'])
+@auth.login_required
+@validate_current_access
+def GetMenuToInterface(menu_id):
+    result = MenuModel().GetMenuToInterfaceRequest(menu_id=menu_id)
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
     return ResultDeal(data=result)
 
 
@@ -64,12 +79,11 @@ def GetMenu(menu_id):
 @validate_current_access
 def ModifyMenu():
     params = {
-        'parent_id': request.form.get('parent_id', '0'),
+        'pid': request.form.get('pid', '0'),
         'title': request.form.get('title'),
         'path': request.form.get('path'),
         'icon': request.form.get('icon'),
-        'sort': request.form.get('sort'),
-        'type': request.form.get('type', 1)
+        'sort': request.form.get('sort')
     }
 
     result = MenuModel().ModifyMenuRequest(menu_id=request.form.get('menu_id'), params=params)

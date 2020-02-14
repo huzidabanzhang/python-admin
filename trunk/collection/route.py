@@ -4,8 +4,8 @@
 @Description: 路由控制器
 @Author: Zpp
 @Date: 2019-09-10 16:00:22
-@LastEditTime : 2019-12-23 15:51:00
-@LastEditors  : Zpp
+@LastEditTime : 2020-02-14 14:20:01
+@LastEditors  : Please set LastEditors
 '''
 from flask import request
 from models.base import db
@@ -22,8 +22,8 @@ class RouteModel():
         s = db.session()
         try:
             data = {}
-            if params.has_key('isLock'):
-                data['isLock'] = params['isLock']
+            if params.has_key('is_disabled'):
+                data['is_disabled'] = params['is_disabled']
 
             result = Route.query.filter_by(**data).filter(
                 Route.name.like("%" + params['name'] + "%") if params.has_key('name') else text('')
@@ -42,7 +42,7 @@ class RouteModel():
         try:
             item = Route(
                 route_id=uuid.uuid4(),
-                parent_id=params['parent_id'],
+                pid=params['pid'],
                 name=params['name'],
                 title=params['title'],
                 path=params['path'],
@@ -83,7 +83,7 @@ class RouteModel():
             if not route:
                 return str('路由不存在')
 
-            AllowableFields = ['parent_id', 'name', 'path', 'title', 'component', 'componentPath', 'cache']
+            AllowableFields = ['pid', 'name', 'path', 'title', 'component', 'componentPath', 'cache']
             data = {}
 
             for i in params:
@@ -98,13 +98,33 @@ class RouteModel():
             s.rollback()
             return str(e.message)
 
-    def LockRouteRequest(self, route_id, isLock):
+    def LockRouteRequest(self, route_id, is_disabled):
         '''
         禁用路由
         '''
         s = db.session()
         try:
-            s.query(Route).filter(Route.route_id.in_(route_id)).update({Route.isLock: isLock})
+            s.query(Route).filter(Route.route_id.in_(route_id)).update({Route.is_disabled: is_disabled})
+            s.commit()
+            return True
+        except Exception as e:
+            print e
+            s.rollback()
+            return str(e.message)
+
+    def DelRouteRequest(self, route_id):
+        '''
+        删除路由
+        '''
+        s = db.session()
+        try:
+            route = s.query(Route).filter(Route.route_id == route_id).first()
+            s.delete(route)
+
+            # 子菜单移动到根目录
+            s.query(Route).filter(Route.pid == route_id).update({
+                'pid': '0'
+            })
             s.commit()
             return True
         except Exception as e:
