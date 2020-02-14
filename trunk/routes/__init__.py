@@ -4,8 +4,8 @@
 @Description: API蓝图初始化注册
 @Author: Zpp
 @Date: 2019-09-04 10:23:46
-@LastEditTime : 2019-12-23 15:47:09
-@LastEditors  : Zpp
+@LastEditTime : 2020-02-14 19:16:38
+@LastEditors  : Please set LastEditors
 '''
 from .v1.admin import route_admin
 from .v1.menu import route_menu
@@ -19,11 +19,20 @@ from .v1.log import route_log
 from flask import current_app, session
 from libs.code import ResultDeal, GetTimestamp
 from models.base import db
+from models.system import InitSql
 from datetime import datetime
 import time
 
 
 def init_app(app):
+    @app.before_first_request
+    def before_first_request():
+        # 运行models，以创建不存在的表
+        s = db.session()
+        db.create_all()
+        s.add(InitSql(isInit=False))
+        s.commit()
+
     @app.before_request
     def handel_before_request():
         session['requestTime'] = GetTimestamp()

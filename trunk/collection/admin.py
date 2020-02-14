@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime : 2020-02-14 15:03:29
+@LastEditTime : 2020-02-14 19:18:48
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
@@ -24,15 +24,12 @@ class AdminModel():
             s = db.session()
 
             if isInit:
-                try:
-                    res = s.query(InitSql).first()
-                    if res.isInit:
-                        return str('已经初始化~~~')
-                except:
-                    pass
-
-            db.drop_all()
-            db.create_all()
+                db.drop_all()
+                db.create_all()
+                s.add(InitSql(isInit=False))
+                s.commit()
+            else:
+                db.create_all()
             password = self.__get_code()
 
             role_id = uuid.uuid4()
@@ -66,11 +63,9 @@ class AdminModel():
             s.add(folder)
             s.commit()
 
-            if not isInit:
-                sql = InitSql(isInit=True)
-                s.add(sql)
-                s.commit()
-
+            sql = s.query(InitSql).first()
+            sql.isInit = True
+            s.commit()
             return {
                 'username': 'Admin',
                 'password': password
