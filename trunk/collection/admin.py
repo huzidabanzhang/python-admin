@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime : 2020-02-14 19:18:48
+@LastEditTime : 2020-02-15 10:24:48
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
@@ -248,7 +248,7 @@ class AdminModel():
                 if number - base_info['lock_times'] == 0:
                     return str('密码不正确, 您的账号已经被锁定, 请在%s分钟后重试' % add_minutes)
                 else:
-                    return str('密码不正确, 还有%s次机会' % (number - base_info['lock_times']))
+                    return str('密码不正确, 还有%s次机会' % (base_info['lock_times'] - number))
 
             if admin.is_disabled:
                 return str('管理员被禁用')
@@ -257,15 +257,15 @@ class AdminModel():
             menu = []
             interface = []
 
-            routes = s.query(Route).filter(Route.is_disabled == False)
+            routes = s.query(Route)
             for i in routes:
                 route.append(i.to_json())
 
             role = s.query(Role).filter(Role.role_id == admin.role_id).first()
             if role:
-                for i in role.menus.filter(Menu.is_disabled == False).order_by(Menu.sort, Menu.id):
+                for i in role.menus.order_by(Menu.sort, Menu.id):
                     menu.append(i.to_json())
-                for i in role.interfaces.filter(Interface.is_disabled == False):
+                for i in role.interfaces:
                     interface.append(i.to_json())
 
             user = copy.deepcopy(admin.to_json())
@@ -276,7 +276,7 @@ class AdminModel():
 
             # 登录成功删除掉原来的锁定记录
             if is_lock:
-                is_lock.delete()
+                s.delete(is_lock)
                 s.commit()
                     
             return {

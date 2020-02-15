@@ -4,7 +4,7 @@
 @Description: 路由控制器
 @Author: Zpp
 @Date: 2019-09-10 16:00:22
-@LastEditTime : 2020-02-14 14:20:01
+@LastEditTime : 2020-02-15 09:52:55
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
@@ -104,7 +104,7 @@ class RouteModel():
         '''
         s = db.session()
         try:
-            s.query(Route).filter(Route.route_id.in_(route_id)).update({Route.is_disabled: is_disabled})
+            s.query(Route).filter(Route.route_id.in_(route_id)).update({Route.is_disabled: is_disabled}, synchronize_session=False)
             s.commit()
             return True
         except Exception as e:
@@ -118,14 +118,15 @@ class RouteModel():
         '''
         s = db.session()
         try:
-            route = s.query(Route).filter(Route.route_id == route_id).first()
-            s.delete(route)
+            for i in route_id:
+                route = s.query(Route).filter(Route.route_id == i).first()
+                s.delete(route)
 
-            # 子菜单移动到根目录
-            s.query(Route).filter(Route.pid == route_id).update({
-                'pid': '0'
-            })
-            s.commit()
+                # 子菜单移动到根目录
+                s.query(Route).filter(Route.pid == i).update({
+                    'pid': '0'
+                })
+                s.commit()
             return True
         except Exception as e:
             print e
