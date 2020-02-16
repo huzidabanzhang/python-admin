@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
 @LastEditTime : 2020-02-14 13:50:11
-@LastEditors  : Please set LastEditors
+@LastEditors: Please set LastEditors
 '''
 from flask import request
 from models.base import db
@@ -48,8 +48,7 @@ class MenuModel():
                 
                 if params.has_key('role_id'):
                     role = Role.query.filter(Role.role_id == params['role_id']).first()
-                    result = role.menus.filter(Menu.is_disabled == params['is_disabled'])
-                    for value in result:
+                    for value in role.menus:
                         if len(value.interfaces) == 0:
                             select.append(item.menu_id)
                         else:
