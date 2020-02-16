@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-09-10 16:16:54
 @LastEditTime : 2020-02-14 13:52:28
-@LastEditors  : Please set LastEditors
+@LastEditors: Please set LastEditors
 '''
 from flask import Blueprint, request
 from collection.menu import MenuModel
