@@ -24,6 +24,7 @@ def CreateMenu():
         'title': request.form.get('title'),
         'path': request.form.get('path'),
         'icon': request.form.get('icon'),
+        'mark': request.form.get('mark'),
         'sort': request.form.get('sort')
     }
 
@@ -83,6 +84,7 @@ def ModifyMenu():
         'title': request.form.get('title'),
         'path': request.form.get('path'),
         'icon': request.form.get('icon'),
+        'mark': request.form.get('mark'),
         'sort': request.form.get('sort')
     }
 

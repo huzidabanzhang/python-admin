@@ -5,11 +5,11 @@
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
 @LastEditTime : 2020-02-15 10:13:18
-@LastEditors  : Please set LastEditors
+@LastEditors: Please set LastEditors
 '''
 from flask import Blueprint, request, make_response, session
 from collection.admin import AdminModel
-from ..token_auth import auth, generate_auth_token, validate_current_access
+from ..token_auth import auth, generate_auth_token, validate_current_access, get_auth_token
 from libs.code import ResultDeal
 from libs.captcha import Captcha
 from io import BytesIO
@@ -32,7 +32,7 @@ def CreateDrop():
 @auth.login_required
 @validate_current_access
 def AgainCreateDrop():
-    result = AdminModel().CreateDropRequest(True)
+    result = AdminModel().CreateDropRequest(True, get_auth_token(session.get('admin')))
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
 

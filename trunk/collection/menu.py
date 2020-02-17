@@ -77,6 +77,7 @@ class MenuModel():
                 title=params['title'],
                 sort=int(params['sort']),
                 path=params['path'],
+                mark=params['mark'],
                 icon=params['icon']
             )
             s.add(item)

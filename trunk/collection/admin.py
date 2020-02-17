@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
 @LastEditTime : 2020-02-15 15:56:33
-@LastEditors  : Please set LastEditors
+@LastEditors: Please set LastEditors
 '''
 from flask import request
 from models.base import db
@@ -19,18 +19,14 @@ import copy
 
 
 class AdminModel():
-    def CreateDropRequest(self, isInit):
+    def CreateDropRequest(self, isInit, params=None):
         try:
             s = db.session()
 
-            if isInit:
-                db.drop_all()
-                db.create_all()
-                s.add(InitSql(isInit=False))
-                s.commit()
-            else:
-                db.create_all()
-            password = self.__get_code()
+            db.drop_all()
+            db.create_all()
+            s.add(InitSql(isInit=False))
+            s.commit()
 
             role_id = uuid.uuid4()
             role = Role(
@@ -41,13 +37,23 @@ class AdminModel():
             s.add(role)
             s.commit()
 
-            admin = Admin(
-                admin_id=uuid.uuid4(),
-                username=u'Admin',
-                password=Config().get_md5(password),
-                avatarUrl='',
-                role_id=role_id
-            )
+            password = self.__get_code()
+            if not isInit:
+                admin = Admin(
+                    admin_id=uuid.uuid4(),
+                    username=u'Admin',
+                    password=Config().get_md5(password),
+                    avatarUrl='',
+                    role_id=role_id
+                )
+            else:
+                admin = Admin(
+                    admin_id=params['admin_id'],
+                    username=u'Admin',
+                    password=params['password'],
+                    avatarUrl='',
+                    role_id=role_id
+                )
             s.add(admin)
             s.commit()
 
@@ -143,7 +149,8 @@ class AdminModel():
             pid=pid,
             title=params['title'],
             path=params['path'],
-            icon=params['icon']
+            icon=params['icon'],
+            mark=params['mark']
         )
 
     def __create_interface(self, params, interface_id, menu_id):

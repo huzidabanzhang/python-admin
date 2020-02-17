@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
 @LastEditTime : 2020-02-14 14:21:31
-@LastEditors  : Please set LastEditors
+@LastEditors: Please set LastEditors
 '''
 import hashlib
 import os
@@ -164,11 +164,13 @@ init_menu = [
         "title": "系统",
         "path": "/system",
         "icon": "cog",
+        "mark": "system",
         "children": [
             {
                 "title": "菜单管理",
                 "path": "/system/menu",
                 "icon": "th-list",
+                "mark": "system_menu",
                 "interface": [
                     {
                         "path": "/v1/Menu/CreateMenu",
@@ -218,6 +220,7 @@ init_menu = [
                 "title": "路由管理",
                 "path": "/system/route",
                 "icon": "share-alt",
+                "mark": "system_route",
                 "interface": [
                     {
                         "path": "/v1/Route/CreateRoute",
@@ -260,6 +263,7 @@ init_menu = [
                 "title": "接口管理",
                 "path": "/system/interface",
                 "icon": "send",
+                "mark": "system_interface",
                 "interface": [
                     {
                         "path": "/v1/Interface/CreateInterface",
@@ -302,6 +306,7 @@ init_menu = [
                 "title": "附件管理",
                 "path": "/system/document",
                 "icon": "folder-open-o",
+                "mark": "system_file",
                 "interface": [
                     {
                         "path": "/v1/Document/CreateDocument",
@@ -374,11 +379,13 @@ init_menu = [
         "title": "权限",
         "path": "/role",
         "icon": "shield",
+        "mark": "role",
         "children": [
             {
                 "title": "管理员用户",
                 "path": "/role/admin",
                 "icon": "user",
+                "mark": "role_admin",
                 "interface": [
                     {
                         "path": "/v1/Admin/CreateAdmin",
@@ -414,13 +421,6 @@ init_menu = [
                         "name": "DelAdmin",
                         "description": "删除管理员",
                         "mark": "del_admin"
-                    },
-                    {
-                        "path": "/v1/Admin/AgainCreateDrop",
-                        "method": "GET",
-                        "name": "AgainCreateDrop",
-                        "description": "重新初始化数据库",
-                        "mark": "init_admin"
                     }
                 ]
             },
@@ -428,6 +428,7 @@ init_menu = [
                 "title": "角色管理",
                 "path": "/role/role",
                 "icon": "group",
+                "mark": "role_group",
                 "interface": [
                     {
                         "path": "/v1/Role/CreateRole",
@@ -472,6 +473,7 @@ init_menu = [
         "title": "日志",
         "path": "/log",
         "icon": "bullseye",
+        "mark": "log",
         "interface": [
             {
                 "path": "/v1/Log/QueryLogByParam",
@@ -485,16 +487,19 @@ init_menu = [
             {
                 "title": "登录日志",
                 "path": "/log/login",
-                "icon": "street-view"
+                "icon": "street-view",
+                "mark": "log_login"
             },
             {
                 "title": "操作日志",
                 "path": "/log/hander",
+                "mark": "log_hander",
                 "icon": "dot-circle-o"
             },
             {
                 "title": "异常日志",
                 "path": "/log/error",
+                "mark": "log_error",
                 "icon": "bug"
             }
         ]

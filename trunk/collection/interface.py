@@ -4,7 +4,7 @@
 @Description: 接口控制器
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
-@LastEditors  : Please set LastEditors
+@LastEditors: Please set LastEditors
 @LastEditTime : 2020-02-14 14:06:24
 '''
 from flask import request
@@ -70,7 +70,7 @@ class InterfaceModel():
             if not interface:
                 return str('接口不存在')
 
-            AllowableFields = ['name', 'path', 'method', 'description', 'menu_id', 'mark']
+            AllowableFields = ['name', 'path', 'method', 'description', 'menu_id']
             data = {}
 
             for i in params:

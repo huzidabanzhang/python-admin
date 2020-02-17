@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
 @LastEditTime : 2020-02-14 15:47:12
-@LastEditors  : Please set LastEditors
+@LastEditors: Please set LastEditors
 '''
 from models.base import db
 import datetime
@@ -135,7 +135,7 @@ class Route(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     route_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     pid = db.Column(db.String(36), nullable=False, index=True, default='0')
-    name = db.Column(db.String(64), nullable=False, unique=True)
+    name = db.Column(db.String(64), index=True, nullable=False, unique=True)
     title = db.Column(db.String(255), nullable=False)
     path = db.Column(db.String(255), nullable=False, unique=True)
     component = db.Column(db.String(255), nullable=False)
@@ -165,6 +165,7 @@ class Menu(db.Model):
     title = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False, unique=True)
     icon = db.Column(db.String(255), nullable=False)
+    mark = db.Column(db.String(255), nullable=False, unique=True)
     sort = db.Column(db.SmallInteger, index=True, default=1)
     is_disabled = db.Column(db.Boolean, index=True, default=False)
     interfaces = db.relationship('Interface', backref='menu')
@@ -187,7 +188,7 @@ class Interface(db.Model):
     __tablename__ = 'db_interface'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     interface_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
-    name = db.Column(db.String(64), nullable=False, unique=True)
+    name = db.Column(db.String(64), index=True, nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False, unique=True)
     method = db.Column(db.String(36), nullable=False)
     description = db.Column(db.String(255), nullable=False)
@@ -214,7 +215,7 @@ class Document(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     document_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     admin_id = db.Column(db.String(36), index=True, nullable=False)
-    name = db.Column(db.String(64), nullable=False)
+    name = db.Column(db.String(64), index=True, nullable=False)
     path = db.Column(db.String(255), nullable=False)
     status = db.Column(db.SmallInteger, index=True, default=1)  # 1=图片 2=附件 （其他的自己定义了）
     ext = db.Column(db.String(64), nullable=False)
@@ -245,7 +246,7 @@ class Folder(db.Model):
     folder_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     admin_id = db.Column(db.String(36), index=True)
     pid = db.Column(db.String(36), nullable=False, index=True, default='0')
-    name = db.Column(db.String(36), nullable=False)
+    name = db.Column(db.String(36), index=True, nullable=False)
     is_sys = db.Column(db.Boolean, index=True, default=True) # True = 系统文件夹
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     documents = db.relationship('Document', backref='folder')
