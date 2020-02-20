@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime : 2020-02-14 14:21:31
+@LastEditTime: 2020-02-20 16:07:34
 @LastEditors: Please set LastEditors
 '''
 import hashlib
@@ -30,6 +30,9 @@ server_info = {
 
 # 文档路径
 document_dir = os.path.join(basedir, 'document')
+
+# sql下载临时路径
+sql_dir = os.path.join(basedir, 'sql')
 
 # 日志
 log_info = {

@@ -1,4 +1,5 @@
 *.pyc
+sql
 logs
 .vscode/*.json
 document
