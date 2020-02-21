@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-02-20 16:07:34
+@LastEditTime: 2020-02-21 14:32:40
 @LastEditors: Please set LastEditors
 '''
 import hashlib
@@ -95,6 +95,14 @@ init_route = [
                 'component': 'document',
                 'componentPath': 'sys/document/index',
                 'title': u'附件管理',
+                'cache': True
+            },
+            {
+                'name': 'BasePage',
+                'path': '/system/base',
+                'component': 'base',
+                'componentPath': 'sys/base/index',
+                'title': u'数据库管理',
                 'cache': True
             }
         ]
@@ -373,6 +381,21 @@ init_menu = [
                         "name": "QueryFolderByParam",
                         "description": "获取附件列表",
                         "mark": "query_folder"
+                    }
+                ]
+            },
+            {
+                "title": "数据库管理",
+                "path": "/system/base",
+                "icon": "database",
+                "mark": "system_base",
+                "interface": [
+                    {
+                        "path": "/v1/Base/ExportSql",
+                        "method": "POST",
+                        "name": "ExportSql",
+                        "description": "导出数据库",
+                        "mark": "export_sql"
                     }
                 ]
             }

@@ -4,8 +4,8 @@
 @Description: API蓝图初始化注册
 @Author: Zpp
 @Date: 2019-09-04 10:23:46
-@LastEditTime : 2020-02-14 19:16:38
-@LastEditors  : Please set LastEditors
+@LastEditTime: 2020-02-21 13:29:00
+@LastEditors: Please set LastEditors
 '''
 from .v1.admin import route_admin
 from .v1.menu import route_menu
@@ -15,6 +15,7 @@ from .v1.interface import route_interface
 from .v1.document import route_document
 from .v1.folder import route_folder
 from .v1.log import route_log
+from .v1.base import route_base
 
 from flask import current_app, session
 from libs.code import ResultDeal, GetTimestamp
@@ -28,10 +29,13 @@ def init_app(app):
     @app.before_first_request
     def before_first_request():
         # 运行models，以创建不存在的表
-        s = db.session()
-        db.create_all()
-        s.add(InitSql(isInit=False))
-        s.commit()
+        try:
+            s = db.session()
+            db.create_all()
+            s.add(InitSql(isInit=False))
+            s.commit()
+        except:
+            return ResultDeal(code=-1, msg=u'数据库未连接错误或者出现错误')
 
     @app.before_request
     def handel_before_request():
@@ -81,3 +85,4 @@ def init_app(app):
     app.register_blueprint(route_document)
     app.register_blueprint(route_folder)
     app.register_blueprint(route_log)
+    app.register_blueprint(route_base)

@@ -4,12 +4,12 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime : 2020-02-15 10:13:18
+@LastEditTime: 2020-02-21 13:09:16
 @LastEditors: Please set LastEditors
 '''
 from flask import Blueprint, request, make_response, session
 from collection.admin import AdminModel
-from ..token_auth import auth, generate_auth_token, validate_current_access, get_auth_token
+from ..token_auth import auth, generate_auth_token, validate_current_access
 from libs.code import ResultDeal
 from libs.captcha import Captcha
 from io import BytesIO
@@ -17,26 +17,6 @@ from libs.utils import checkDb
 import json
 
 route_admin = Blueprint('Admin', __name__, url_prefix='/v1/Admin')
-
-
-@route_admin.route('/CreateDrop', methods=['GET'])
-def CreateDrop():
-    result = AdminModel().CreateDropRequest(False)
-    if type(result).__name__ == 'str':
-        return ResultDeal(msg=result, code=-1)
-
-    return ResultDeal(data=result)
-
-
-@route_admin.route('/AgainCreateDrop', methods=['GET'])
-@auth.login_required
-@validate_current_access
-def AgainCreateDrop():
-    result = AdminModel().CreateDropRequest(True, get_auth_token(session.get('admin')))
-    if type(result).__name__ == 'str':
-        return ResultDeal(msg=result, code=-1)
-
-    return ResultDeal(data=result)
 
 
 @route_admin.route('/checkDb', methods=['GET'])

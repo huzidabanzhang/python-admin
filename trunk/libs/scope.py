@@ -4,8 +4,8 @@
 @Description: 权限判断方法
 @Author: Zpp
 @Date: 2019-09-04 16:55:43
-@LastEditTime: 2019-11-25 10:51:26
-@LastEditors: Zpp
+@LastEditTime: 2020-02-21 16:45:05
+@LastEditors: Please set LastEditors
 '''
 from models.base import db
 from models.system import Admin, Role, Route, Interface, Menu
@@ -24,15 +24,17 @@ def is_in_scope(admin_id, path):
             return str('管理员被禁用')
 
 
-        role = s.query(Role).filter(Role.id == admin.role_id, Role.isLock == True).first()
+        role = s.query(Role).filter(Role.id == admin.role_id, Role.is_disabled == False).first()
         if role:
-            route = role.routes.filter(Route.isLock == True, Route.path == path)
-            if route:
+            i = role.interfaces.filter(Interface.is_disabled == False, Interface.path == path)
+            if i:
                 return True
-            else:
-                interface = role.menus.join(Interface).filter(Menu.isLock == True, Interface.path == path)
-                if interface:
-                    return True
+            m = role.menus.filter(Menu.is_disabled == False, Menu.path == path)
+            if m:
+                return True
+            r = s.query(Route).filter(RoRoutele.path == path, Route.is_disabled == False).first()
+            if r:
+                return True
 
         return False
     except Exception, e:
