@@ -20,9 +20,8 @@ import time
 
 class BaseModel():
     def CreateDropRequest(self, isInit, params=None):
+        s = db.session()
         try:
-            s = db.session()
-
             db.drop_all()
             db.create_all()
             s.add(InitSql(isInit=False))
@@ -77,6 +76,7 @@ class BaseModel():
                 'password': password
             }
         except Exception as e:
+            s.rollback()
             print e
             return str(e.message)
 
@@ -196,6 +196,7 @@ class BaseModel():
             return str(e.message)
 
     def ImportSql(self, file):
+        s = db.session()
         try:
             filename = 'TABLE%s.sql' % int(time.time() * 1000)
             config = Config()
@@ -214,8 +215,11 @@ class BaseModel():
                                 config.port,
                                 config.db,
                                 file_path))
+
+            db.drop_all()
             os.system(sql)
             return True
         except Exception as e:
+            s.rollback()
             print e
             return str(e.message)

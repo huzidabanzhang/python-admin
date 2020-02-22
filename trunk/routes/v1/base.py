@@ -50,6 +50,7 @@ def ExportSql():
     if os.path.exists(result['path']):
         res = make_response(readFile(result['path'], 'rb'))
         res.headers['Content-Type'] = 'application/octet-stream'
+        res.headers['filename'] = result['name']
         res.headers['Content-Disposition'] = 'attachment; filename=' + result['name']
         return res
     else:

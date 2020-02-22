@@ -132,7 +132,7 @@ class AdminModel():
             del user['id']
             del user['create_time']
             del user['update_time']
-            user['role_type'] = role.mark
+            user['mark'] = role.mark
 
             # 登录成功删除掉原来的锁定记录
             if is_lock:

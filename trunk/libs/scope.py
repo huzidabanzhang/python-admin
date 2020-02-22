@@ -32,7 +32,7 @@ def is_in_scope(admin_id, path):
             m = role.menus.filter(Menu.is_disabled == False, Menu.path == path)
             if m:
                 return True
-            r = s.query(Route).filter(RoRoutele.path == path, Route.is_disabled == False).first()
+            r = s.query(Route).filter(Route.path == path, Route.is_disabled == False).first()
             if r:
                 return True
 

@@ -69,7 +69,7 @@ def Login():
         token = generate_auth_token({
             'admin_id': user['admin_id'],
             'password': user['password'],
-            'is_admin': True if user['role_type'] == 'SYS_ADMIN' else False
+            'is_admin': True if user['mark'] == 'SYS_ADMIN' else False
         })
 
         session['admin'] = token
