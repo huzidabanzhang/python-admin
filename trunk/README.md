@@ -12,9 +12,7 @@
   setting.py里面修改连接数据库配置
   然后创建一个新的数据库
   
-  app.py 启动后 路由/v1/Admin/CreateDrop来初始化数据库 
-  
   前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
 
 ## 计划
-   修改所有API接口的字段让接口能正常获取
+   明天要复工了
