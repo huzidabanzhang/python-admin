@@ -9,7 +9,7 @@
 '''
 from flask import Blueprint, request, session
 from collection.folder import FolderModel
-from ..token_auth import auth, validate_current_access
+from ..token_auth import auth, validate_current_access, get_auth_token
 from libs.code import ResultDeal
 
 route_folder = Blueprint('Folder', __name__, url_prefix='/v1/Folder')
@@ -19,11 +19,11 @@ route_folder = Blueprint('Folder', __name__, url_prefix='/v1/Folder')
 @auth.login_required
 @validate_current_access
 def CreateFolder():
-    admin = session.get('admin')
+    user = get_auth_token(session.get('admin'))
     params = {
         'pid': request.form.get('pid', '0'),
         'name': request.form.get('name'),
-        'admin_id': admin['admin_id']
+        'admin_id': user.get('admin_id')
     }
 
     result = FolderModel().CreateFolderRequest(params)
@@ -67,10 +67,10 @@ def ModifyFolder():
 @auth.login_required
 @validate_current_access
 def QueryFolderByParam():
-    admin = session.get('admin')
+    user = get_auth_token(session.get('admin'))
     result = FolderModel().QueryFolderByParamRequest(
         pid=request.form.get('pid', '0'),
-        admin_id=admin['admin_id']
+        admin_id=user.get('admin_id')
     )
 
     if type(result).__name__ == 'str':

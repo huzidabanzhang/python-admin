@@ -9,7 +9,7 @@
 '''
 from flask import Blueprint, request, make_response, abort, send_from_directory
 from collection.document import DocumentModel
-from ..token_auth import auth, validate_current_access
+from ..token_auth import auth, validate_current_access, get_auth_token
 from libs.code import ResultDeal
 from conf.setting import document_dir
 from libs.utils import readFile
@@ -24,8 +24,9 @@ route_document = Blueprint('Document', __name__, url_prefix='/v1/Document')
 @auth.login_required
 @validate_current_access
 def CreateDocument():
+    user = get_auth_token(session.get('admin'))
     params = {
-        'admin_id': request.form.get('admin_id'),
+        'admin_id': user.get('admin_id'),
         'type': int(request.form.get('type')),
         'uid': request.form.getlist('uid'),
         'folder_id': request.form.get('folder_id', None)
