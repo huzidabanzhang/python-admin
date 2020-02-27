@@ -68,7 +68,8 @@ class FolderModel():
                 return str('文件夹不存在')
 
             folder.name = params['name']
-            folder.pid = params['pid']
+            if params.has_key('pid'):
+                folder.pid = params['pid']
             s.commit()
             return True
         except Exception as e:

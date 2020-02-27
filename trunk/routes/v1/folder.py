@@ -51,7 +51,7 @@ def DelFolder():
 @validate_current_access
 def ModifyFolder():
     params = {
-        'pid': request.form.get('pid', '0'),
+        'pid': request.form.get('pid'),
         'name': request.form.get('name')
     }
 
