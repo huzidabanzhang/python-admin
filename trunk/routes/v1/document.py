@@ -7,7 +7,7 @@
 @LastEditors  : Please set LastEditors
 @LastEditTime : 2020-02-14 14:59:26
 '''
-from flask import Blueprint, request, make_response, abort, send_from_directory
+from flask import Blueprint, request, make_response, abort, send_from_directory, session
 from collection.document import DocumentModel
 from ..token_auth import auth, validate_current_access, get_auth_token
 from libs.code import ResultDeal
@@ -27,7 +27,7 @@ def CreateDocument():
     user = get_auth_token(session.get('admin'))
     params = {
         'admin_id': user.get('admin_id'),
-        'type': int(request.form.get('type')),
+        'status': int(request.form.get('status')),
         'uid': request.form.getlist('uid'),
         'folder_id': request.form.get('folder_id', None)
     }

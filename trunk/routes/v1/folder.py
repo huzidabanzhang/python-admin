@@ -23,7 +23,8 @@ def CreateFolder():
     params = {
         'pid': request.form.get('pid', '0'),
         'name': request.form.get('name'),
-        'admin_id': user.get('admin_id')
+        'admin_id': user.get('admin_id'),
+        'is_sys': request.form.get('is_sys')
     }
 
     result = FolderModel().CreateFolderRequest(params)
@@ -50,10 +51,9 @@ def DelFolder():
 @auth.login_required
 @validate_current_access
 def ModifyFolder():
-    params = {
-        'pid': request.form.get('pid'),
-        'name': request.form.get('name')
-    }
+    params = {'name': request.form.get('name')}
+    if request.form.get('pid'):
+        params['pid'] = request.form.get('pid')
 
     result = FolderModel().ModifyFolderRequest(folder_id=request.form.get('folder_id'), params=params)
 

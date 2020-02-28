@@ -11,7 +11,7 @@ from flask import request
 from models.base import db
 from models.system import Document
 from conf.setting import document_dir
-from sqlalchemy import text
+from sqlalchemy import text, or_
 import uuid
 import time
 import os
@@ -24,16 +24,19 @@ class DocumentModel():
         '''
         s = db.session()
         try:
-            Int = ['status', 'deleted', 'folder_id']
-            data = {}
+            deleted = Document.deleted == params['deleted']
+            folder = Document.folder_id == params['folder_id']
+            if params['folder_id'] == '0':
+                folder = or_(
+                    Document.folder_id == params['folder_id'],
+                    Document.folder_id == None
+                )
 
-            for i in Int:
-                if params.has_key(i):
-                    data[i] = params[i]
+            status = text('')
+            if params.has_key('status'):
+                status = Document.status == params['status']
 
-            result = Document.query.filter_by(**data).filter(
-                Document.name.like("%" + params['name'] + "%") if params.has_key('name') else text('')
-            ).order_by(order_by).paginate(page, page_size, error_out=False)
+            result = Document.query.filter(folder, deleted, status).order_by(order_by).paginate(page, page_size, error_out=False)
 
             return {'data': [value.to_json() for value in result.items], 'total': result.total}
         except Exception as e:

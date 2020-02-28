@@ -23,7 +23,10 @@ class FolderModel():
         try:
             result = Folder.query.filter(
                 or_(
-                    Folder.is_sys == True,
+                    and_(
+                        Folder.is_sys == True,
+                        Folder.pid == pid,
+                    ),
                     and_(
                         Folder.is_sys == False,
                         Folder.pid == pid,
@@ -47,7 +50,8 @@ class FolderModel():
                 folder_id=uuid.uuid4(),
                 pid=params['pid'],
                 name=params['name'],
-                admin_id=params['admin_id']
+                admin_id=params['admin_id'],
+                is_sys=params['is_sys']
             )
             s.add(item)
             s.commit()
@@ -92,6 +96,7 @@ class FolderModel():
             for i in res:
                 i.pid = '0'
 
+            s.delete(folder)
             s.commit()
             return True
         except Exception as e:
