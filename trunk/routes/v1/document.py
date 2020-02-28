@@ -67,7 +67,10 @@ def DownDocument(filename, name):
 @auth.login_required
 @validate_current_access
 def RetrieveDocument():
-    result = DocumentModel().RetrieveDocument(document_id=request.form.getlist('document_id'))
+    result = DocumentModel().RetrieveDocument(
+        document_id=request.form.getlist('document_id[]'),
+        deleted=True if request.form.get('deleted') == 'true' else False
+    )
     return ResultDeal(data=result)
 
 
@@ -75,7 +78,7 @@ def RetrieveDocument():
 @auth.login_required
 @validate_current_access
 def DelDocument():
-    result = DocumentModel().DelDocument(document_id=request.form.getlist('document_id'))
+    result = DocumentModel().DelDocument(document_id=request.form.getlist('document_id[]'))
     return ResultDeal(data=result)
 
 

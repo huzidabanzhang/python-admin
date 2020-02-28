@@ -122,13 +122,13 @@ class DocumentModel():
             print e
             return str(e.message)
 
-    def RetrieveDocument(self, document_id):
+    def RetrieveDocument(self, document_id, deleted):
         '''
         移动文档到回收站
         '''
         s = db.session()
         try:
-            s.query(Document).filter(Document.document_id.in_(document_id)).update({Document.deleted: True}, synchronize_session=False)
+            s.query(Document).filter(Document.document_id.in_(document_id)).update({Document.deleted: deleted}, synchronize_session=False)
             s.commit()
             return True
         except Exception as e:
