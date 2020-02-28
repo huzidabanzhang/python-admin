@@ -24,7 +24,7 @@ class DocumentModel():
         '''
         s = db.session()
         try:
-            deleted = Document.deleted == params['deleted']
+            deleted = Document.deleted == (True if params['deleted'] == 'true' else False)
             folder = Document.folder_id == params['folder_id']
             if params['folder_id'] == '0':
                 folder = or_(
@@ -34,7 +34,7 @@ class DocumentModel():
 
             status = text('')
             if params.has_key('status'):
-                status = Document.status == params['status']
+                status = Document.status == int(params['status'])
 
             result = Document.query.filter(folder, deleted, status).order_by(order_by).paginate(page, page_size, error_out=False)
 
