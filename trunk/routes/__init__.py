@@ -4,8 +4,8 @@
 @Description: API蓝图初始化注册
 @Author: Zpp
 @Date: 2019-09-04 10:23:46
-@LastEditTime: 2020-02-21 13:29:00
-@LastEditors: Please set LastEditors
+@LastEditTime: 2020-03-02 13:59:10
+@LastEditors: Zpp
 '''
 from .v1.admin import route_admin
 from .v1.menu import route_menu
@@ -32,8 +32,10 @@ def init_app(app):
         try:
             s = db.session()
             db.create_all()
-            s.add(InitSql(isInit=False))
-            s.commit()
+            res = s.query(InitSql).first()
+            if not res:
+                s.add(InitSql(isInit=False))
+                s.commit()
         except:
             return ResultDeal(code=-1, msg=u'数据库未连接错误或者出现错误')
 

@@ -4,8 +4,8 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime : 2020-02-14 15:47:12
-@LastEditors: Please set LastEditors
+@LastEditTime: 2020-03-02 10:34:35
+@LastEditors: Zpp
 '''
 from models.base import db
 import datetime
@@ -194,6 +194,7 @@ class Interface(db.Model):
     description = db.Column(db.String(255), nullable=False)
     mark = db.Column(db.String(255), nullable=False, unique=True)
     is_disabled = db.Column(db.Boolean, index=True, default=False)
+    not_allow = db.Column(db.Boolean, index=True, default=True)
     menu_id = db.Column(db.String(36), db.ForeignKey('db_menu.menu_id', ondelete='CASCADE'))
     __table_args__ = ({"useexisting": True})
 

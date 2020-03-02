@@ -4,8 +4,8 @@
 @Description: 接口控制器
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
-@LastEditors: Please set LastEditors
-@LastEditTime : 2020-02-14 14:06:24
+@LastEditors: Zpp
+@LastEditTime: 2020-03-02 10:37:51
 '''
 from flask import request
 from models.base import db
@@ -50,7 +50,8 @@ class InterfaceModel():
                 method=params['method'],
                 description=params['description'],
                 menu_id=params['menu_id'],
-                mark=params['mark']
+                mark=params['mark'],
+                not_allow=params['not_allow']
             )
             s.add(item)
             s.commit()

@@ -4,12 +4,12 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2020-02-21 13:09:16
-@LastEditors: Please set LastEditors
+@LastEditTime: 2020-03-02 13:53:08
+@LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
 from collection.admin import AdminModel
-from ..token_auth import auth, generate_auth_token, validate_current_access
+from ..token_auth import auth, generate_auth_token, validate_current_access, get_auth_token
 from libs.code import ResultDeal
 from libs.captcha import Captcha
 from io import BytesIO
@@ -162,7 +162,29 @@ def ModifyAdmin():
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
 
-    return ResultDeal(data=result)
+    token = session.get('admin')
+    info = get_auth_token(token)
+    if info['admin_id'] == request.form.get('admin_id'):
+        token = generate_auth_token({
+            'admin_id': result['admin_id'],
+            'password': result['password'],
+            'is_admin': True if result['mark'] == 'SYS_ADMIN' else False
+        })
+
+        session['admin'] = token
+        session['username'] = result['username']
+
+        return ResultDeal(data={
+            'user': result,
+            'token': token,
+            'is_self': True
+        })
+    
+    return ResultDeal(data={
+        'user': result,
+        'token': None,
+        'is_self': False
+    })
 
 
 @route_admin.route('/QueryAdminByParam', methods=['POST'])

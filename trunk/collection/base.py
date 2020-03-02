@@ -4,8 +4,8 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-@LastEditTime: 2020-02-21 13:16:19
-@LastEditors: Please set LastEditors
+@LastEditTime: 2020-03-02 10:37:18
+@LastEditors: Zpp
 '''
 from models.base import db
 from models.system import Admin, Role, Route, Menu, Interface, InitSql, Folder
@@ -161,7 +161,8 @@ class BaseModel():
             path=params['path'],
             method=params['method'],
             description=params['description'],
-            mark=params['mark']
+            mark=params['mark'],
+            not_allow=params['not_allow']
         )
 
     def ExportSql(self, type = 1):

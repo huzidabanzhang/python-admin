@@ -4,8 +4,8 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-02-21 14:32:40
-@LastEditors: Please set LastEditors
+@LastEditTime: 2020-03-02 10:36:41
+@LastEditors: Zpp
 '''
 import hashlib
 import os
@@ -188,42 +188,48 @@ init_menu = [
                         "method": "POST",
                         "name": "CreateMenu",
                         "description": "添加菜单",
-                        "mark": "add_menu"
+                        "mark": "add_menu",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Menu/QueryMenuByParam",
                         "method": "POST",
                         "name": "QueryMenuByParam",
                         "description": "获取菜单列表",
-                        "mark": "get_menu_list"
+                        "mark": "get_menu_list",
+                        "not_allow": True
                     },
                     {
                         "path": "/v1/Menu/ModifyMenu",
                         "method": "POST",
                         "name": "ModifyMenu",
                         "description": "修改菜单信息",
-                        "mark": "set_menu"
+                        "mark": "set_menu",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Menu/LockMenu",
                         "method": "POST",
                         "name": "LockMenu",
                         "description": "禁用菜单",
-                        "mark": "lock_menu"
+                        "mark": "lock_menu",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Menu/DelMenu",
                         "method": "POST",
                         "name": "DelMenu",
                         "description": "删除菜单",
-                        "mark": "del_menu"
+                        "mark": "del_menu",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Menu/GetMenuToInterface",
                         "method": "GET",
                         "name": "GetMenuToInterface",
                         "description": "获取菜单下级联的API接口",
-                        "mark": "get_menu_to_interface"
+                        "mark": "get_menu_to_interface",
+                        "not_allow": False
                     }
                 ]
             },
@@ -238,35 +244,40 @@ init_menu = [
                         "method": "POST",
                         "name": "CreateRoute",
                         "description": "添加路由",
-                        "mark": "add_router"
+                        "mark": "add_router",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Route/QueryRouteByParam",
                         "method": "POST",
                         "name": "QueryRouteByParam",
                         "description": "获取路由列表",
-                        "mark": "get_router_list"
+                        "mark": "get_router_list",
+                        "not_allow": True
                     },
                     {
                         "path": "/v1/Route/ModifyRoute",
                         "method": "POST",
                         "name": "ModifyRoute",
                         "description": "修改路由信息",
-                        "mark": "set_router"
+                        "mark": "set_router",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Route/LockRoute",
                         "method": "POST",
                         "name": "LockRoute",
                         "description": "禁用路由",
-                        "mark": "lock_router"
+                        "mark": "lock_router",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Route/DelRoute",
                         "method": "POST",
                         "name": "DelRoute",
                         "description": "删除路由",
-                        "mark": "del_router"
+                        "mark": "del_router",
+                        "not_allow": False
                     }
                 ]
             },
@@ -281,35 +292,40 @@ init_menu = [
                         "method": "POST",
                         "name": "CreateInterface",
                         "description": "添加接口",
-                        "mark": "add_interface"
+                        "mark": "add_interface",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Interface/QueryInterfaceByParam",
                         "method": "POST",
                         "name": "QueryInterfaceByParam",
                         "description": "获取接口列表",
-                        "mark": "get_interface_list"
+                        "mark": "get_interface_list",
+                        "not_allow": True
                     },
                     {
                         "path": "/v1/Interface/ModifyInterface",
                         "method": "POST",
                         "name": "ModifyInterface",
                         "description": "修改接口信息",
-                        "mark": "set_interface"
+                        "mark": "set_interface",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Interface/LockInterface",
                         "method": "POST",
                         "name": "LockInterface",
                         "description": "禁用接口",
-                        "mark": "lock_interface"
+                        "mark": "lock_interface",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Interface/DelInterface",
                         "method": "POST",
                         "name": "DelInterface",
                         "description": "删除接口",
-                        "mark": "del_interface"
+                        "mark": "del_interface",
+                        "not_allow": False
                     }
                 ]
             },
@@ -324,63 +340,72 @@ init_menu = [
                         "method": "POST",
                         "name": "CreateDocument",
                         "description": "添加附件",
-                        "mark": "add_document"
+                        "mark": "add_document",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Document/QueryDocumentByParam",
                         "method": "POST",
                         "name": "QueryDocumentByParam",
                         "description": "获取附件列表",
-                        "mark": "get_document_list"
+                        "mark": "get_document_list",
+                        "not_allow": True
                     },
                     {
                         "path": "/v1/Document/DownDocument",
                         "method": "GET",
                         "name": "DownDocument",
                         "description": "下载附件",
-                        "mark": "down_document"
+                        "mark": "down_document",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Document/DelDocument",
                         "method": "POST",
                         "name": "DelDocument",
                         "description": "删除附件",
-                        "mark": "del_document"
+                        "mark": "del_document",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Document/RetrieveDocument",
                         "method": "POST",
                         "name": "RetrieveDocument",
                         "description": "回收附件",
-                        "mark": "retrieve_document"
+                        "mark": "retrieve_document",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Folder/CreateFolder",
                         "method": "POST",
                         "name": "CreateFolder",
                         "description": "创建文件夹",
-                        "mark": "create_folder"
+                        "mark": "create_folder",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Folder/DelFolder",
                         "method": "POST",
                         "name": "DelFolder",
                         "description": "删除文件夹",
-                        "mark": "del_folder"
+                        "mark": "del_folder",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Folder/ModifyFolder",
                         "method": "POST",
                         "name": "ModifyFolder",
                         "description": "修改文件夹",
-                        "mark": "modify_folder"
+                        "mark": "modify_folder",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Folder/QueryFolderByParam",
                         "method": "POST",
                         "name": "QueryFolderByParam",
                         "description": "获取附件列表",
-                        "mark": "query_folder"
+                        "mark": "query_folder",
+                        "not_allow": True
                     }
                 ]
             },
@@ -395,7 +420,8 @@ init_menu = [
                         "method": "POST",
                         "name": "ExportSql",
                         "description": "导出数据库",
-                        "mark": "export_sql"
+                        "mark": "export_sql",
+                        "not_allow": False
                     }
                 ]
             }
@@ -418,35 +444,40 @@ init_menu = [
                         "method": "POST",
                         "name": "CreateAdmin",
                         "description": "注册管理员",
-                        "mark": "add_admin"
+                        "mark": "add_admin",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Admin/QueryAdminByParam",
                         "method": "POST",
                         "name": "QueryAdminByParam",
                         "description": "获取管理员列表",
-                        "mark": "get_admin_list"
+                        "mark": "get_admin_list",
+                        "not_allow": True
                     },
                     {
                         "path": "/v1/Admin/ModifyAdmin",
                         "method": "POST",
                         "name": "ModifyAdmin",
                         "description": "修改管理员信息",
-                        "mark": "set_admin"
+                        "mark": "set_admin",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Admin/LockAdmin",
                         "method": "POST",
                         "name": "LockAdmin",
                         "description": "禁用管理员",
-                        "mark": "lock_admin"
+                        "mark": "lock_admin",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Admin/DelAdmin",
                         "method": "POST",
                         "name": "DelAdmin",
                         "description": "删除管理员",
-                        "mark": "del_admin"
+                        "mark": "del_admin",
+                        "not_allow": False
                     }
                 ]
             },
@@ -461,35 +492,40 @@ init_menu = [
                         "method": "POST",
                         "name": "CreateRole",
                         "description": "添加角色",
-                        "mark": "add_role"
+                        "mark": "add_role",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Role/QueryRoleByParam",
                         "method": "POST",
                         "name": "QueryRoleByParam",
                         "description": "获取角色列表",
-                        "mark": "get_role_list"
+                        "mark": "get_role_list",
+                        "not_allow": True
                     },
                     {
                         "path": "/v1/Role/ModifyRole",
                         "method": "POST",
                         "name": "ModifyRole",
                         "description": "修改角色信息",
-                        "mark": "set_role"
+                        "mark": "set_role",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Role/LockRole",
                         "method": "POST",
                         "name": "LockRole",
                         "description": "禁用角色",
-                        "mark": "lock_role"
+                        "mark": "lock_role",
+                        "not_allow": False
                     },
                     {
                         "path": "/v1/Role/DelRole",
                         "method": "POST",
                         "name": "DelRole",
                         "description": "删除角色",
-                        "mark": "del_role"
+                        "mark": "del_role",
+                        "not_allow": False
                     }
                 ]
             }
@@ -506,7 +542,8 @@ init_menu = [
                 "method": "POST",
                 "name": "QueryLogByParam",
                 "description": "获取日志列表",
-                "mark": "get_log_list"
+                "mark": "get_log_list",
+                "not_allow": True
             }
         ],
         "children": [

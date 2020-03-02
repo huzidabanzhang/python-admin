@@ -4,8 +4,8 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2020-02-21 13:01:26
-@LastEditors: Please set LastEditors
+@LastEditTime: 2020-03-02 14:00:06
+@LastEditors: Zpp
 '''
 from flask import request
 from models.base import db
@@ -166,23 +166,25 @@ class AdminModel():
             if not role:
                 return str('角色不存在')
 
-            if role.mark == 'SYS_ADMIN':
+            if admin.role_id != role.role_id and role.mark == 'SYS_ADMIN':
                 return str('不能设为为超级管理员')
 
-            AllowableFields = ['nickname', 'sex', 'role_id', 'avatarUrl', 'password', 'email']
-            data = {}
+            admin.nickname = params['nickname']
+            admin.sex = params['sex']
+            admin.role_id = params['role_id']
+            admin.avatarUrl = params['avatarUrl']
+            admin.email = params['email']
+            if params['password'] != admin.password:
+                admin.password = Config().get_md5(params['password'])
 
-            for i in params:
-                if i in AllowableFields and params.has_key(i):
-                    if i == 'password':
-                        if params[i] != admin.password:
-                            data[i] = Config().get_md5(params[i])
-                    else:
-                        data[i] = params[i]
+            user = copy.deepcopy(admin.to_json())
+            del user['id']
+            del user['create_time']
+            del user['update_time']
+            user['mark'] = role.mark
 
-            s.query(Admin).filter(Admin.admin_id == admin_id).update(data)
             s.commit()
-            return True
+            return user
         except Exception as e:
             print e
             s.rollback()
