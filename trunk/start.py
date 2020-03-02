@@ -8,6 +8,7 @@
 @LastEditors: Please set LastEditors
 '''
 from flask import Flask
+from conf.setting import server_info
 import models
 import routes
 import services
@@ -31,7 +32,7 @@ logging.info('--------------------')
 
 try:
     logging.info(u'------启动成功------')
-    app.run()
+    app.run(port=server_info['port'], host=server_info['host'])
 except Exception as e:
     print e
     logging.error(u'------启动失败------')
