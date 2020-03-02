@@ -575,7 +575,7 @@ class Config():
         # mysql 配置信息
         self.host = '127.0.0.1'
         self.port = 3306
-        self.admin = 'root'
+        self.admin = 'flask_user'
         self.password = 'intersky'
         self.db = 'flask'
         self.charset = 'utf8'
