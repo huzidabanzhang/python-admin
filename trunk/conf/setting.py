@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-03-02 10:36:41
+@LastEditTime: 2020-03-02 16:58:30
 @LastEditors: Zpp
 '''
 import hashlib
@@ -25,7 +25,7 @@ token_info = {
 # 启动服务参数 字典类型
 server_info = {
     "host": '0.0.0.0',
-    "port": 5000,  # 启动服务的端口号
+    "port": 91,  # 启动服务的端口号
 }
 
 # 文档路径
