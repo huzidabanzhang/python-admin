@@ -4,7 +4,7 @@
 @Description: API蓝图初始化注册
 @Author: Zpp
 @Date: 2019-09-04 10:23:46
-@LastEditTime: 2020-03-02 13:59:10
+@LastEditTime: 2020-03-03 14:07:06
 @LastEditors: Zpp
 '''
 from .v1.admin import route_admin
@@ -30,8 +30,8 @@ def init_app(app):
     def before_first_request():
         # 运行models，以创建不存在的表
         try:
-            s = db.session()
             db.create_all()
+            s = db.session()
             res = s.query(InitSql).first()
             if not res:
                 s.add(InitSql(isInit=False))

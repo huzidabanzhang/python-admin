@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-03-02 16:58:30
+@LastEditTime: 2020-03-03 08:52:47
 @LastEditors: Zpp
 '''
 import hashlib
@@ -575,7 +575,7 @@ class Config():
         # mysql 配置信息
         self.host = '127.0.0.1'
         self.port = 3306
-        self.admin = 'flask_user'
+        self.admin = 'root'
         self.password = 'intersky'
         self.db = 'flask'
         self.charset = 'utf8'

@@ -4,4 +4,5 @@ logs
 .vscode/*.json
 document
 sessions
+/libs/captcha.py
 caches
