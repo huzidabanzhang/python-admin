@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-03-04 14:55:47
+@LastEditTime: 2020-03-04 15:00:30
 @LastEditors: Zpp
 '''
 import hashlib
@@ -46,7 +46,7 @@ session_info = {
     'SESSION_FILE_DIR': os.path.join(basedir, 'sessions'),
     'SESSION_FILE_THRESHOLD': 500,
     'SESSION_FILE_MODE': 384,
-    'SESSION_PERMANENT': False
+    'SESSION_PERMANENT': True
 }
 
 # cache参数
