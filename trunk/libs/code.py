@@ -4,7 +4,7 @@
 @Description: response返回处理方法
 @Author: Zpp
 @Date: 2019-09-04 17:09:14
-@LastEditTime: 2019-10-21 14:40:21
+@LastEditTime: 2020-03-04 14:46:11
 @LastEditors: Zpp
 '''
 from flask import jsonify, request, current_app, session
@@ -23,7 +23,7 @@ def ResultDeal(code=0, data={}, msg=''):
 
     if response.headers['Content-Type'] == 'application/json' and response.status_code == 200:
         params = {
-            'ip': request.remote_addr,
+            'ip': request.headers['X-Real-Ip'],
             'method': request.method,
             'path': request.path,
             'username': session.get('username'),

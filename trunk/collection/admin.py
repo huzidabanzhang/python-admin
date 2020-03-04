@@ -102,7 +102,7 @@ class AdminModel():
                         user_id=admin.admin_id,
                         flag=False,
                         number=number,
-                        ip=request.remote_addr
+                        ip=request.headers['X-Real-Ip']
                     ))
                 s.commit()
                 if number - base_info['lock_times'] == 0:
