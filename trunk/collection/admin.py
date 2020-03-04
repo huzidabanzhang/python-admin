@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2020-03-02 14:00:06
+@LastEditTime: 2020-03-04 15:33:12
 @LastEditors: Zpp
 '''
 from flask import request
@@ -102,7 +102,7 @@ class AdminModel():
                         user_id=admin.admin_id,
                         flag=False,
                         number=number,
-                        ip=request.headers['X-Real-Ip']
+                        ip=request.headers['X-Real-Ip'] if request.headers.has_key('X-Real-Ip') else request.remote_addr
                     ))
                 s.commit()
                 if number - base_info['lock_times'] == 0:

@@ -4,8 +4,8 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime : 2020-02-14 13:50:11
-@LastEditors: Please set LastEditors
+@LastEditTime: 2020-03-04 16:05:04
+@LastEditors: Zpp
 '''
 from flask import request
 from models.base import db
@@ -48,12 +48,10 @@ class MenuModel():
                 
                 if params.has_key('role_id'):
                     role = Role.query.filter(Role.role_id == params['role_id']).first()
-                    for value in role.menus:
-                        if len(value.interfaces) == 0:
-                            select.append(item.menu_id)
-                        else:
-                            for item in value.interfaces:
-                                select.append(item.interface_id)
+                    for value in role.interfaces:
+                        select.append(value.interface_id)
+                    # for value in role.menus:
+                    #     select.append(value.menu_id)
 
                 return {
                     'data': menus,
