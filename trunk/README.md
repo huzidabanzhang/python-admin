@@ -1,3 +1,10 @@
+## 演示
+  https://ig132n.cn/
+  
+  测试账号：Test 密码：123456
+  
+  有问题欢迎大家提给我
+  
 ## 功能
 
 * 管理员管理
@@ -14,8 +21,6 @@
   然后创建一个新的数据库
   
   前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
-  演示地址 https://ig132n.cn/ 测试账号：Test 密码：123456
-  有问题欢迎大家提给我
 
 ## 计划
    这两天弄下东西
