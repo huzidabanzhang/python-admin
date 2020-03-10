@@ -21,6 +21,3 @@
   然后创建一个新的数据库
   
   前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
-
-## 计划
-   这两天弄下东西
