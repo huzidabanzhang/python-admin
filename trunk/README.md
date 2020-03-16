@@ -20,3 +20,6 @@
   setting.py里面修改连接数据库配置创建一个新的数据库
   
   前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
+  
+## 计划
+  加入分支开始自己的装修记录
