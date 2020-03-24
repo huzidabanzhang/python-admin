@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2020-03-04 15:33:12
+@LastEditTime: 2020-03-24 15:47:10
 @LastEditors: Zpp
 '''
 from flask import request
@@ -121,12 +121,12 @@ class AdminModel():
             for i in routes:
                 route.append(i.to_json())
 
-            if admin.mark == 'SYS_ADMIN':
-                interface = [value.to_json() for value in s.query(Interface).all()]
-                menu = [value.to_json() for value in s.query(Menu).all()]
-            else:
-                role = s.query(Role).filter(Role.role_id == admin.role_id).first()
-                if role:
+            role = s.query(Role).filter(Role.role_id == admin.role_id).first()
+            if role:
+                if admin.mark == 'SYS_ADMIN':
+                    interface = [value.to_json() for value in s.query(Interface).all()]
+                    menu = [value.to_json() for value in s.query(Menu).all()]
+                else:
                     for i in role.menus.order_by(Menu.sort, Menu.id):
                         menu.append(i.to_json())
                     for i in role.interfaces:
