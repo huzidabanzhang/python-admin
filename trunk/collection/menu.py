@@ -50,7 +50,7 @@ class MenuModel():
                     role = Role.query.filter(Role.role_id == params['role_id']).first()
                     if role.mark == 'SYS_ADMIN':
                         for i in menus:
-                            select.append(menus[i]['menu_id'])
+                            select.append(i['menu_id'])
                     else:
                         for value in role.interfaces:
                             select.append(value.interface_id)
