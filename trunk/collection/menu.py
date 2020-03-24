@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2020-03-24 15:41:43
+@LastEditTime: 2020-03-24 16:05:27
 @LastEditors: Zpp
 '''
 from flask import request
@@ -49,8 +49,8 @@ class MenuModel():
                 if params.has_key('role_id'):
                     role = Role.query.filter(Role.role_id == params['role_id']).first()
                     if role.mark == 'SYS_ADMIN':
-                        for value in interfaces:
-                            select.append(value['menu_id'])
+                        for i in menus:
+                            select.append(menus[i]['menu_id'])
                     else:
                         for value in role.interfaces:
                             select.append(value.interface_id)
