@@ -123,7 +123,7 @@ class AdminModel():
 
             role = s.query(Role).filter(Role.role_id == admin.role_id).first()
             if role:
-                if admin.mark == 'SYS_ADMIN':
+                if role.mark == 'SYS_ADMIN':
                     interface = [value.to_json() for value in s.query(Interface).all()]
                     menu = [value.to_json() for value in s.query(Menu).all()]
                 else:
