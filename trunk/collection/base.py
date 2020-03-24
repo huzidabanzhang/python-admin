@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-@LastEditTime: 2020-03-02 10:37:18
+@LastEditTime: 2020-03-24 15:38:18
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -56,8 +56,8 @@ class BaseModel():
             s.add(admin)
             s.commit()
 
-            self.__init_routes(init_route, '0', role_id)
-            self.__init_menus(init_menu, '0', role_id)
+            self.__init_routes(init_route, '0')
+            self.__init_menus(init_menu, '0')
 
             folder = Folder(
                 folder_id=uuid.uuid4(),
@@ -92,7 +92,7 @@ class BaseModel():
         code_num = ''.join(code)
         return code_num
 
-    def __init_routes(self, data, pid, role_id):
+    def __init_routes(self, data, pid):
         s = db.session()
         for r in data:
             route_id = uuid.uuid4()
@@ -100,13 +100,11 @@ class BaseModel():
             s.add(route)
             s.commit()
             if r.has_key('children'):
-                self.__init_routes(r['children'], route_id, role_id)
+                self.__init_routes(r['children'], route_id)
 
-    def __init_menus(self, data, pid, role_id):
+    def __init_menus(self, data, pid):
         s = db.session()
         for m in data:
-            role = s.query(Role).filter(Role.role_id == role_id).first()
-
             menu_id = uuid.uuid4()
             menu = self.__create_menu(m, menu_id, pid)
 
@@ -118,18 +116,10 @@ class BaseModel():
                     interfaces.append(interface)
                 menu.interfaces = interfaces
 
-                role_interfaces = [i for i in role.interfaces]
-                role.interfaces = role_interfaces + interfaces
-
             s.add(menu)
-
-            menus = [i for i in role.menus]
-            menus.append(menu)
-            role.menus = menus
-
             s.commit()
             if m.has_key('children'):
-                self.__init_menus(m['children'], menu_id, role_id)
+                self.__init_menus(m['children'], menu_id)
 
     def __create_route(self, params, route_id, pid):
         return Route(

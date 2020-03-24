@@ -9,7 +9,7 @@
 '''
 from flask import request
 from models.base import db
-from models.system import Admin, Role, Route, Menu, LoginLock
+from models.system import Admin, Role, Route, Menu, LoginLock, Interface
 from conf.setting import Config, base_info
 import uuid
 import datetime
@@ -121,12 +121,16 @@ class AdminModel():
             for i in routes:
                 route.append(i.to_json())
 
-            role = s.query(Role).filter(Role.role_id == admin.role_id).first()
-            if role:
-                for i in role.menus.order_by(Menu.sort, Menu.id):
-                    menu.append(i.to_json())
-                for i in role.interfaces:
-                    interface.append(i.to_json())
+            if admin.mark == 'SYS_ADMIN':
+                interface = [value.to_json() for value in s.query(Interface).all()]
+                menu = [value.to_json() for value in s.query(Menu).all()]
+            else:
+                role = s.query(Role).filter(Role.role_id == admin.role_id).first()
+                if role:
+                    for i in role.menus.order_by(Menu.sort, Menu.id):
+                        menu.append(i.to_json())
+                    for i in role.interfaces:
+                        interface.append(i.to_json())
 
             user = copy.deepcopy(admin.to_json())
             del user['id']
