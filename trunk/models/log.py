@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-09-12 16:34:07
 @LastEditors: Zpp
-@LastEditTime: 2019-10-18 11:03:18
+@LastEditTime: 2020-03-30 14:44:00
 '''
 from models.base import db
 import datetime
@@ -27,7 +27,10 @@ class Log(db.Model):
     status = db.Column(db.SmallInteger, nullable=False, index=True, default=1) # 0 成功 1 失败 2 禁用
     type = db.Column(db.SmallInteger, nullable=False, index=True, default=1) # 0 其他 1 登录
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
-    __table_args__ = ({"useexisting": True})
+    __table_args__ = {
+        'useexisting': True,
+        'mysql_engine': 'InnoDB'
+    }
 
     def to_json(self):
         dict = self.__dict__

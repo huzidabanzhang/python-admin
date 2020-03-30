@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2020-03-02 10:34:35
+@LastEditTime: 2020-03-30 14:37:25
 @LastEditors: Zpp
 '''
 from models.base import db
@@ -42,7 +42,10 @@ class Admin(db.Model):
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     update_time = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     role_id = db.Column(db.String(36), db.ForeignKey('db_role.role_id', ondelete='CASCADE'))
-    __table_args__ = ({"useexisting": True})
+    __table_args__ = {
+        'useexisting': True,
+        'mysql_engine': 'InnoDB'
+    }
 
     def is_authenticated(self):
         return True
@@ -82,7 +85,10 @@ class LoginLock(db.Model):
     number = db.Column(db.Integer, primary_key=True, default=0)
     ip = db.Column(db.String(36), index=True)
     lock_time = db.Column(db.DateTime)
-    __table_args__ = ({"useexisting": True})
+    __table_args__ = {
+        'useexisting': True,
+        'mysql_engine': 'InnoDB'
+    }
 
     def to_json(self):
         dict = self.__dict__
@@ -115,7 +121,10 @@ class Role(db.Model):
                                  secondary=InterfaceToRole,
                                  backref=db.backref('db_interface', lazy='dynamic'),
                                  lazy='dynamic')
-    __table_args__ = ({"useexisting": True})
+    __table_args__ = {
+        'useexisting': True,
+        'mysql_engine': 'InnoDB'
+    }
 
     def to_json(self):
         dict = self.__dict__
@@ -142,7 +151,10 @@ class Route(db.Model):
     componentPath = db.Column(db.String(255), nullable=False)
     cache = db.Column(db.Boolean, index=True, default=True)
     is_disabled = db.Column(db.Boolean, index=True, default=False)
-    __table_args__ = ({"useexisting": True})
+    __table_args__ = {
+        'useexisting': True,
+        'mysql_engine': 'InnoDB'
+    }
 
     def to_json(self):
         dict = self.__dict__
@@ -169,7 +181,10 @@ class Menu(db.Model):
     sort = db.Column(db.SmallInteger, index=True, default=1)
     is_disabled = db.Column(db.Boolean, index=True, default=False)
     interfaces = db.relationship('Interface', backref='menu')
-    __table_args__ = ({"useexisting": True})
+    __table_args__ = {
+        'useexisting': True,
+        'mysql_engine': 'InnoDB'
+    }
 
     def to_json(self):
         dict = self.__dict__
@@ -196,7 +211,10 @@ class Interface(db.Model):
     is_disabled = db.Column(db.Boolean, index=True, default=False)
     not_allow = db.Column(db.Boolean, index=True, default=True)
     menu_id = db.Column(db.String(36), db.ForeignKey('db_menu.menu_id', ondelete='CASCADE'))
-    __table_args__ = ({"useexisting": True})
+    __table_args__ = {
+        'useexisting': True,
+        'mysql_engine': 'InnoDB'
+    }
 
     def to_json(self):
         dict = self.__dict__
@@ -224,7 +242,10 @@ class Document(db.Model):
     deleted = db.Column(db.Boolean, index=True, default=False) # True = 回收站
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     folder_id = db.Column(db.String(36), db.ForeignKey('db_folder.folder_id', ondelete='CASCADE'))
-    __table_args__ = ({"useexisting": True})
+    __table_args__ = {
+        'useexisting': True,
+        'mysql_engine': 'InnoDB'
+    }
 
     def to_json(self):
         dict = self.__dict__
@@ -251,7 +272,10 @@ class Folder(db.Model):
     is_sys = db.Column(db.Boolean, index=True, default=True) # True = 系统文件夹
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     documents = db.relationship('Document', backref='folder')
-    __table_args__ = ({"useexisting": True})
+    __table_args__ = {
+        'useexisting': True,
+        'mysql_engine': 'InnoDB'
+    }
 
     def to_json(self):
         dict = self.__dict__
@@ -272,4 +296,7 @@ class InitSql(db.Model):
     __tablename__ = 'db_init_sql'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     isInit = db.Column(db.Boolean, index=True, default=True)
-    __table_args__ = ({"useexisting": True})
+    __table_args__ = {
+        'useexisting': True,
+        'mysql_engine': 'InnoDB'
+    }
