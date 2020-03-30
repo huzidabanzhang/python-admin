@@ -4,11 +4,11 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2020-03-02 13:53:08
+@LastEditTime: 2020-03-30 11:01:28
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
-from collection.admin import AdminModel
+from collection.v1.admin import AdminModel
 from ..token_auth import auth, generate_auth_token, validate_current_access, get_auth_token
 from libs.code import ResultDeal
 from libs.captcha import Captcha

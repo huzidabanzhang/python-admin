@@ -8,7 +8,7 @@
 @LastEditTime: 2019-10-22 10:28:11
 '''
 from flask import Blueprint, request
-from collection.log import LogModel
+from collection.v1.log import LogModel
 from ..token_auth import auth, validate_current_access
 from libs.code import ResultDeal
 

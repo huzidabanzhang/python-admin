@@ -8,7 +8,7 @@
 @LastEditTime : 2020-02-14 14:59:26
 '''
 from flask import Blueprint, request, make_response, abort, send_from_directory, session
-from collection.document import DocumentModel
+from collection.v1.document import DocumentModel
 from ..token_auth import auth, validate_current_access, get_auth_token
 from libs.code import ResultDeal
 from conf.setting import document_dir

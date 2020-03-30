@@ -8,7 +8,7 @@
 @LastEditors: Please set LastEditors
 '''
 from flask import Blueprint, request, make_response, session, abort
-from collection.base import BaseModel
+from collection.v1.base import BaseModel
 from ..token_auth import auth, generate_auth_token, validate_current_access, get_auth_token
 from libs.code import ResultDeal
 from libs.utils import readFile

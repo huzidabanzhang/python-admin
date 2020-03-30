@@ -8,7 +8,7 @@
 @LastEditTime : 2020-02-14 14:07:50
 '''
 from flask import Blueprint, request
-from collection.interface import InterfaceModel
+from collection.v1.interface import InterfaceModel
 from ..token_auth import auth, validate_current_access
 from libs.code import ResultDeal
 

@@ -8,7 +8,7 @@
 @LastEditors: Please set LastEditors
 '''
 from flask import Blueprint, request
-from collection.menu import MenuModel
+from collection.v1.menu import MenuModel
 from ..token_auth import auth, validate_current_access
 from libs.code import ResultDeal
 

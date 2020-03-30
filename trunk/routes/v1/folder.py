@@ -8,7 +8,7 @@
 @LastEditTime : 2020-02-14 14:51:54
 '''
 from flask import Blueprint, request, session
-from collection.folder import FolderModel
+from collection.v1.folder import FolderModel
 from ..token_auth import auth, validate_current_access, get_auth_token
 from libs.code import ResultDeal
 

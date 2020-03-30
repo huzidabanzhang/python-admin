@@ -8,7 +8,7 @@
 @LastEditors  : Please set LastEditors
 '''
 from flask import Blueprint, request
-from collection.role import RoleModel
+from collection.v1.role import RoleModel
 from ..token_auth import auth, validate_current_access
 from libs.code import ResultDeal
 import json

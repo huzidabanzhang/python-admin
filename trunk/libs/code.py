@@ -4,11 +4,11 @@
 @Description: response返回处理方法
 @Author: Zpp
 @Date: 2019-09-04 17:09:14
-@LastEditTime: 2020-03-04 15:32:59
+@LastEditTime: 2020-03-30 11:01:20
 @LastEditors: Zpp
 '''
 from flask import jsonify, request, current_app, session
-from collection.log import LogModel
+from collection.v1.log import LogModel
 from datetime import datetime
 import json
 import time
