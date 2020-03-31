@@ -3,6 +3,8 @@
   
   测试账号：Test 密码：123456
   
+  前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
+  
 ## 功能
 
 * 管理员管理
@@ -15,9 +17,11 @@
 * 日志
 
 ## 启动
-  setting.py里面修改连接数据库配置创建一个新的数据库
+  第一次启动前，先创建一个数据库，然后在conf/setting.py里面数据库配置修改来你自己的数据库连接信息
   
-  前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
+  tools/manage.py为数据库版本控制的py，具体的使用介绍你可以看： [章胖胖的笔记](https://huzidabanzhang.github.io/notes/2020-03-30.html#python-flask-migrate-%E8%BF%81%E7%A7%BB%E6%95%B0%E6%8D%AE%E5%BA%93 "章胖胖的笔记")
+  
+  start.py为启动文件
   
 ## 计划
   加入分支开始自己的装修记录
