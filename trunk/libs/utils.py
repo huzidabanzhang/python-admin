@@ -7,7 +7,7 @@
 @LastEditors  : Please set LastEditors
 @LastEditTime : 2020-02-14 15:45:41
 '''
-from models.base import db
+from models import db
 from models.system import InitSql
 
 

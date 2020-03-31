@@ -7,7 +7,7 @@
 @LastEditTime: 2020-03-05 09:14:27
 @LastEditors: Zpp
 '''
-from models.base import db
+from models import db
 from models.system import Admin, Role, Route, Interface, Menu
 
 

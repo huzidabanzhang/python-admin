@@ -8,7 +8,7 @@
 @LastEditTime : 2019-12-23 15:50:15
 '''
 from flask import request
-from models.base import db
+from models import db
 from models.log import Log
 from sqlalchemy import text
 import json

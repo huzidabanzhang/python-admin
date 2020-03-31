@@ -8,7 +8,7 @@
 @LastEditTime : 2020-02-14 15:01:10
 '''
 from flask import request
-from models.base import db
+from models import db
 from models.system import Document
 from conf.setting import document_dir
 from sqlalchemy import text, or_

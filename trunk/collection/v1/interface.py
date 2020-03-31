@@ -8,7 +8,7 @@
 @LastEditTime: 2020-03-02 10:37:51
 '''
 from flask import request
-from models.base import db
+from models import db
 from models.system import Interface
 from sqlalchemy import text
 import uuid

@@ -7,7 +7,7 @@
 @LastEditTime: 2020-03-24 15:38:18
 @LastEditors: Zpp
 '''
-from models.base import db
+from models import db
 from models.system import Admin, Role, Route, Menu, Interface, InitSql, Folder
 from conf.setting import Config, init_route, init_menu, sql_dir
 import uuid

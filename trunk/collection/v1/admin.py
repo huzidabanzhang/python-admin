@@ -8,7 +8,7 @@
 @LastEditors: Zpp
 '''
 from flask import request
-from models.base import db
+from models import db
 from models.system import Admin, Role, Route, Menu, LoginLock, Interface
 from conf.setting import Config, base_info
 import uuid

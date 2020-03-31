@@ -8,7 +8,7 @@
 @LastEditors  : Please set LastEditors
 '''
 from flask import request
-from models.base import db
+from models import db
 from models.system import Route
 from sqlalchemy import text
 import uuid

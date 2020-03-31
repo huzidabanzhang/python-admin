@@ -8,7 +8,7 @@
 @LastEditors: Zpp
 '''
 from flask import request
-from models.base import db
+from models import db
 from models.system import Menu, Role
 from sqlalchemy import text
 import uuid

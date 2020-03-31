@@ -7,7 +7,7 @@
 @LastEditors: Zpp
 @LastEditTime: 2020-03-30 14:44:00
 '''
-from models.base import db
+from models import db
 import datetime
 
 

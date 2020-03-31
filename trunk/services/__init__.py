@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 10:23:44
-@LastEditTime: 2020-03-05 09:24:37
+@LastEditTime: 2020-03-31 09:50:49
 @LastEditors: Zpp
 '''
 from flask_session import Session
@@ -12,7 +12,7 @@ from flask_compress import Compress
 from flask_cache import Cache
 from conf.setting import token_info, session_info, cache_info
 
-cache = None
+cache = Cache()
 
 def init_app(app):
     # 密钥
@@ -27,5 +27,4 @@ def init_app(app):
     Session(app)
     Compress(app)
     global cache
-    cache = Cache(app)
-    return app
+    cache.init_app(app)

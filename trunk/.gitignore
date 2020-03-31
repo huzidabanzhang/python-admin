@@ -5,5 +5,5 @@ logs
 document
 sessions
 /libs/captcha.py
-/tools/migrations/*
+/tools/migrations
 caches

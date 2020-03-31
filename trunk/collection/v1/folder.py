@@ -8,7 +8,7 @@
 @LastEditTime : 2020-02-14 14:49:46
 '''
 from flask import request
-from models.base import db
+from models import db
 from models.system import Folder, Document
 from sqlalchemy import text, or_, and_
 import uuid

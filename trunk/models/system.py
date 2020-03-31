@@ -4,10 +4,10 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2020-03-30 14:37:25
+@LastEditTime: 2020-03-31 09:47:39
 @LastEditors: Zpp
 '''
-from models.base import db
+from models import db
 import datetime
 
 
