@@ -1,3 +1,5 @@
+![默哀](https://github.com/huzidabanzhang/python-admin/blob/master/trunk/static/image/markdown/desktop.jpg "默哀")
+
 ## 演示
   https://ig132n.cn/
   
