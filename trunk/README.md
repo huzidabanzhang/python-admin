@@ -5,7 +5,7 @@
   
   测试账号：Test 密码：123456
   
-  前端GIT地址: https://github.com/huzidabanzhang/python-admin-pm
+  前端地址 [Vue](https://github.com/huzidabanzhang/python-admin-pm "Vue")
   
 ## 功能
 
