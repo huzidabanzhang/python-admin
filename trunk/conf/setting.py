@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-03-04 15:00:30
+@LastEditTime: 2020-04-10 14:41:29
 @LastEditors: Zpp
 '''
 import hashlib
@@ -30,6 +30,9 @@ server_info = {
 
 # 文档路径
 document_dir = os.path.join(basedir, 'document')
+
+# excel存放路径
+excel_dir = os.path.join(basedir, 'excel')
 
 # sql下载临时路径
 sql_dir = os.path.join(basedir, 'sql')

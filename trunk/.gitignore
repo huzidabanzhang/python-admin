@@ -6,4 +6,5 @@ document
 sessions
 /libs/captcha.py
 /tools/migrations
+/conf/aliyun.py
 caches
