@@ -15,6 +15,10 @@ from conf.setting import excel_dir
 import logging
 import xlwings as xw
 import uuid
+import time
+import os
+import datetime
+import json
 
 
 class WagesModel():
@@ -60,12 +64,6 @@ class WagesModel():
             return str('获取个人工资失败')
 
     @staticmethod
-    def file_extension(filename):
-        ary = filename.split('.')
-        count = len(ary)
-        return ary[count - 1] if count > 1 else ''
-
-    @staticmethod
     def allowed_file(file):
         ALLOWED_EXTENSIONS = set(['xls', 'xlsx'])
 
@@ -76,26 +74,33 @@ class WagesModel():
         导入工资记录
         '''
         s = db.session()
-        try:
-            filename = file.filename
-            ext = self.file_extension(file)
-            if not self.allowed_file(filename):
-                return str('请上传Excel文件')
+        filename = file.filename
 
-            file.seek(0)
-            fn = '/' + str(time.strftime('%Y/%m/%d'))
-            if not os.path.exists(excel_dir + fn):
-                os.makedirs(excel_dir + fn)
-            path = fn + '/' + str(uuid.uuid1()) + '.' + ext
-            file.save(excel_dir + path)
+        ary = filename.split('.')
+        count = len(ary)
+        ext = ary[count - 1] if count > 1 else ''
+        if not self.allowed_file(filename):
+            return str('请上传Excel文件')
 
-            xw_app = xw.App(visible=False, add_book=False)
-            wb = xw_app.books.open(excel_dir + path)
-            sheet = wb.sheets[0]
+        file.seek(0)
+        fn = '/' + str(time.strftime('%Y/%m/%d'))
+        if not os.path.exists(excel_dir + fn):
+            os.makedirs(excel_dir + fn)
+        path = fn + '/' + str(uuid.uuid1()) + '.' + ext
+        file.save(excel_dir + path)
+
+        import pythoncom
+        pythoncom.CoInitialize()
+
+        xw_app = xw.App(visible=False, add_book=False)
+        wb = xw_app.books.open(excel_dir + path)
+
+        params = []
+
+        for sheet in wb.sheets:
             # 读取所有内容
             data = sheet.range('A1').expand().value
 
-            params = []
             fileds = [u'公司', u'姓名', u'身份证', u'电话']
             for i in data:
                 if i[0] == u'公司':
@@ -107,30 +112,25 @@ class WagesModel():
                     for index, j in enumerate(item):
                         if j:
                             if j.replace(" ", "") in fileds:
-                                d[j] = i[index] if type(i[index]) != float else int(i[index])
+                                d[j.replace(" ", "")] = i[index] if type(i[index]) != float else int(i[index])
                             else:
-                                d['value'][j] = i[index]
+                                d['value'][j] = str(i[index]) if not type(i[index]).__name__ == 'datetime' else i[index].strftime('%Y-%m-%d')
                     params.append(d)
-
-            case = []
-            for i in params:
+        print len(params)
+        case = []
+        for i in params:
+            if i.has_key(u'公司') and i.has_key(u'姓名') and i.has_key(u'身份证') and i.has_key(u'电话'):
                 case.append(Wages(
                     wages_id=uuid.uuid4(),
                     company=i[u'公司'],
                     name=i[u'姓名'],
                     id_card=i[u'身份证'],
-                    phone=i[u'电话'],
-                    wages=i['value'],
+                    phone=int(i[u'电话']),
+                    wages=json.dumps(i['value']),
                     payment_time=payment_time
                 ))
-            s.add_all(case)
-            s.commit()
-            return True
-        except Exception as e:
-            print e
-            logging.info('-------导入工资记录失败%s' % e)
-            return str('导入工资记录失败')
-        finally:
-            wb.close()
-            xw_app.quit()
-            xw_app.kill()
+            else: 
+                print i
+        s.add_all(case)
+        s.commit()
+        return True

@@ -7,4 +7,5 @@ sessions
 /libs/captcha.py
 /tools/migrations
 /conf/aliyun.py
+excel
 caches
