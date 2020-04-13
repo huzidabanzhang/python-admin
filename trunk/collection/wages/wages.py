@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 13:30:34
 @LastEditors: Zpp
-@LastEditTime: 2020-04-13 15:30:47
+@LastEditTime: 2020-04-13 15:56:36
 '''
 from flask import request
 from models import db
@@ -77,6 +77,13 @@ class WagesModel():
         '''
         s = db.session()
         try:
+            res = WagesUser.query.filter_by({
+                'openid': params['openid']
+            }).first()
+
+            if res:
+                return str('已注册')
+
             WagesUser(
                 wages_user_id=uuid.uuid4(),
                 id_card=params['id_card'],
