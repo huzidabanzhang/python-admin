@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 14:17:37
 @LastEditors: Zpp
-@LastEditTime: 2020-04-10 15:21:35
+@LastEditTime: 2020-04-13 08:47:56
 '''
 from flask import Blueprint, request
 from collection.wages.wages import WagesModel
@@ -19,8 +19,6 @@ route_wages = Blueprint('Wages', __name__, url_prefix='/wages/Wages')
 @auth.login_required
 @validate_current_access
 def ImportWages():
-    print request.files.get('file')
-    print request.form.get('payment_time')
     file = request.files.get('file')
     if not file:
         return ResultDeal(msg=u'请选择上传文件', code=-1)

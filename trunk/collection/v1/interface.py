@@ -5,14 +5,14 @@
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
 @LastEditors: Zpp
-@LastEditTime: 2020-03-02 10:37:51
+@LastEditTime: 2020-04-13 09:00:02
 '''
 from flask import request
 from models import db
 from models.system import Interface
 from sqlalchemy import text
 import uuid
-import json
+import copy
 
 
 class InterfaceModel():
@@ -55,8 +55,9 @@ class InterfaceModel():
                 not_allow=params['not_allow']
             )
             s.add(item)
+            data = copy.deepcopy(item.to_json())
             s.commit()
-            return item
+            return data
         except Exception as e:
             s.rollback()
             print e
