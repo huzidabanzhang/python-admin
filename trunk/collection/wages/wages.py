@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 13:30:34
 @LastEditors: Zpp
-@LastEditTime: 2020-04-13 13:28:23
+@LastEditTime: 2020-04-13 15:30:47
 '''
 from flask import request
 from models import db
@@ -14,7 +14,7 @@ from sqlalchemy import text
 from conf.setting import excel_dir
 from libs.aliyun import AliyunModel
 import logging
-import xlwings as xw
+import xlrd
 import uuid
 import time
 import os
@@ -130,20 +130,16 @@ class WagesModel():
         path = fn + '/' + str(uuid.uuid1()) + '.' + ext
         file.save(excel_dir + path)
 
-        import pythoncom
-        pythoncom.CoInitialize()
-
-        xw_app = xw.App(visible=False, add_book=False)
-        wb = xw_app.books.open(excel_dir + path)
+        wb = xlrd.open_workbook(excel_dir + path)
         try:
             params = []
+            fileds = [u'公司', u'姓名', u'身份证', u'电话']
 
-            for sheet in wb.sheets:
-                # 读取所有内容
-                data = sheet.range('A1').expand().value
-
-                fileds = [u'公司', u'姓名', u'身份证', u'电话']
-                for i in data:
+            for name in wb.sheet_names():
+                sheet = wb.sheet_by_name(name)
+                for row in range(sheet.nrows):
+                    # 读取所有内容
+                    i = sheet.row_values(row)
                     if i[0] == u'公司':
                         item = i
                     else:
@@ -191,7 +187,3 @@ class WagesModel():
             print e
             logging.info('-------获取工资列表失败%s' % e)
             return str('获取工资列表失败')
-        finally:
-            wb.close()
-            xw_app.quit()
-            xw_app.kill()
