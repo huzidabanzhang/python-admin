@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 14:17:37
 @LastEditors: Zpp
-@LastEditTime: 2020-04-13 08:47:56
+@LastEditTime: 2020-04-13 13:08:43
 '''
 from flask import Blueprint, request
 from collection.wages.wages import WagesModel

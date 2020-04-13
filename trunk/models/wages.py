@@ -5,11 +5,12 @@
 @Author: Zpp
 @Date: 2020-04-10 13:20:08
 @LastEditors: Zpp
-@LastEditTime: 2020-04-10 13:30:17
+@LastEditTime: 2020-04-13 10:49:49
 '''
 
 from models import db
 import datetime
+import json
 
 
 class Wages(db.Model):
@@ -22,9 +23,9 @@ class Wages(db.Model):
     company = db.Column(db.String(255), index=True, nullable=False)
     name = db.Column(db.String(255), nullable=False)
     id_card = db.Column(db.String(255), index=True, nullable=False)
-    phone = db.Column(db.Integer, index=True, nullable=False)
+    phone = db.Column(db.BigInteger, index=True, nullable=False)
     wages = db.Column(db.Text, nullable=False)
-    payment_time = db.Column(db.DateTime, index=True, nullable=False)
+    payment_time = db.Column(db.Date, index=True, nullable=False)
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     update_time = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     __table_args__ = {
@@ -37,7 +38,9 @@ class Wages(db.Model):
         if "_sa_instance_state" in dict:
             del dict["_sa_instance_state"]
         if "payment_time" in dict:
-            dict["payment_time"] = dict["payment_time"].strftime('%Y-%m-%d %H:%M:%S')
+            dict["payment_time"] = dict["payment_time"].strftime('%Y-%m')
+        if "wages" in dict:
+            dict["wages"] = json.loads(dict["wages"])
         if "update_time" in dict:
             dict["update_time"] = dict["update_time"].strftime('%Y-%m-%d %H:%M:%S')
         if "create_time" in dict:
@@ -55,9 +58,9 @@ class WagesUser(db.Model):
     __tablename__ = 'db_wages_user'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     wages_user_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
-    id_card = db.Column(db.String(255), index=True, nullable=False)
-    phone = db.Column(db.Integer, index=True, nullable=False)
-    openid = db.Column(db.String(255), index=True, nullable=False)
+    id_card = db.Column(db.String(255), index=True, nullable=False, unique=True)
+    phone = db.Column(db.BigInteger, index=True, nullable=False, unique=True)
+    openid = db.Column(db.String(255), index=True, nullable=False, unique=True)
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     __table_args__ = {
         'useexisting': True,
