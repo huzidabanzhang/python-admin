@@ -12,6 +12,7 @@ from models import db
 from models.system import Interface
 from sqlalchemy import text
 import uuid
+import json
 
 
 class InterfaceModel():

@@ -25,7 +25,8 @@ def CreateInterface():
         'method': request.form.get('method'),
         'description': request.form.get('description'),
         'menu_id': request.form.get('menu_id'),
-        'mark': request.form.get('mark')
+        'mark': request.form.get('mark'),
+        'not_allow': True if request.form.get('not_allow') == 'true' else False
     }
 
     result = InterfaceModel().CreateInterfaceRequest(params)
