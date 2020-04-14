@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-13 13:07:43
 @LastEditors: Zpp
-@LastEditTime: 2020-04-13 14:05:21
+@LastEditTime: 2020-04-14 10:14:41
 '''
 from flask import Blueprint, request, session
 from collection.wages.wages import WagesModel
@@ -46,26 +46,26 @@ def GetCode():
 
 @route_wages_user.route('/AddWages', methods=['POST'])
 def AddWages():
-    if not request.form.get('code'):
-        return ResultDeal(msg=u'请输入验证码', code=-1)
+    # if not request.form.get('code'):
+    #     return ResultDeal(msg=u'请输入验证码', code=-1)
 
-    Code = session.get('Code')
+    # Code = session.get('Code')
 
-    if not Code:
-        return ResultDeal(msg=u'请获取验证码', code=-1)
+    # if not Code:
+    #     return ResultDeal(msg=u'请获取验证码', code=-1)
 
-    if (datetime.datetime.now() - Code['time']).seconds > 5 * 60:
-        return ResultDeal(msg=u'验证码已过期', code=-1)
+    # if (datetime.datetime.now() - Code['time']).seconds > 5 * 60:
+    #     return ResultDeal(msg=u'验证码已过期, 请重新获取', code=-1)
 
-    if Code['code'] != request.form.get('code'):
-        return ResultDeal(msg=u'验证码不正确', code=-1)
+    # if Code['code'] != request.form.get('code'):
+    #     return ResultDeal(msg=u'验证码不正确', code=-1)
 
     result = WagesModel().AddWagesRequest(request.form)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
 
-    return ResultDeal(data=result)
+    return ResultDeal(data=result['openid'])
 
 
 @route_wages_user.route('/GetWages', methods=['POST'])

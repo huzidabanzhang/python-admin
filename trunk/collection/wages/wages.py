@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 13:30:34
 @LastEditors: Zpp
-@LastEditTime: 2020-04-13 15:56:36
+@LastEditTime: 2020-04-14 10:41:32
 '''
 from flask import request
 from models import db
@@ -51,13 +51,13 @@ class WagesModel():
         '''
         s = db.session()
         try:
-            res = WagesUser.query.filter_by({
+            res = WagesUser.query.filter_by(**{
                 'openid': openid
             }).first()
 
             if not res:
                 return str('请先注册')
-
+            print res
             data = {
                 'id_card': res.id_card,
                 'phone': res.phone
@@ -73,27 +73,32 @@ class WagesModel():
 
     def AddWagesRequest(self, params):
         '''
-        注册个人工资查询
+        注册或者登录个人工资查询
         '''
         s = db.session()
         try:
-            res = WagesUser.query.filter_by({
-                'openid': params['openid']
+            res = WagesUser.query.filter_by(**{
+                'id_card': params['id_card'],
+                'phone': int(params['phone'])
             }).first()
 
             if res:
-                return str('已注册')
+                return {
+                    'openid': res.openid
+                }
 
-            WagesUser(
+            openid = str(uuid.uuid4())
+
+            s.add(WagesUser(
                 wages_user_id=uuid.uuid4(),
                 id_card=params['id_card'],
                 phone=int(params['phone']),
-                openid=params['openid']
-            )
-
-            s.add(WagesUser)
+                openid=openid
+            ))
             s.commit()
-            return True
+            return {
+                'openid': openid
+            }
         except Exception as e:
             print e
             logging.info('-------注册个人工资查询失败%s' % e)
@@ -116,6 +121,51 @@ class WagesModel():
         ALLOWED_EXTENSIONS = set(['xls', 'xlsx'])
 
         return '.' in file and file.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+    # def deal_data(self, wb):
+    #     '''
+    #     处理excel内容
+    #     '''
+    #     params = []
+    #     error = []
+    #     fileds = [u'公司', u'姓名', u'身份证', u'电话']
+
+    #     for name in wb.sheet_names():
+    #         sheet = wb.sheet_by_name(name)
+    #         item = []
+    #         for row in range(sheet.nrows):
+    #             # 读取所有内容
+    #             i = sheet.row_values(row)
+    #             if i[0] == u'公司':
+    #                 for x in i:
+    #                     item.append(x.replace(" ", ""))
+
+    #                 if not [u'公司'] in item or not [u'姓名'] in item or not [u'身份证'] in item or not [u'电话'] in item:
+    #                     error.append('%s请输入必须公司，姓名，身份证和电话的表头' % name)
+    #                     break
+    #                 else:
+    #                     continue
+
+    #             d = {'value': {}}
+    #             for index, j in enumerate(item):
+    #                 if j:
+    #                     if j in fileds:
+    #                         d[j] = i[index] if type(i[index]) != float else int(i[index])
+    #                     else:
+    #                         v = i[index]
+    #                         if type(i[index]).__name__ == 'datetime':
+    #                             v = i[index].strftime('%Y-%m-%d')
+    #                         elif i[index] == None:
+    #                             v = ''
+    #                         elif type(i[index]) == float:
+    #                             if i[index] - int(i[index]) == 0:
+    #                                 v = int(i[index])
+    #                         else:
+    #                             v = str(i[index])
+    #                         d['value'][j] = v
+    #             params.append(d)
+
+    #         return params
 
     def ImportWagesRequest(self, file, payment_time):
         '''
