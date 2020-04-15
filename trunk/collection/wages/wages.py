@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 13:30:34
 @LastEditors: Zpp
-@LastEditTime: 2020-04-14 13:28:59
+@LastEditTime: 2020-04-15 10:12:14
 '''
 from flask import request
 from models import db
@@ -172,13 +172,14 @@ class WagesModel():
                                 break
                         else:
                             v = i[index]
-                            if type(i[index]).__name__ == 'datetime':
-                                v = i[index].strftime('%Y-%m-%d')
-                            elif i[index] == None:
-                                v = ''
-                            elif type(i[index]) == float:
-                                if i[index] - int(i[index]) == 0:
-                                    v = int(i[index])
+                            ctype = sheet.cell(row, index).ctype
+                            if ctype == 2 and i[index] - int(i[index]) == 0:
+                                v = int(i[index])
+                            elif ctype == 3:
+                                v = datetime.datetime(*xlrd.xldate_as_tuple(i[index], 0))
+                                v = v.strftime('%Y-%d-%m')
+                            elif ctype == 4:
+                                v = True if i[index] == 1 else False
                             else:
                                 v = str(i[index])
                             d['value'][j] = v
