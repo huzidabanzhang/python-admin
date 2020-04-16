@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 10:23:44
-@LastEditTime: 2020-04-14 13:48:07
+@LastEditTime: 2020-04-16 12:42:03
 @LastEditors: Zpp
 '''
 from flask_session import Session
@@ -18,7 +18,7 @@ def init_app(app):
     # 密钥
     app.config['SECRET_KEY'] = token_info['SECRET_KEY']
     # 调试模式
-    app.config['DEBUG'] = True
+    app.config['DEBUG'] = False
     # SESSION配置
     app.config.update(session_info)
     # CACHE配置
