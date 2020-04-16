@@ -31,6 +31,18 @@ def ImportWages():
     return ResultDeal(data=result)
 
 
+@route_wages.route('/DelWages', methods=['POST'])
+@auth.login_required
+@validate_current_access
+def DelWages():
+    result = WagesModel().DelWagesRequest(request.form.getlist('rid[]'))
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
+    return ResultDeal(data=result)
+
+
 @route_wages.route('/QueryWagesByParam', methods=['POST'])
 @auth.login_required
 @validate_current_access

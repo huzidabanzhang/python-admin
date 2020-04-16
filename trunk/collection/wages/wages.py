@@ -108,6 +108,22 @@ class WagesModel():
             logging.info('-------注册个人工资查询失败%s' % e)
             return str('注册个人工资查询失败')
 
+    def DelWagesRequest(self, rid):
+        '''
+        删除工资记录
+        '''
+        s = db.session()
+        try:
+            result = s.query(Wages).filter(Wages.wages_id.in_(rid)).all()
+            for i in result:
+                s.delete(i)
+            s.commit()
+            return True
+        except Exception as e:
+            print e
+            logging.info('-------删除工资记录失败%s' % e)
+            return str('删除工资记录失败')
+
     def GetCodeRequest(self, phone):
         '''
         获取阿里云短信
@@ -241,7 +257,7 @@ class WagesModel():
                         ))
                     except Exception as e:
                         print e
-                        logging.info('-------新增工资记录失败%s' % e)
+                        logging.info('-------导入工资列表失败%s' % e)
                         error.append(u'%s表第%s行添加失败' % (i['sheet'], i['row']))
                         continue
             s.add_all(case)
@@ -249,5 +265,5 @@ class WagesModel():
             return error
         except Exception as e:
             print e
-            logging.info('-------获取工资列表失败%s' % e)
-            return str('获取工资列表失败')
+            logging.info('-------导入工资列表失败%s' % e)
+            return str('导入工资列表失败')
