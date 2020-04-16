@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 13:30:34
 @LastEditors: Zpp
-@LastEditTime: 2020-04-15 10:12:14
+@LastEditTime: 2020-04-16 12:31:55
 '''
 from flask import request
 from models import db
@@ -24,7 +24,7 @@ import re
 
 class WagesModel():
     def __init__(self):
-        self.phone = re.compile('^1[35678]\d{9}$')
+        self.phone = re.compile('^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$')
         self.id_card = re.compile('^\d{6}(18|19|20)\d{2}(0\d|10|11|12)([0-2]\d|30|31)\d{3}[\dXx]$')
 
     def QueryWagesByParamRequest(self, params, page=1, page_size=20, order_by='id'):
@@ -176,7 +176,11 @@ class WagesModel():
                             if ctype == 2 and i[index] - int(i[index]) == 0:
                                 v = int(i[index])
                             elif ctype == 3:
-                                v = datetime.datetime(*xlrd.xldate_as_tuple(i[index], 0))
+                                if i[index] < 64:
+                                    t = (1900, 1, 1, 0, 0, 0)
+                                else:
+                                    t = xlrd.xldate_as_tuple(i[index], 0)
+                                v = datetime.datetime(*t)
                                 v = v.strftime('%Y-%d-%m')
                             elif ctype == 4:
                                 v = True if i[index] == 1 else False

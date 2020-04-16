@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 14:17:37
 @LastEditors: Zpp
-@LastEditTime: 2020-04-15 10:12:24
+@LastEditTime: 2020-04-16 12:04:11
 '''
 from flask import Blueprint, request
 from collection.wages.wages import WagesModel
@@ -24,6 +24,10 @@ def ImportWages():
         return ResultDeal(msg=u'请选择上传文件', code=-1)
 
     result = WagesModel().ImportWagesRequest(file, request.form.get('payment_time'))
+    
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
     return ResultDeal(data=result)
 
 
