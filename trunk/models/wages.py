@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 13:20:08
 @LastEditors: Zpp
-@LastEditTime: 2020-04-13 10:49:49
+@LastEditTime: 2020-04-17 16:33:09
 '''
 
 from models import db
@@ -77,3 +77,39 @@ class WagesUser(db.Model):
 
     def __repr__(self):
         return '<WagesUser %r>' % self.wages_user_id
+
+
+class Attendance(db.Model):
+    '''
+    考勤记录
+    '''
+    __tablename__ = 'db_attendance'
+    id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
+    attendance_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
+    name = db.Column(db.String(255), index=True, nullable=False)
+    company = db.Column(db.String(255), index=True, nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    attance = db.Column(db.Text, nullable=False)
+    attendance_time = db.Column(db.Date, index=True, nullable=False)
+    create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
+    __table_args__ = {
+        'useexisting': True,
+        'mysql_engine': 'InnoDB'
+    }
+
+    def to_json(self):
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        if "attendance_time" in dict:
+            dict["attendance_time"] = dict["attendance_time"].strftime('%Y-%m')
+        if "content" in dict:
+            dict["content"] = json.loads(dict["content"])
+        if "attance" in dict:
+            dict["attance"] = json.loads(dict["attance"])
+        if "create_time" in dict:
+            dict["create_time"] = dict["create_time"].strftime('%Y-%m-%d %H:%M:%S')
+        return dict
+
+    def __repr__(self):
+        return '<Attendance %r>' % self.attendance_id

@@ -5,11 +5,11 @@
 @Author: Zpp
 @Date: 2020-04-10 13:30:34
 @LastEditors: Zpp
-@LastEditTime: 2020-04-17 08:55:13
+@LastEditTime: 2020-04-17 16:29:06
 '''
 from flask import request
 from models import db
-from models.wages import Wages, WagesUser
+from models.wages import Wages, WagesUser, Attendance
 from sqlalchemy import text
 from conf.setting import excel_dir
 from libs.aliyun import AliyunModel
@@ -187,22 +187,7 @@ class WagesModel():
                                 error.append(u'%s表第%s行，%s不能为空' % (name, rows, j))
                                 break
                         else:
-                            v = i[index]
-                            ctype = sheet.cell(row, index).ctype
-                            if ctype == 2 and i[index] - int(i[index]) == 0:
-                                v = int(i[index])
-                            elif ctype == 3:
-                                if i[index] < 64:
-                                    t = (1900, 1, 1, 0, 0, 0)
-                                else:
-                                    t = xlrd.xldate_as_tuple(i[index], 0)
-                                v = datetime.datetime(*t)
-                                v = v.strftime('%Y-%m-%d')
-                            elif ctype == 4:
-                                v = True if i[index] == 1 else False
-                            else:
-                                v = str(i[index])
-                            d['value'][j] = v
+                            d['value'][j] = self.excel_fileds(i[index], sheet.cell(row, index).ctype)
                 if is_error == False:           
                     params.append(d)
 
@@ -267,3 +252,149 @@ class WagesModel():
             print e
             logging.info('-------导入工资列表失败%s' % e)
             return str('导入工资列表失败')
+
+    def excel_fileds(self, data, ctype):
+        '''
+        处理excel字段
+        '''
+        try:
+            if ctype == 2 and data - int(data) == 0:
+                v = int(data)
+            elif ctype == 3:
+                if data < 64:
+                    t = (1900, 1, 1, 0, 0, 0)
+                else:
+                    t = xlrd.xldate_as_tuple(data, 0)
+                v = datetime.datetime(*t)
+                v = v.strftime('%Y-%m-%d')
+            elif ctype == 4:
+                v = True if data == 1 else False
+            else:
+                v = str(data)
+
+            return v
+        except:
+            return data
+
+    def ImportAttendanceRequest(self, file, attendance_time):
+        '''
+        导入考勤记录
+        '''
+        s = db.session()
+        try:
+            # filename = file.filename
+
+            # ary = filename.split('.')
+            # count = len(ary)
+            # ext = ary[count - 1] if count > 1 else ''
+            # if not self.allowed_file(filename):
+            #     return str('请上传Excel文件')
+
+            # file.seek(0)
+            # fn = '/' + str(time.strftime('%Y/%m/%d'))
+            # if not os.path.exists(excel_dir + fn):
+            #     os.makedirs(excel_dir + fn)
+            # path = fn + '/' + str(uuid.uuid1()) + '.' + ext
+            # file.save(excel_dir + path)
+
+            wb = xlrd.open_workbook('C:\\Users\\Administrator\\Desktop\\b.xlsx')
+
+            params = []
+            for name in wb.sheet_names():
+                sheet = wb.sheet_by_name(name)
+                item = sheet.row_values(0)
+                item = [i.replace(" ", "") if type(i) == unicode else self.excel_fileds(i, sheet.cell(0, index).ctype) for index, i in enumerate(item)]
+
+                fileds = {
+                    'name': item.index(u'姓名'),
+                    'company': item.index(u'公司名称')
+                }
+                
+                # 冠捷逻辑
+                if u'时数' in item:
+                    d = {}
+
+                    for row in range(1, sheet.nrows):
+                        i = sheet.row_values(row)
+                        rows = row + 1
+
+                        if i[fileds['name']] == '':
+                            continue
+
+                        name = i[fileds['name']].replace(" ", "")
+                        if not d.has_key(name):
+                            d[name] = {
+                                'company': i[fileds['company']],
+                                'content': {
+                                    u'人员编号': i[item.index(u'人员编号')]
+                                },
+                                'attance': {}
+                            }
+                        
+                        current = self.excel_fileds(i[item.index(u'当前日期')], sheet.cell(row, item.index(u'当前日期')).ctype)
+                        duration = self.excel_fileds(i[item.index(u'时数')], sheet.cell(row, item.index(u'时数')).ctype)
+                        types = self.excel_fileds(i[item.index(u'类型')], sheet.cell(row, item.index(u'类型')).ctype)
+
+                        if d[name]['attance'].has_key(current):
+                            d[name]['attance'][current] += u'  %s：%s小时' % (types, duration)
+                        else:
+                            d[name]['attance'][current] = u'%s：%s小时' % (types, duration)
+
+                    for j in d:
+                        d_data = d[j]
+                        d_data['name'] = j
+                        params.append(d_data)
+
+
+                # 友达的逻辑
+                if u'总工时' in item:
+                    total = {
+                        u'工号': item.index(u'工号'),
+                        u'部门': item.index(u'部门'),
+                        u'转正日期': item.index(u'转正日期'),
+                        u'总工时': item.index(u'总工时')
+                    }
+
+                    for row in range(1, sheet.nrows):
+                        # 读取所有内容
+                        i = sheet.row_values(row)
+                        rows = row + 1
+                        data = {
+                            'content': {},
+                            'attance': {}
+                        }
+
+                        if i[fileds['name']] == '':
+                            continue
+
+                        for j in fileds:
+                            data[j] = self.excel_fileds(i[fileds[j]], sheet.cell(row, fileds[j]).ctype)
+                        for j in total:
+                            data['content'][j] = self.excel_fileds(i[total[j]], sheet.cell(row, total[j]).ctype)
+                        for j in range(total[u'总工时'] + 1, len(i)):
+                            data['attance'][item[j]] = i[j]
+
+                        params.append(data)
+
+            case = []
+            for i in params:
+                try:
+                    case.append(Attendance(
+                        attendance_id=uuid.uuid4(),
+                        company=i['company'],
+                        name=i['name'],
+                        content=json.dumps(i['content']),
+                        attance=json.dumps(i['attance']),
+                        attendance_time=datetime.datetime.strptime(attendance_time, "%Y-%m")
+                    ))
+                except Exception as e:
+                    print e
+                    logging.info('-------导入考勤记录失败%s' % e)
+                    continue
+            s.add_all(case)
+            s.commit()
+            return True
+        except Exception as e:
+            print e
+            logging.info('-------导入考勤记录失败%s' % e)
+            return str('导入考勤记录失败')

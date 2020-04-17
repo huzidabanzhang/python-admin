@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 14:17:37
 @LastEditors: Zpp
-@LastEditTime: 2020-04-16 12:04:11
+@LastEditTime: 2020-04-17 09:56:05
 '''
 from flask import Blueprint, request
 from collection.wages.wages import WagesModel
@@ -24,6 +24,22 @@ def ImportWages():
         return ResultDeal(msg=u'请选择上传文件', code=-1)
 
     result = WagesModel().ImportWagesRequest(file, request.form.get('payment_time'))
+    
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
+    return ResultDeal(data=result)
+
+
+@route_wages.route('/ImportAttendance', methods=['POST'])
+# @auth.login_required
+# @validate_current_access
+def ImportAttendance():
+    # file = request.files.get('file')
+    # if not file:
+    #     return ResultDeal(msg=u'请选择上传文件', code=-1)
+
+    result = WagesModel().ImportAttendanceRequest(None, request.form.get('attendance_time'))
     
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
