@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 13:30:34
 @LastEditors: Zpp
-@LastEditTime: 2020-04-16 12:31:55
+@LastEditTime: 2020-04-17 08:55:13
 '''
 from flask import request
 from models import db
@@ -197,7 +197,7 @@ class WagesModel():
                                 else:
                                     t = xlrd.xldate_as_tuple(i[index], 0)
                                 v = datetime.datetime(*t)
-                                v = v.strftime('%Y-%d-%m')
+                                v = v.strftime('%Y-%m-%d')
                             elif ctype == 4:
                                 v = True if i[index] == 1 else False
                             else:
