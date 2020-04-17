@@ -88,3 +88,17 @@ def GetWages():
         return ResultDeal(msg=result, code=-1)
 
     return ResultDeal(data=result)
+
+
+@route_wages_user.route('/GetAttence', methods=['POST'])
+def GetAttence():
+    result = WagesModel().GetAttendanceRequest(
+        params=request.form,
+        page=int(request.form.get('page')),
+        page_size=int(request.form.get('page_size'))
+    )
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
+    return ResultDeal(data=result)

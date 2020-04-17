@@ -60,8 +60,8 @@ class WagesModel():
             }).first()
 
             if not res:
-                return str('请先注册')
-            print res
+                return str('请先登录')
+
             data = {
                 'id_card': res.id_card,
                 'phone': res.phone
@@ -124,6 +124,62 @@ class WagesModel():
             logging.info('-------删除工资记录失败%s' % e)
             return str('删除工资记录失败')
 
+    def QueryAttendanceByParamRequest(self, params, page=1, page_size=20, order_by='id'):
+        '''
+        获取考勤列表
+        '''
+        s = db.session()
+        try:
+            data = {}
+            for i in ['attendance_time']:
+                if params.has_key(i):
+                    data[i] = datetime.datetime.strptime(params[i], "%Y-%m")
+
+            result = Attendance.query.filter_by(**data).filter(
+                Attendance.name.like('%' + params['name'] + '%') if params.has_key('name') else text('')
+            ).order_by(order_by).paginate(page, page_size, error_out=False)
+
+            return {'data': [value.to_json() for value in result.items], 'total': result.total}
+        except Exception as e:
+            print e
+            logging.info('-------获取考勤列表失败%s' % e)
+            return str('获取考勤列表失败')
+
+    def GetAttendanceRequest(self, params, page=1, page_size=20):
+        '''
+        获取个人考勤列表
+        '''
+        s = db.session()
+        try:
+            data = {
+                'name': params['name'],
+                'user_id': params['user_id']
+            }
+
+            result = Attendance.query.filter_by(**data).order_by('id').paginate(page, page_size, error_out=False)
+
+            return {'data': [value.to_json() for value in result.items], 'total': result.total}
+        except Exception as e:
+            print e
+            logging.info('-------获取个人考勤列表失败%s' % e)
+            return str('获取个人考勤列表失败')
+
+    def DelAttendanceRequest(self, rid):
+        '''
+        删除考勤记录
+        '''
+        s = db.session()
+        try:
+            result = s.query(Attendance).filter(Attendance.attendance_id.in_(rid)).all()
+            for i in result:
+                s.delete(i)
+            s.commit()
+            return True
+        except Exception as e:
+            print e
+            logging.info('-------删除考勤记录失败%s' % e)
+            return str('删除考勤记录失败')
+
     def GetCodeRequest(self, phone):
         '''
         获取阿里云短信
@@ -134,7 +190,6 @@ class WagesModel():
         res = AliyunModel().SmsSend(phone)
 
         return res
-        
 
     @staticmethod
     def allowed_file(file):
@@ -282,22 +337,22 @@ class WagesModel():
         '''
         s = db.session()
         try:
-            # filename = file.filename
+            filename = file.filename
 
-            # ary = filename.split('.')
-            # count = len(ary)
-            # ext = ary[count - 1] if count > 1 else ''
-            # if not self.allowed_file(filename):
-            #     return str('请上传Excel文件')
+            ary = filename.split('.')
+            count = len(ary)
+            ext = ary[count - 1] if count > 1 else ''
+            if not self.allowed_file(filename):
+                return str('请上传Excel文件')
 
-            # file.seek(0)
-            # fn = '/' + str(time.strftime('%Y/%m/%d'))
-            # if not os.path.exists(excel_dir + fn):
-            #     os.makedirs(excel_dir + fn)
-            # path = fn + '/' + str(uuid.uuid1()) + '.' + ext
-            # file.save(excel_dir + path)
+            file.seek(0)
+            fn = '/' + str(time.strftime('%Y/%m/%d'))
+            if not os.path.exists(excel_dir + fn):
+                os.makedirs(excel_dir + fn)
+            path = fn + '/' + str(uuid.uuid1()) + '.' + ext
+            file.save(excel_dir + path)
 
-            wb = xlrd.open_workbook('C:\\Users\\Administrator\\Desktop\\b.xlsx')
+            wb = xlrd.open_workbook(excel_dir + path)
 
             params = []
             for name in wb.sheet_names():
@@ -325,9 +380,8 @@ class WagesModel():
                         if not d.has_key(name):
                             d[name] = {
                                 'company': i[fileds['company']],
-                                'content': {
-                                    u'人员编号': i[item.index(u'人员编号')]
-                                },
+                                'user_id': i[item.index(u'人员编号')],
+                                'content': {},
                                 'attance': {}
                             }
                         
@@ -336,7 +390,7 @@ class WagesModel():
                         types = self.excel_fileds(i[item.index(u'类型')], sheet.cell(row, item.index(u'类型')).ctype)
 
                         if d[name]['attance'].has_key(current):
-                            d[name]['attance'][current] += u'  %s：%s小时' % (types, duration)
+                            d[name]['attance'][current] += u'<br>%s：%s小时' % (types, duration)
                         else:
                             d[name]['attance'][current] = u'%s：%s小时' % (types, duration)
 
@@ -349,7 +403,6 @@ class WagesModel():
                 # 友达的逻辑
                 if u'总工时' in item:
                     total = {
-                        u'工号': item.index(u'工号'),
                         u'部门': item.index(u'部门'),
                         u'转正日期': item.index(u'转正日期'),
                         u'总工时': item.index(u'总工时')
@@ -369,6 +422,7 @@ class WagesModel():
 
                         for j in fileds:
                             data[j] = self.excel_fileds(i[fileds[j]], sheet.cell(row, fileds[j]).ctype)
+                        data['user_id'] = self.excel_fileds(i[item.index(u'工号')], sheet.cell(row, item.index(u'工号')).ctype)
                         for j in total:
                             data['content'][j] = self.excel_fileds(i[total[j]], sheet.cell(row, total[j]).ctype)
                         for j in range(total[u'总工时'] + 1, len(i)):
@@ -383,6 +437,7 @@ class WagesModel():
                         attendance_id=uuid.uuid4(),
                         company=i['company'],
                         name=i['name'],
+                        user_id=i['user_id'],
                         content=json.dumps(i['content']),
                         attance=json.dumps(i['attance']),
                         attendance_time=datetime.datetime.strptime(attendance_time, "%Y-%m")

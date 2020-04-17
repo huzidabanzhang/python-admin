@@ -87,6 +87,7 @@ class Attendance(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     attendance_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     name = db.Column(db.String(255), index=True, nullable=False)
+    user_id = db.Column(db.String(255), index=True, nullable=False)
     company = db.Column(db.String(255), index=True, nullable=False)
     content = db.Column(db.Text, nullable=False)
     attance = db.Column(db.Text, nullable=False)
