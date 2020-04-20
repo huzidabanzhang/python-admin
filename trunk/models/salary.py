@@ -13,18 +13,18 @@ import datetime
 import json
 
 
-class Wages(db.Model):
+class Salary(db.Model):
     '''
     工资记录
     '''
-    __tablename__ = 'db_wages'
+    __tablename__ = 'db_salary'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
-    wages_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
+    salary_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     company = db.Column(db.String(255), index=True, nullable=False)
     name = db.Column(db.String(255), nullable=False)
     id_card = db.Column(db.String(255), index=True, nullable=False)
     phone = db.Column(db.BigInteger, index=True, nullable=False)
-    wages = db.Column(db.Text, nullable=False)
+    salary = db.Column(db.Text, nullable=False)
     payment_time = db.Column(db.Date, index=True, nullable=False)
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     update_time = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
@@ -39,8 +39,8 @@ class Wages(db.Model):
             del dict["_sa_instance_state"]
         if "payment_time" in dict:
             dict["payment_time"] = dict["payment_time"].strftime('%Y-%m')
-        if "wages" in dict:
-            dict["wages"] = json.loads(dict["wages"])
+        if "salary" in dict:
+            dict["salary"] = json.loads(dict["salary"])
         if "update_time" in dict:
             dict["update_time"] = dict["update_time"].strftime('%Y-%m-%d %H:%M:%S')
         if "create_time" in dict:
@@ -48,16 +48,16 @@ class Wages(db.Model):
         return dict
 
     def __repr__(self):
-        return '<Wages %r>' % self.wages_id
+        return '<Salary %r>' % self.salary_id
 
 
-class WagesUser(db.Model):
+class SalaryUser(db.Model):
     '''
     员工注册
     '''
-    __tablename__ = 'db_wages_user'
+    __tablename__ = 'db_salary_user'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
-    wages_user_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
+    salary_user_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     id_card = db.Column(db.String(255), index=True, nullable=False, unique=True)
     phone = db.Column(db.BigInteger, index=True, nullable=False, unique=True)
     openid = db.Column(db.String(255), index=True, nullable=False, unique=True)
@@ -76,7 +76,7 @@ class WagesUser(db.Model):
         return dict
 
     def __repr__(self):
-        return '<WagesUser %r>' % self.wages_user_id
+        return '<SalaryUser %r>' % self.salary_user_id
 
 
 class Attendance(db.Model):

@@ -5,43 +5,31 @@
 @Author: Zpp
 @Date: 2020-04-13 13:07:43
 @LastEditors: Zpp
-@LastEditTime: 2020-04-15 09:43:51
+@LastEditTime: 2020-04-20 14:54:25
 '''
 from flask import Blueprint, request, session
-from collection.wages.wages import WagesModel
+from collection.v2.salary import SalaryModel
 from libs.code import ResultDeal
 from conf.aliyun import wx_info
+from validate import validate_form
+from validate.v2.salary import params
 import urllib
 import json
 import datetime
 
-route_wages_user = Blueprint('WagesUser', __name__, url_prefix='/wages/User')
+route_salary_user = Blueprint('SalaryUser', __name__, url_prefix='/v2/SalaryUser')
+validate = validate_form(params)
 
 
-# 获取openid
-@route_wages_user.route('/GetOpenId', methods=['POST'])
-def GetOpenId():
-    code = request.form.get('code')
-
-    url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code' % (wx_info['appid'], wx_info['secret'], code)
-
-    html = urllib.urlopen(url)
-    html = json.loads(html.read())
-
-    if html['openid']:
-        return ResultDeal(data=html['openid'])
-    else:
-        return ResultDeal(code=-1, msg=html['errmsg'])
-
-
-@route_wages_user.route('/GetCode', methods=['POST'])
+@route_salary_user.route('/GetCode', methods=['POST'])
+@validate.form('GetCode')
 def GetCode():
     Code = session.get('Code')
 
     if Code and (datetime.datetime.now() - Code['time']).seconds < 60:
         return ResultDeal(msg=u'请在%s秒后重新获取验证码' % (60 - (datetime.datetime.now() - Code['time']).seconds), code=-1)
 
-    result = WagesModel().GetCodeRequest(request.form.get('phone'))
+    result = SalaryModel().GetCodeRequest(request.form.get('phone'))
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -49,8 +37,8 @@ def GetCode():
     return ResultDeal(data=result)
 
 
-@route_wages_user.route('/AddWages', methods=['POST'])
-def AddWages():
+@route_salary_user.route('/AddSalary', methods=['POST'])
+def AddSalary():
     if not request.form.get('code'):
         return ResultDeal(msg=u'请输入验证码', code=-1)
 
@@ -65,7 +53,7 @@ def AddWages():
     if Code['code'] != request.form.get('code'):
         return ResultDeal(msg=u'验证码不正确', code=-1)
 
-    result = WagesModel().AddWagesRequest(request.form)
+    result = SalaryModel().AddSalaryRequest(request.form)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -73,12 +61,12 @@ def AddWages():
     return ResultDeal(data=result['openid'])
 
 
-@route_wages_user.route('/GetWages', methods=['POST'])
-def GetWages():
+@route_salary_user.route('/GetSalary', methods=['POST'])
+def GetSalary():
     if not request.form.get('openid'):
         return ResultDeal(msg=u'请先注册', code=-1)
 
-    result = WagesModel().GetWagesRequest(
+    result = SalaryModel().GetSalaryRequest(
         openid=request.form.get('openid'),
         page=int(request.form.get('page')),
         page_size=int(request.form.get('page_size'))
@@ -90,9 +78,9 @@ def GetWages():
     return ResultDeal(data=result)
 
 
-@route_wages_user.route('/GetAttence', methods=['POST'])
+@route_salary_user.route('/GetAttence', methods=['POST'])
 def GetAttence():
-    result = WagesModel().GetAttendanceRequest(
+    result = SalaryModel().GetAttendanceRequest(
         params=request.form,
         page=int(request.form.get('page')),
         page_size=int(request.form.get('page_size'))

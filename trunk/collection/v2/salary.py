@@ -5,11 +5,11 @@
 @Author: Zpp
 @Date: 2020-04-10 13:30:34
 @LastEditors: Zpp
-@LastEditTime: 2020-04-17 16:29:06
+@LastEditTime: 2020-04-20 14:27:07
 '''
 from flask import request
 from models import db
-from models.wages import Wages, WagesUser, Attendance
+from models.salary import Salary, SalaryUser, Attendance
 from sqlalchemy import text
 from conf.setting import excel_dir
 from libs.aliyun import AliyunModel
@@ -22,12 +22,12 @@ import datetime
 import json
 import re
 
-class WagesModel():
+class SalaryModel():
     def __init__(self):
         self.phone = re.compile('^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$')
         self.id_card = re.compile('^\d{6}(18|19|20)\d{2}(0\d|10|11|12)([0-2]\d|30|31)\d{3}[\dXx]$')
 
-    def QueryWagesByParamRequest(self, params, page=1, page_size=20, order_by='id'):
+    def QuerySalaryByParamRequest(self, params, page=1, page_size=20, order_by='id'):
         '''
         工资列表
         '''
@@ -38,9 +38,9 @@ class WagesModel():
                 if params.has_key(i):
                     data[i] = datetime.datetime.strptime(params[i], "%Y-%m")
 
-            result = Wages.query.filter_by(**data).filter(
-                Wages.company.like('%' + params['company'] + '%') if params.has_key('company') else text(''),
-                Wages.name.like('%' + params['name'] + '%') if params.has_key('name') else text('')
+            result = Salary.query.filter_by(**data).filter(
+                Salary.company.like('%' + params['company'] + '%') if params.has_key('company') else text(''),
+                Salary.name.like('%' + params['name'] + '%') if params.has_key('name') else text('')
             ).order_by(order_by).paginate(page, page_size, error_out=False)
 
             return {'data': [value.to_json() for value in result.items], 'total': result.total}
@@ -49,13 +49,13 @@ class WagesModel():
             logging.info('-------获取工资列表失败%s' % e)
             return str('获取工资列表失败')
 
-    def GetWagesRequest(self, openid, page=1, page_size=20):
+    def GetSalaryRequest(self, openid, page=1, page_size=20):
         '''
         获取个人工资列表
         '''
         s = db.session()
         try:
-            res = WagesUser.query.filter_by(**{
+            res = SalaryUser.query.filter_by(**{
                 'openid': openid
             }).first()
 
@@ -67,7 +67,7 @@ class WagesModel():
                 'phone': res.phone
             }
 
-            result = Wages.query.filter_by(**data).order_by('id').paginate(page, page_size, error_out=False)
+            result = Salary.query.filter_by(**data).order_by('id').paginate(page, page_size, error_out=False)
 
             return {'data': [value.to_json() for value in result.items], 'total': result.total}
         except Exception as e:
@@ -75,13 +75,13 @@ class WagesModel():
             logging.info('-------获取个人工资失败%s' % e)
             return str('获取个人工资失败')
 
-    def AddWagesRequest(self, params):
+    def AddSalaryRequest(self, params):
         '''
         注册或者登录个人工资查询
         '''
         s = db.session()
         try:
-            res = WagesUser.query.filter_by(**{
+            res = SalaryUser.query.filter_by(**{
                 'id_card': params['id_card'],
                 'phone': int(params['phone'])
             }).first()
@@ -93,8 +93,8 @@ class WagesModel():
 
             openid = str(uuid.uuid4())
 
-            s.add(WagesUser(
-                wages_user_id=uuid.uuid4(),
+            s.add(SalaryUser(
+                salary_user_id=uuid.uuid4(),
                 id_card=params['id_card'],
                 phone=int(params['phone']),
                 openid=openid
@@ -108,13 +108,13 @@ class WagesModel():
             logging.info('-------注册个人工资查询失败%s' % e)
             return str('注册个人工资查询失败')
 
-    def DelWagesRequest(self, rid):
+    def DelSalaryRequest(self, rid):
         '''
         删除工资记录
         '''
         s = db.session()
         try:
-            result = s.query(Wages).filter(Wages.wages_id.in_(rid)).all()
+            result = s.query(Salary).filter(Salary.salary_id.in_(rid)).all()
             for i in result:
                 s.delete(i)
             s.commit()
@@ -251,7 +251,7 @@ class WagesModel():
             'error': error
         }
 
-    def ImportWagesRequest(self, file, payment_time):
+    def ImportSalaryRequest(self, file, payment_time):
         '''
         导入工资记录
         '''
@@ -276,7 +276,7 @@ class WagesModel():
             data = self.deal_data(wb)
             error = data['error']
             
-            all_list = Wages.query.filter_by(**{
+            all_list = Salary.query.filter_by(**{
                 'payment_time': datetime.datetime.strptime(payment_time, "%Y-%m")
             }).all()
 
@@ -286,13 +286,13 @@ class WagesModel():
             for i in data['data']:
                 if not i[u'身份证'] in ic_list:
                     try:
-                        case.append(Wages(
-                            wages_id=uuid.uuid4(),
+                        case.append(Salary(
+                            salary_id=uuid.uuid4(),
                             company=i[u'公司'],
                             name=i[u'姓名'],
                             id_card=i[u'身份证'],
                             phone=int(i[u'电话']),
-                            wages=json.dumps(i['value']),
+                            salary=json.dumps(i['value']),
                             payment_time=datetime.datetime.strptime(payment_time, "%Y-%m")
                         ))
                     except Exception as e:

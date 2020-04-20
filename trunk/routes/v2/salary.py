@@ -5,25 +5,25 @@
 @Author: Zpp
 @Date: 2020-04-10 14:17:37
 @LastEditors: Zpp
-@LastEditTime: 2020-04-17 09:56:05
+@LastEditTime: 2020-04-20 14:28:54
 '''
 from flask import Blueprint, request
-from collection.wages.wages import WagesModel
+from collection.v2.salary import SalaryModel
 from ..token_auth import auth, validate_current_access
 from libs.code import ResultDeal
 
-route_wages = Blueprint('Wages', __name__, url_prefix='/wages/Wages')
+route_salary = Blueprint('Salary', __name__, url_prefix='/v2/Salary')
 
 
-@route_wages.route('/ImportWages', methods=['POST'])
+@route_salary.route('/ImportSalary', methods=['POST'])
 @auth.login_required
 @validate_current_access
-def ImportWages():
+def ImportSalary():
     file = request.files.get('file')
     if not file:
         return ResultDeal(msg=u'请选择上传文件', code=-1)
 
-    result = WagesModel().ImportWagesRequest(file, request.form.get('payment_time'))
+    result = SalaryModel().ImportSalaryRequest(file, request.form.get('payment_time'))
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -31,11 +31,11 @@ def ImportWages():
     return ResultDeal(data=result)
 
 
-@route_wages.route('/DelWages', methods=['POST'])
+@route_salary.route('/DelSalary', methods=['POST'])
 @auth.login_required
 @validate_current_access
-def DelWages():
-    result = WagesModel().DelWagesRequest(request.form.getlist('rid[]'))
+def DelSalary():
+    result = SalaryModel().DelSalaryRequest(request.form.getlist('rid[]'))
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -43,17 +43,17 @@ def DelWages():
     return ResultDeal(data=result)
 
 
-@route_wages.route('/QueryWagesByParam', methods=['POST'])
+@route_salary.route('/QuerySalaryByParam', methods=['POST'])
 @auth.login_required
 @validate_current_access
-def QueryWagesByParam():
+def QuerySalaryByParam():
     params = {}
     Ary = ['name', 'company', 'payment_time']
     for i in Ary:
         if request.form.get(i):
             params[i] = request.form.get(i)
 
-    result = WagesModel().QueryWagesByParamRequest(
+    result = SalaryModel().QuerySalaryByParamRequest(
         params=params,
         page=int(request.form.get('page')),
         page_size=int(request.form.get('page_size')),
@@ -66,7 +66,7 @@ def QueryWagesByParam():
     return ResultDeal(data=result)
 
 
-@route_wages.route('/ImportAttendance', methods=['POST'])
+@route_salary.route('/ImportAttendance', methods=['POST'])
 @auth.login_required
 @validate_current_access
 def ImportAttendance():
@@ -74,7 +74,7 @@ def ImportAttendance():
     if not file:
         return ResultDeal(msg=u'请选择上传文件', code=-1)
 
-    result = WagesModel().ImportAttendanceRequest(file, request.form.get('attendance_time'))
+    result = SalaryModel().ImportAttendanceRequest(file, request.form.get('attendance_time'))
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -82,11 +82,11 @@ def ImportAttendance():
     return ResultDeal(data=result)
 
 
-@route_wages.route('/DelAttendance', methods=['POST'])
+@route_salary.route('/DelAttendance', methods=['POST'])
 @auth.login_required
 @validate_current_access
 def DelAttendance():
-    result = WagesModel().DelAttendanceRequest(request.form.getlist('rid[]'))
+    result = SalaryModel().DelAttendanceRequest(request.form.getlist('rid[]'))
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -94,7 +94,7 @@ def DelAttendance():
     return ResultDeal(data=result)
 
 
-@route_wages.route('/QueryAttendanceByParam', methods=['POST'])
+@route_salary.route('/QueryAttendanceByParam', methods=['POST'])
 @auth.login_required
 @validate_current_access
 def QueryAttendanceByParam():
@@ -104,7 +104,7 @@ def QueryAttendanceByParam():
         if request.form.get(i):
             params[i] = request.form.get(i)
 
-    result = WagesModel().QueryAttendanceByParamRequest(
+    result = SalaryModel().QueryAttendanceByParamRequest(
         params=params,
         page=int(request.form.get('page')),
         page_size=int(request.form.get('page_size')),
