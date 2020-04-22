@@ -9,7 +9,7 @@
   
 ## 验证器
   [验证器](https://github.com/huzidabanzhang/python-admin/blob/master/trunk/validate/__init__.py "验证器")
-  
+  ```python
   {
       'name': u'手机号',  # 字段名称
       'value': 'phone',   # 字段
@@ -21,6 +21,7 @@
       // 'default': 133333333,   # 默认值
       // 'msg': u'手机号必填',     # 有msg将代替默认错误提示
   }
+  ```
   
 ## 功能
 
