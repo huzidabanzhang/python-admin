@@ -5,11 +5,12 @@
 @Author: Zpp
 @Date: 2020-04-20 13:43:42
 @LastEditors: Zpp
-@LastEditTime: 2020-04-22 10:39:25
+@LastEditTime: 2020-04-22 15:00:15
 '''
 from flask import request
 from libs.code import ResultDeal
 import re
+import datetime
 
 class validate_form():
     '''
@@ -90,14 +91,16 @@ class validate_form():
         if i['type'] == 'email':
             if not self.email.match(f):
                 error = True
+
+        if i['type'] == 'time':
+            if type(f) != datetime.datetime:
+                error = True
                 
         if error == True:
             return ResultDeal(code=-1, msg=u'%s格式错误' % i['name'])
         elif error == None:
             if i.has_key('default'):
                 self.add_default(f, i['default'])
-
-            return fun()
         else:
             return ResultDeal(code=-1, msg=error)
 
@@ -109,29 +112,50 @@ class validate_form():
         r[f] = default
         request.form = r
 
+    def get_data(self, f, t):
+        '''
+        获取值
+        '''
+        if t == 'list':
+            return request.form.getlist(f)
+
+        if t == 'file':
+            return request.files.get(f)
+
+        if t == 'files':
+            return request.files.getlist(f)
+
+        return request.form.get(f)
+
     def form(self, args):
         '''
         验证表单字段
         '''
         def validate(f):
             def one():
-                if self.params.has_key(args):
-                    for i in self.params[args]:
-                        data = request.form.getlist(i['value']) if i['type'] == 'list' else request.form.get(i['value'])
-
-                        if not i.has_key('required') or not i['required']:
-                            if data:
-                                return self.validate_params(data, i, f)
+                try:
+                    if self.params.has_key(args):
+                        for i in self.params[args]:
+                            data = self.get_data(i['value'], i['type'])
+                            
+                            if not i.has_key('required') or not i['required']:
+                                if data:
+                                    self.validate_params(data, i, f)
+                                else:
+                                    if i.has_key('default'):
+                                        self.add_default(i['value'], i['default'])
                             else:
-                                if i.has_key('default'):
-                                    self.add_default(i['value'], i['default'])
-                        else:
-                            if not data:
-                                return ResultDeal(code=-1, msg=u'请输入%s' % i['name'])
-                            else:
-                                return self.validate_params(data, i, f)
+                                if not data:
+                                    if i.has_key('msg'):
+                                        return ResultDeal(code=-1, msg=i['msg'])
+                                    else:
+                                        return ResultDeal(code=-1, msg=u'请输入%s' % i['name'])
+                                else:
+                                    self.validate_params(data, i, f)
 
-                return f()
+                    return f()
+                except Exception as e:
+                    return ResultDeal(code=-1, msg=e.message)
             return one
         
         return validate
