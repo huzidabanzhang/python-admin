@@ -7,6 +7,21 @@
   
   前端地址 [Vue](https://github.com/huzidabanzhang/python-admin-pm "Vue")
   
+## 验证器
+  [验证器](https://github.com/huzidabanzhang/python-admin/blob/master/trunk/validate/__init__.py "验证器")
+  
+  {
+      'name': u'手机号',  # 字段名称
+      'value': 'phone',   # 字段
+      'type': 'phone',    # 有int str list file files phone email time ic boolean
+      'required': True,   # 是否必填
+      // 'max': 99,     # 最大值 只有int str 有
+      // 'min': 1,     # 最小值 只有int str 有
+      // 'between': [1, 2],   # 值在list之间 只有int str 有
+      // 'default': 133333333,   # 默认值
+      // 'msg': u'手机号必填',     # 有msg将代替默认错误提示
+  }
+  
 ## 功能
 
 * 管理员管理
