@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 13:30:34
 @LastEditors: Zpp
-@LastEditTime: 2020-04-20 14:27:07
+@LastEditTime: 2020-04-22 15:53:50
 '''
 from flask import request
 from models import db
@@ -60,7 +60,7 @@ class SalaryModel():
             }).first()
 
             if not res:
-                return str('请先登录')
+                return {'data': [], 'total': 0}
 
             data = {
                 'id_card': res.id_card,
@@ -222,7 +222,7 @@ class SalaryModel():
                     else:
                         continue
 
-                d = {'value': {}, 'row': rows, 'sheet': name}
+                d = {'value': [], 'row': rows, 'sheet': name}
                 is_error = False
                 for index, j in enumerate(item):
                     if j:
@@ -242,7 +242,10 @@ class SalaryModel():
                                 error.append(u'%s表第%s行，%s不能为空' % (name, rows, j))
                                 break
                         else:
-                            d['value'][j] = self.excel_fileds(i[index], sheet.cell(row, index).ctype)
+                            d['value'].append({
+                                'name': j,
+                                'value': self.excel_fileds(i[index], sheet.cell(row, index).ctype)
+                            })
                 if is_error == False:           
                     params.append(d)
 
@@ -356,79 +359,97 @@ class SalaryModel():
 
             params = []
             for name in wb.sheet_names():
-                sheet = wb.sheet_by_name(name)
-                item = sheet.row_values(0)
-                item = [i.replace(" ", "") if type(i) == unicode else self.excel_fileds(i, sheet.cell(0, index).ctype) for index, i in enumerate(item)]
+                try:
+                    sheet = wb.sheet_by_name(name)
+                    item = sheet.row_values(0)
+                    item = [i.replace(" ", "") if type(i) == unicode else self.excel_fileds(i, sheet.cell(0, index).ctype) for index, i in enumerate(item)]
 
-                fileds = {
-                    'name': item.index(u'姓名'),
-                    'company': item.index(u'公司名称')
-                }
-                
-                # 冠捷逻辑
-                if u'时数' in item:
-                    d = {}
-
-                    for row in range(1, sheet.nrows):
-                        i = sheet.row_values(row)
-                        rows = row + 1
-
-                        if i[fileds['name']] == '':
-                            continue
-
-                        name = i[fileds['name']].replace(" ", "")
-                        if not d.has_key(name):
-                            d[name] = {
-                                'company': i[fileds['company']],
-                                'user_id': i[item.index(u'人员编号')],
-                                'content': {},
-                                'attance': {}
-                            }
-                        
-                        current = self.excel_fileds(i[item.index(u'当前日期')], sheet.cell(row, item.index(u'当前日期')).ctype)
-                        duration = self.excel_fileds(i[item.index(u'时数')], sheet.cell(row, item.index(u'时数')).ctype)
-                        types = self.excel_fileds(i[item.index(u'类型')], sheet.cell(row, item.index(u'类型')).ctype)
-
-                        if d[name]['attance'].has_key(current):
-                            d[name]['attance'][current] += u'<br>%s：%s小时' % (types, duration)
-                        else:
-                            d[name]['attance'][current] = u'%s：%s小时' % (types, duration)
-
-                    for j in d:
-                        d_data = d[j]
-                        d_data['name'] = j
-                        params.append(d_data)
-
-
-                # 友达的逻辑
-                if u'总工时' in item:
-                    total = {
-                        u'部门': item.index(u'部门'),
-                        u'转正日期': item.index(u'转正日期'),
-                        u'总工时': item.index(u'总工时')
+                    fileds = {
+                        'name': item.index(u'姓名'),
+                        'company': item.index(u'公司名称')
                     }
 
-                    for row in range(1, sheet.nrows):
-                        # 读取所有内容
-                        i = sheet.row_values(row)
-                        rows = row + 1
-                        data = {
-                            'content': {},
-                            'attance': {}
+                    # 冠捷逻辑
+                    if u'时数' in item:
+                        d = {}
+
+                        for row in range(1, sheet.nrows):
+                            i = sheet.row_values(row)
+                            rows = row + 1
+
+                            if i[fileds['name']] == '':
+                                continue
+
+                            name = i[fileds['name']].replace(" ", "")
+                            if not d.has_key(name):
+                                d[name] = {
+                                    'company': i[fileds['company']],
+                                    'user_id': i[item.index(u'人员编号')],
+                                    'content': [],
+                                    'attance': {}
+                                }
+
+                            current = self.excel_fileds(i[item.index(u'当前日期')], sheet.cell(row, item.index(u'当前日期')).ctype)
+                            duration = self.excel_fileds(i[item.index(u'时数')], sheet.cell(row, item.index(u'时数')).ctype)
+                            types = self.excel_fileds(i[item.index(u'类型')], sheet.cell(row, item.index(u'类型')).ctype)
+
+                            if d[name]['attance'].has_key(current):
+                                d[name]['attance'][current] += u'<br>%s：%s小时' % (types, duration)
+                            else:
+                                d[name]['attance'][current] = u'%s：%s小时' % (types, duration)
+
+                        for j in d:
+                            d_data = d[j]
+                            d_data['name'] = j
+
+                            attance = []
+                            for x in d[j]['attance']:
+                                attance.append({
+                                    'name': x,
+                                    'value': d[j]['attance'][x]
+                                })
+
+                            d_data['attance'] = attance
+                            params.append(d_data)
+
+                    # 友达的逻辑
+                    if u'总工时' in item:
+                        total = {
+                            u'部门': item.index(u'部门'),
+                            u'转正日期': item.index(u'转正日期'),
+                            u'总工时': item.index(u'总工时')
                         }
 
-                        if i[fileds['name']] == '':
-                            continue
+                        for row in range(1, sheet.nrows):
+                            # 读取所有内容
+                            i = sheet.row_values(row)
+                            rows = row + 1
+                            data = {
+                                'content': [],
+                                'attance': []
+                            }
 
-                        for j in fileds:
-                            data[j] = self.excel_fileds(i[fileds[j]], sheet.cell(row, fileds[j]).ctype)
-                        data['user_id'] = self.excel_fileds(i[item.index(u'工号')], sheet.cell(row, item.index(u'工号')).ctype)
-                        for j in total:
-                            data['content'][j] = self.excel_fileds(i[total[j]], sheet.cell(row, total[j]).ctype)
-                        for j in range(total[u'总工时'] + 1, len(i)):
-                            data['attance'][item[j]] = i[j]
+                            if i[fileds['name']] == '':
+                                continue
 
-                        params.append(data)
+                            for j in fileds:
+                                data[j] = self.excel_fileds(i[fileds[j]], sheet.cell(row, fileds[j]).ctype)
+                            data['user_id'] = self.excel_fileds(i[item.index(u'工号')], sheet.cell(row, item.index(u'工号')).ctype)
+                            for j in total:
+                                data['content'].append({
+                                    'name': j,
+                                    'value': self.excel_fileds(i[total[j]], sheet.cell(row, total[j]).ctype)
+                                })
+                            for j in range(total[u'总工时'] + 1, len(i)):
+                                data['attance'].append({
+                                    'name': item[j],
+                                    'value': u'%s 小时' % i[j]
+                                })
+
+                            params.append(data)
+                except Exception as e:
+                    print e
+                    continue
 
             case = []
             for i in params:

@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-13 13:07:43
 @LastEditors: Zpp
-@LastEditTime: 2020-04-20 14:54:25
+@LastEditTime: 2020-04-22 13:36:18
 '''
 from flask import Blueprint, request, session
 from collection.v2.salary import SalaryModel
@@ -21,7 +21,7 @@ route_salary_user = Blueprint('SalaryUser', __name__, url_prefix='/v2/SalaryUser
 validate = validate_form(params)
 
 
-@route_salary_user.route('/GetCode', methods=['POST'])
+@route_salary_user.route('/GetCode', methods=['POST'], endpoint='GetCode')
 @validate.form('GetCode')
 def GetCode():
     Code = session.get('Code')
@@ -37,11 +37,9 @@ def GetCode():
     return ResultDeal(data=result)
 
 
-@route_salary_user.route('/AddSalary', methods=['POST'])
+@route_salary_user.route('/AddSalary', methods=['POST'], endpoint='AddSalary')
+@validate.form('AddSalary')
 def AddSalary():
-    if not request.form.get('code'):
-        return ResultDeal(msg=u'请输入验证码', code=-1)
-
     Code = session.get('Code')
 
     if not Code:
@@ -61,11 +59,9 @@ def AddSalary():
     return ResultDeal(data=result['openid'])
 
 
-@route_salary_user.route('/GetSalary', methods=['POST'])
+@route_salary_user.route('/GetSalary', methods=['POST'], endpoint='GetSalary')
+@validate.form('GetSalary')
 def GetSalary():
-    if not request.form.get('openid'):
-        return ResultDeal(msg=u'请先注册', code=-1)
-
     result = SalaryModel().GetSalaryRequest(
         openid=request.form.get('openid'),
         page=int(request.form.get('page')),
@@ -78,7 +74,8 @@ def GetSalary():
     return ResultDeal(data=result)
 
 
-@route_salary_user.route('/GetAttence', methods=['POST'])
+@route_salary_user.route('/GetAttence', methods=['POST'], endpoint='GetAttence')
+@validate.form('GetAttence')
 def GetAttence():
     result = SalaryModel().GetAttendanceRequest(
         params=request.form,
