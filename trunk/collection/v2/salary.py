@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 13:30:34
 @LastEditors: Zpp
-@LastEditTime: 2020-04-23 09:20:25
+@LastEditTime: 2020-04-23 12:05:14
 '''
 from flask import request
 from models import db
@@ -153,7 +153,7 @@ class SalaryModel():
         try:
             data = {
                 'name': params['name'],
-                'user_id': params['user_id']
+                'user_id': str(params['user_id'])
             }
 
             result = Attendance.query.filter_by(**data).order_by('id').paginate(page, page_size, error_out=False)
@@ -384,7 +384,7 @@ class SalaryModel():
                             if not d.has_key(name):
                                 d[name] = {
                                     'company': i[fileds['company']],
-                                    'user_id': i[item.index(u'人员编号')],
+                                    'user_id': self.excel_fileds(i[item.index(u'人员编号')], sheet.cell(row, item.index(u'人员编号')).ctype),
                                     'content': [],
                                     'attance': {}
                                 }
