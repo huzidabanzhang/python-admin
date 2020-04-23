@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 13:30:34
 @LastEditors: Zpp
-@LastEditTime: 2020-04-22 15:53:50
+@LastEditTime: 2020-04-23 09:20:25
 '''
 from flask import request
 from models import db
@@ -451,22 +451,29 @@ class SalaryModel():
                     print e
                     continue
 
+            all_list = Attendance.query.filter_by(**{
+                'attendance_time': datetime.datetime.strptime(attendance_time, "%Y-%m")
+            }).all()
+
+            user_list = [str(res.user_id) for res in all_list]
+
             case = []
             for i in params:
-                try:
-                    case.append(Attendance(
-                        attendance_id=uuid.uuid4(),
-                        company=i['company'],
-                        name=i['name'],
-                        user_id=i['user_id'],
-                        content=json.dumps(i['content']),
-                        attance=json.dumps(i['attance']),
-                        attendance_time=datetime.datetime.strptime(attendance_time, "%Y-%m")
-                    ))
-                except Exception as e:
-                    print e
-                    logging.info('-------导入考勤记录失败%s' % e)
-                    continue
+                if not str(i['user_id']) in user_list:
+                    try:
+                        case.append(Attendance(
+                            attendance_id=uuid.uuid4(),
+                            company=i['company'],
+                            name=i['name'],
+                            user_id=str(i['user_id']),
+                            content=json.dumps(i['content']),
+                            attance=json.dumps(i['attance']),
+                            attendance_time=datetime.datetime.strptime(attendance_time, "%Y-%m")
+                        ))
+                    except Exception as e:
+                        print e
+                        logging.info('-------导入考勤记录失败%s' % e)
+                        continue
             s.add_all(case)
             s.commit()
             return True
