@@ -6,6 +6,7 @@ document
 sessions
 /libs/captcha.py
 /tools/migrations
+/tools/*.mmdb
 /conf/aliyun.py
 excel
 caches
