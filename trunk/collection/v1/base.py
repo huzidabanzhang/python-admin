@@ -4,12 +4,14 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-@LastEditTime: 2020-03-24 15:38:18
+@LastEditTime: 2020-04-26 16:34:01
 @LastEditors: Zpp
 '''
 from models import db
 from models.system import Admin, Role, Route, Menu, Interface, InitSql, Folder
+from models.log import Log
 from conf.setting import Config, init_route, init_menu, sql_dir
+from sqlalchemy import func, desc
 import uuid
 import datetime
 import random
@@ -212,5 +214,86 @@ class BaseModel():
             return True
         except Exception as e:
             s.rollback()
+            print e
+            return str(e.message)
+
+    def GetLoginInfo(self, username):
+        '''
+        获取用户登录情况
+        '''
+        s = db.session()
+        try:
+            params = {
+                'username': username,
+                'type': 1
+            }
+
+            user_time = s.query(
+                func.count(Log.username),
+                func.date_format(Log.create_time, '%Y-%m-%d').label('date')
+            ).filter_by(**params).group_by('date').all()
+
+            last_time = s.query(
+                func.date_format(Log.create_time, '%Y-%m-%d %H:%m:%S')
+            ).filter_by(**params).order_by(desc('id')).first()
+
+            role_info = s.query(
+                Role.name,
+                Role.mark,
+                Admin.avatarUrl
+            ).filter(
+                Admin.username == username,
+                Admin.role_id == Role.role_id
+            ).first()
+
+            data = []
+            for i in user_time:
+                data.append({
+                    u'日期': i[1],
+                    username: i[0]
+                })
+
+            return {
+                'rows': data,
+                'columns': [u'日期', username],
+                'info': {
+                    'time': last_time[0],
+                    'role_name': role_info[0],
+                    'mark': role_info[1],
+                    'avatarUrl': role_info[2],
+                    'isAdmin': role_info[1] == 'SYS_ADMIN'
+                }
+            }
+        except Exception as e:
+            print e
+            return str(e.message)
+
+    def GetAllUserLoginCount(self):
+        '''
+        获取所有用户登录次数
+        '''
+        s = db.session()
+        try:
+            user_count = s.query(
+                Log.username,
+                func.count(Log.username)
+            ).filter(
+                Log.type == 1
+            ).group_by('username').all()
+
+            user_list = [u'用户']
+            data  = []
+            for i in user_count:
+                user_list.append(i[0])
+                data.append({
+                    u'用户': i[0],
+                    i[0]: i[1]
+                })
+
+            return {
+                'data': data,
+                'user': user_list
+            }
+        except Exception as e:
             print e
             return str(e.message)

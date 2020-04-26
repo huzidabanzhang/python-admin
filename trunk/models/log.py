@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-09-12 16:34:07
 @LastEditors: Zpp
-@LastEditTime: 2020-03-30 14:44:00
+@LastEditTime: 2020-04-26 15:33:18
 '''
 from models import db
 import datetime
@@ -17,7 +17,7 @@ class Log(db.Model):
     '''
     __tablename__ = 'db_log'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
-    username = db.Column(db.String(64), nullable=False)
+    username = db.Column(db.String(64), index=True, nullable=False)
     content = db.Column(db.Text) # 错误内容
     path = db.Column(db.Text, nullable=False)
     method = db.Column(db.String(36), nullable=False)
