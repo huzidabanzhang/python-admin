@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-04-26 14:47:08
+@LastEditTime: 2020-04-27 10:59:26
 @LastEditors: Zpp
 '''
 import hashlib
@@ -33,6 +33,9 @@ document_dir = os.path.join(basedir, 'document')
 
 # excel存放路径
 excel_dir = os.path.join(basedir, 'excel')
+
+# GeoLite2路径
+GeoLite2_dir = os.path.join(basedir, 'tools/GeoLite2-City.mmdb')
 
 # sql下载临时路径
 sql_dir = os.path.join(basedir, 'sql')

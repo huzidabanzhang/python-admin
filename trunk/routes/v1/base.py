@@ -95,3 +95,15 @@ def GetAllUserLoginCount():
         return ResultDeal(msg=result, code=-1)
 
     return ResultDeal(data=result)
+
+
+@route_base.route('/GetUserLoginIp', methods=['POST'])
+@auth.login_required
+@validate_current_access
+def GetUserLoginIp():
+    result = BaseModel().GetUserLoginIp()
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
+    return ResultDeal(data=result)

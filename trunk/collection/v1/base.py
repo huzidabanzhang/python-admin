@@ -4,14 +4,15 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-@LastEditTime: 2020-04-26 16:34:01
+@LastEditTime: 2020-04-27 14:28:56
 @LastEditors: Zpp
 '''
 from models import db
 from models.system import Admin, Role, Route, Menu, Interface, InitSql, Folder
 from models.log import Log
-from conf.setting import Config, init_route, init_menu, sql_dir
+from conf.setting import Config, init_route, init_menu, sql_dir, GeoLite2_dir
 from sqlalchemy import func, desc
+import geoip2.database
 import uuid
 import datetime
 import random
@@ -31,7 +32,7 @@ class BaseModel():
 
             role_id = uuid.uuid4()
             role = Role(
-                role_id=role_id, 
+                role_id=role_id,
                 name=u'超级管理员',
                 mark=u'SYS_ADMIN'
             )
@@ -157,7 +158,7 @@ class BaseModel():
             not_allow=params['not_allow']
         )
 
-    def ExportSql(self, type = 1):
+    def ExportSql(self, type=1):
         try:
             config = Config()
             if not os.path.exists(sql_dir):
@@ -165,12 +166,12 @@ class BaseModel():
 
             os.chdir(sql_dir)
             filename = 'TABLE%s.sql' % int(time.time() * 1000)
-            
+
             sqlfromat = "%s -h%s -u%s -p%s -P%s %s >%s"
             if type == 2:
-                sqlfromat = "%s -h%s -u%s -p%s -P%s -d %s >%s" # 不包含数据
+                sqlfromat = "%s -h%s -u%s -p%s -P%s -d %s >%s"  # 不包含数据
             if type == 3:
-                sqlfromat = "%s -h%s -u%s -p%s -P%s -t %s >%s" # 不包含表结构
+                sqlfromat = "%s -h%s -u%s -p%s -P%s -t %s >%s"  # 不包含表结构
 
             sql = (sqlfromat % ('mysqldump ',
                                 config.host,
@@ -196,10 +197,10 @@ class BaseModel():
 
             if not os.path.exists(sql_dir):
                 os.mkdir(sql_dir)
-            
+
             file_path = os.path.join(sql_dir, filename)
             file.save(file_path)
-            
+
             sqlfromat = "%s -h%s -u%s -p%s -P%s %s <%s"
             sql = (sqlfromat % ('mysql ',
                                 config.host,
@@ -281,18 +282,63 @@ class BaseModel():
                 Log.type == 1
             ).group_by('username').all()
 
-            user_list = [u'用户']
-            data  = []
+            user_list = [u'用户', u'登录次数']
+            data = []
             for i in user_count:
                 user_list.append(i[0])
                 data.append({
                     u'用户': i[0],
-                    i[0]: i[1]
+                    u'登录次数': i[1]
                 })
 
             return {
                 'data': data,
                 'user': user_list
+            }
+        except Exception as e:
+            print e
+            return str(e.message)
+
+    def GetUserLoginIp(self):
+        '''
+        获取用户登录IP分布情况
+        '''
+        s = db.session()
+        try:
+            params = {
+                'type': 1
+            }
+
+            ip_list = s.query(
+                Log.ip
+            ).filter_by(**params).group_by('ip').all()
+
+            reader = geoip2.database.Reader(GeoLite2_dir)
+
+            ip = {}
+            city = {}
+            for i in ip_list:
+                try:
+                    response = reader.city(i[0])
+                    if not ip.has_key(response.city.names["zh-CN"]):
+                        ip[response.city.names["zh-CN"]] = {
+                            'count': 1,
+                            'ip': [i[0]]
+                        }
+                    else:
+                        ip[response.city.names["zh-CN"]]['count'] += 1
+                        ip[response.city.names["zh-CN"]]['ip'].append(i[0])
+
+                    city[response.city.names["zh-CN"]] = [
+                        response.location.longitude,
+                        response.location.latitude
+                    ]
+                except:
+                    continue
+
+            return {
+                'ip': ip,
+                'city': city
             }
         except Exception as e:
             print e
