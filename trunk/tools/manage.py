@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-03-30 11:01:56
 @LastEditors: Zpp
-@LastEditTime: 2020-03-30 14:43:47
+@LastEditTime: 2020-04-28 09:55:26
 '''
 import sys
 import os
@@ -18,14 +18,16 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from conf.setting import Config
-from models.system import *
-from models.log import *
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = Config().get_sql_url()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+from models.salary import *
+from models.system import *
+from models.log import *
 
 # 初始化 migrate
 # 两个参数一个是 Flask 的 app，一个是数据库 db
