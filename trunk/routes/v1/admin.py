@@ -4,12 +4,13 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2020-03-30 11:01:28
+@LastEditTime: 2020-04-28 14:21:29
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
 from collection.v1.admin import AdminModel
 from ..token_auth import auth, generate_auth_token, validate_current_access, get_auth_token
+from conf.setting import default
 from libs.code import ResultDeal
 from libs.captcha import Captcha
 from io import BytesIO
@@ -69,7 +70,7 @@ def Login():
         token = generate_auth_token({
             'admin_id': user['admin_id'],
             'password': user['password'],
-            'is_admin': True if user['mark'] == 'SYS_ADMIN' else False
+            'is_admin': True if user['mark'] == default['role_mark'] else False
         })
 
         session['admin'] = token
@@ -77,7 +78,6 @@ def Login():
 
         return ResultDeal(data={
             'token': token,
-            'routes': result['routes'],
             'menus': result['menus'],
             'interface': result['interface'],
             'info': user
@@ -168,7 +168,7 @@ def ModifyAdmin():
         token = generate_auth_token({
             'admin_id': result['admin_id'],
             'password': result['password'],
-            'is_admin': True if result['mark'] == 'SYS_ADMIN' else False
+            'is_admin': True if result['mark'] == default['role_mark'] else False
         })
 
         session['admin'] = token

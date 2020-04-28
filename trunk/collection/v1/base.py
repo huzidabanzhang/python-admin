@@ -4,13 +4,13 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-@LastEditTime: 2020-04-27 14:28:56
+@LastEditTime: 2020-04-28 15:33:12
 @LastEditors: Zpp
 '''
 from models import db
-from models.system import Admin, Role, Route, Menu, Interface, InitSql, Folder
+from models.system import Admin, Role, Menu, Interface, InitSql, Folder
 from models.log import Log
-from conf.setting import Config, init_route, init_menu, sql_dir, GeoLite2_dir
+from conf.setting import Config, init_menu, sql_dir, GeoLite2_dir, default
 from sqlalchemy import func, desc
 import geoip2.database
 import uuid
@@ -22,6 +22,10 @@ import time
 
 
 class BaseModel():
+    def __init__(self):
+        self.role_name = u'超级管理员'
+        self.user_name = u'Admin'
+
     def CreateDropRequest(self, isInit, params=None):
         s = db.session()
         try:
@@ -33,8 +37,8 @@ class BaseModel():
             role_id = uuid.uuid4()
             role = Role(
                 role_id=role_id,
-                name=u'超级管理员',
-                mark=u'SYS_ADMIN'
+                name=self.role_name,
+                mark=default['role_mark']
             )
             s.add(role)
             s.commit()
@@ -43,7 +47,7 @@ class BaseModel():
             if not isInit:
                 admin = Admin(
                     admin_id=uuid.uuid4(),
-                    username=u'Admin',
+                    username=self.user_name,
                     password=Config().get_md5(password),
                     avatarUrl='',
                     role_id=role_id
@@ -51,7 +55,7 @@ class BaseModel():
             else:
                 admin = Admin(
                     admin_id=params['admin_id'],
-                    username=u'Admin',
+                    username=self.user_name,
                     password=params['password'],
                     avatarUrl='',
                     role_id=role_id
@@ -59,8 +63,7 @@ class BaseModel():
             s.add(admin)
             s.commit()
 
-            self.__init_routes(init_route, '0')
-            self.__init_menus(init_menu, '0')
+            self.__init_menus(init_menu)
 
             folder = Folder(
                 folder_id=uuid.uuid4(),
@@ -95,17 +98,7 @@ class BaseModel():
         code_num = ''.join(code)
         return code_num
 
-    def __init_routes(self, data, pid):
-        s = db.session()
-        for r in data:
-            route_id = uuid.uuid4()
-            route = self.__create_route(r, route_id, pid)
-            s.add(route)
-            s.commit()
-            if r.has_key('children'):
-                self.__init_routes(r['children'], route_id)
-
-    def __init_menus(self, data, pid):
+    def __init_menus(self, data, pid='0'):
         s = db.session()
         for m in data:
             menu_id = uuid.uuid4()
@@ -124,18 +117,6 @@ class BaseModel():
             if m.has_key('children'):
                 self.__init_menus(m['children'], menu_id)
 
-    def __create_route(self, params, route_id, pid):
-        return Route(
-            route_id=route_id,
-            pid=pid,
-            name=params['name'],
-            title=params['title'],
-            path=params['path'],
-            component=params['component'],
-            componentPath=params['componentPath'],
-            cache=params['cache']
-        )
-
     def __create_menu(self, params, menu_id, pid):
         return Menu(
             menu_id=menu_id,
@@ -143,7 +124,11 @@ class BaseModel():
             title=params['title'],
             path=params['path'],
             icon=params['icon'],
-            mark=params['mark']
+            mark=params['mark'],
+            component=params['component'],
+            componentPath=params['componentPath'],
+            name=params['name'],
+            cache=params['cache']
         )
 
     def __create_interface(self, params, interface_id, menu_id):
@@ -155,7 +140,7 @@ class BaseModel():
             method=params['method'],
             description=params['description'],
             mark=params['mark'],
-            not_allow=params['not_allow']
+            forbidden=params['forbidden']
         )
 
     def ExportSql(self, type=1):
@@ -262,7 +247,7 @@ class BaseModel():
                     'role_name': role_info[0],
                     'mark': role_info[1],
                     'avatarUrl': role_info[2],
-                    'isAdmin': role_info[1] == 'SYS_ADMIN'
+                    'isAdmin': role_info[1] == default['role_mark']
                 }
             }
         except Exception as e:

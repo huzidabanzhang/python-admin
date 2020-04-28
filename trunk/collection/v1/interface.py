@@ -52,7 +52,7 @@ class InterfaceModel():
                 description=params['description'],
                 menu_id=params['menu_id'],
                 mark=params['mark'],
-                not_allow=params['not_allow']
+                forbidden=params['forbidden']
             )
             s.add(item)
             data = copy.deepcopy(item.to_json())

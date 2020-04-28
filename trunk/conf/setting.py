@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-04-27 10:59:26
+@LastEditTime: 2020-04-28 16:57:27
 @LastEditors: Zpp
 '''
 import hashlib
@@ -62,120 +62,6 @@ cache_info = {
     'CACHE_THRESHOLD': 500
 }
 
-# 初始化路由配置
-init_route = [
-    {
-        'name': 'System',
-        'path': '/system',
-        'component': 'layoutHeaderAside',
-        'componentPath': 'layout/header-aside',
-        'title': u'系统设置',
-        'cache': True,
-        'children': [
-            {
-                'name': 'MenuPage',
-                'path': '/system/menu',
-                'component': 'menu',
-                'componentPath': 'sys/menu/index',
-                'title': u'菜单管理',
-                'cache': True
-            },
-            {
-                'name': 'RoutePage',
-                'path': '/system/route',
-                'component': 'route',
-                'componentPath': 'sys/route/index',
-                'title': u'路由管理',
-                'cache': True
-            },
-            {
-                'name': 'InterfacePage',
-                'path': '/system/interface',
-                'component': 'interface',
-                'componentPath': 'sys/interface/index',
-                'title': u'接口管理',
-                'cache': True
-            },
-            {
-                'name': 'DocumentPage',
-                'path': '/system/document',
-                'component': 'document',
-                'componentPath': 'sys/document/index',
-                'title': u'附件管理',
-                'cache': True
-            },
-            {
-                'name': 'BasePage',
-                'path': '/system/base',
-                'component': 'base',
-                'componentPath': 'sys/base/index',
-                'title': u'数据库管理',
-                'cache': True
-            }
-        ]
-    },
-    {
-        'name': 'Role',
-        'path': '/role',
-        'component': 'layoutHeaderAside',
-        'componentPath': 'layout/header-aside',
-        'title': u'权限管理',
-        'cache': True,
-        'children': [
-            {
-                'name': 'AdminPage',
-                'path': '/role/admin',
-                'component': 'admin',
-                'componentPath': 'sys/admin/index',
-                'title': u'管理员用户',
-                'cache': True
-            },
-            {
-                'name': 'RolePage',
-                'path': '/role/role',
-                'component': 'role',
-                'componentPath': 'sys/role/index',
-                'title': u'角色管理',
-                'cache': True
-            }
-        ]
-    },
-    {
-        'name': 'Log',
-        'path': '/log',
-        'component': 'layoutHeaderAside',
-        'componentPath': 'layout/header-aside',
-        'title': u'日志管理',
-        'cache': True,
-        'children': [
-            {
-                'name': 'LogLogin',
-                'path': '/log/login',
-                'component': 'login',
-                'componentPath': 'sys/login/index',
-                'title': u'登录日志',
-                'cache': True
-            },
-            {
-                'name': 'LogHander',
-                'path': '/log/hander',
-                'component': 'hander',
-                'componentPath': 'sys/hander/index',
-                'title': u'操作日志',
-                'cache': True
-            },
-            {
-                'name': 'LorError',
-                'path': '/log/error',
-                'component': 'error',
-                'componentPath': 'sys/error/index',
-                'title': u'异常日志',
-                'cache': True
-            }
-        ]
-    }
-]
-
 # 初始化菜单和下属的接口
 init_menu = [
     {
@@ -183,12 +69,20 @@ init_menu = [
         "path": "/system",
         "icon": "cog",
         "mark": "system",
+        'component': 'layoutHeaderAside',
+        'componentPath': 'layout/header-aside',
+        'name': 'System',
+        'cache': True,
         "children": [
             {
                 "title": "菜单管理",
                 "path": "/system/menu",
                 "icon": "th-list",
                 "mark": "system_menu",
+                'name': 'MenuPage',
+                'component': 'menu',
+                'componentPath': 'sys/menu/index',
+                'cache': True,
                 "interface": [
                     {
                         "path": "/v1/Menu/CreateMenu",
@@ -196,7 +90,7 @@ init_menu = [
                         "name": "CreateMenu",
                         "description": "添加菜单",
                         "mark": "add_menu",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Menu/QueryMenuByParam",
@@ -204,7 +98,7 @@ init_menu = [
                         "name": "QueryMenuByParam",
                         "description": "获取菜单列表",
                         "mark": "get_menu_list",
-                        "not_allow": True
+                        "forbidden": True
                     },
                     {
                         "path": "/v1/Menu/ModifyMenu",
@@ -212,7 +106,7 @@ init_menu = [
                         "name": "ModifyMenu",
                         "description": "修改菜单信息",
                         "mark": "set_menu",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Menu/LockMenu",
@@ -220,7 +114,7 @@ init_menu = [
                         "name": "LockMenu",
                         "description": "禁用菜单",
                         "mark": "lock_menu",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Menu/DelMenu",
@@ -228,7 +122,7 @@ init_menu = [
                         "name": "DelMenu",
                         "description": "删除菜单",
                         "mark": "del_menu",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Menu/GetMenuToInterface",
@@ -236,55 +130,7 @@ init_menu = [
                         "name": "GetMenuToInterface",
                         "description": "获取菜单下级联的API接口",
                         "mark": "get_menu_to_interface",
-                        "not_allow": False
-                    }
-                ]
-            },
-            {
-                "title": "路由管理",
-                "path": "/system/route",
-                "icon": "share-alt",
-                "mark": "system_route",
-                "interface": [
-                    {
-                        "path": "/v1/Route/CreateRoute",
-                        "method": "POST",
-                        "name": "CreateRoute",
-                        "description": "添加路由",
-                        "mark": "add_router",
-                        "not_allow": False
-                    },
-                    {
-                        "path": "/v1/Route/QueryRouteByParam",
-                        "method": "POST",
-                        "name": "QueryRouteByParam",
-                        "description": "获取路由列表",
-                        "mark": "get_router_list",
-                        "not_allow": True
-                    },
-                    {
-                        "path": "/v1/Route/ModifyRoute",
-                        "method": "POST",
-                        "name": "ModifyRoute",
-                        "description": "修改路由信息",
-                        "mark": "set_router",
-                        "not_allow": False
-                    },
-                    {
-                        "path": "/v1/Route/LockRoute",
-                        "method": "POST",
-                        "name": "LockRoute",
-                        "description": "禁用路由",
-                        "mark": "lock_router",
-                        "not_allow": False
-                    },
-                    {
-                        "path": "/v1/Route/DelRoute",
-                        "method": "POST",
-                        "name": "DelRoute",
-                        "description": "删除路由",
-                        "mark": "del_router",
-                        "not_allow": False
+                        "forbidden": False
                     }
                 ]
             },
@@ -293,6 +139,10 @@ init_menu = [
                 "path": "/system/interface",
                 "icon": "send",
                 "mark": "system_interface",
+                'name': 'InterfacePage',
+                'component': 'interface',
+                'componentPath': 'sys/interface/index',
+                'cache': True,
                 "interface": [
                     {
                         "path": "/v1/Interface/CreateInterface",
@@ -300,7 +150,7 @@ init_menu = [
                         "name": "CreateInterface",
                         "description": "添加接口",
                         "mark": "add_interface",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Interface/QueryInterfaceByParam",
@@ -308,7 +158,7 @@ init_menu = [
                         "name": "QueryInterfaceByParam",
                         "description": "获取接口列表",
                         "mark": "get_interface_list",
-                        "not_allow": True
+                        "forbidden": True
                     },
                     {
                         "path": "/v1/Interface/ModifyInterface",
@@ -316,7 +166,7 @@ init_menu = [
                         "name": "ModifyInterface",
                         "description": "修改接口信息",
                         "mark": "set_interface",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Interface/LockInterface",
@@ -324,7 +174,7 @@ init_menu = [
                         "name": "LockInterface",
                         "description": "禁用接口",
                         "mark": "lock_interface",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Interface/DelInterface",
@@ -332,7 +182,7 @@ init_menu = [
                         "name": "DelInterface",
                         "description": "删除接口",
                         "mark": "del_interface",
-                        "not_allow": False
+                        "forbidden": False
                     }
                 ]
             },
@@ -341,6 +191,10 @@ init_menu = [
                 "path": "/system/document",
                 "icon": "folder-open-o",
                 "mark": "system_file",
+                'name': 'DocumentPage',
+                'component': 'document',
+                'componentPath': 'sys/document/index',
+                'cache': True,
                 "interface": [
                     {
                         "path": "/v1/Document/CreateDocument",
@@ -348,7 +202,7 @@ init_menu = [
                         "name": "CreateDocument",
                         "description": "添加附件",
                         "mark": "add_document",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Document/QueryDocumentByParam",
@@ -356,7 +210,7 @@ init_menu = [
                         "name": "QueryDocumentByParam",
                         "description": "获取附件列表",
                         "mark": "get_document_list",
-                        "not_allow": True
+                        "forbidden": True
                     },
                     {
                         "path": "/v1/Document/DownDocument",
@@ -364,7 +218,7 @@ init_menu = [
                         "name": "DownDocument",
                         "description": "下载附件",
                         "mark": "down_document",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Document/DelDocument",
@@ -372,7 +226,7 @@ init_menu = [
                         "name": "DelDocument",
                         "description": "删除附件",
                         "mark": "del_document",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Document/RetrieveDocument",
@@ -380,7 +234,7 @@ init_menu = [
                         "name": "RetrieveDocument",
                         "description": "回收附件",
                         "mark": "retrieve_document",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Folder/CreateFolder",
@@ -388,7 +242,7 @@ init_menu = [
                         "name": "CreateFolder",
                         "description": "创建文件夹",
                         "mark": "create_folder",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Folder/DelFolder",
@@ -396,7 +250,7 @@ init_menu = [
                         "name": "DelFolder",
                         "description": "删除文件夹",
                         "mark": "del_folder",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Folder/ModifyFolder",
@@ -404,7 +258,7 @@ init_menu = [
                         "name": "ModifyFolder",
                         "description": "修改文件夹",
                         "mark": "modify_folder",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Folder/QueryFolderByParam",
@@ -412,7 +266,7 @@ init_menu = [
                         "name": "QueryFolderByParam",
                         "description": "获取附件列表",
                         "mark": "query_folder",
-                        "not_allow": True
+                        "forbidden": True
                     }
                 ]
             },
@@ -421,6 +275,10 @@ init_menu = [
                 "path": "/system/base",
                 "icon": "database",
                 "mark": "system_base",
+                'name': 'BasePage',
+                'component': 'base',
+                'componentPath': 'sys/base/index',
+                'cache': True,
                 "interface": [
                     {
                         "path": "/v1/Base/ExportSql",
@@ -428,7 +286,31 @@ init_menu = [
                         "name": "ExportSql",
                         "description": "导出数据库",
                         "mark": "export_sql",
-                        "not_allow": False
+                        "forbidden": False
+                    },
+                    {
+                        "path": "/v1/Base/GetLoginInfo",
+                        "method": "POST",
+                        "name": "GetLoginInfo",
+                        "description": "获取用户登录情况",
+                        "mark": "get_login_info",
+                        "forbidden": False
+                    },
+                    {
+                        "path": "/v1/Base/GetAllUserLoginCount",
+                        "method": "POST",
+                        "name": "GetAllUserLoginCount",
+                        "description": "获取所有用户登录次数",
+                        "mark": "get_all_user_login_count",
+                        "forbidden": False
+                    },
+                    {
+                        "path": "/v1/Base/GetUserLoginIp",
+                        "method": "POST",
+                        "name": "GetUserLoginIp",
+                        "description": "获取用户登录IP分布情况",
+                        "mark": "get_user_ip",
+                        "forbidden": False
                     }
                 ]
             }
@@ -439,12 +321,20 @@ init_menu = [
         "path": "/role",
         "icon": "shield",
         "mark": "role",
+        'name': 'Role',
+        'component': 'layoutHeaderAside',
+        'componentPath': 'layout/header-aside',
+        'cache': True,
         "children": [
             {
                 "title": "管理员用户",
                 "path": "/role/admin",
                 "icon": "user",
                 "mark": "role_admin",
+                'name': 'AdminPage',
+                'component': 'admin',
+                'componentPath': 'sys/admin/index',
+                'cache': True,
                 "interface": [
                     {
                         "path": "/v1/Admin/CreateAdmin",
@@ -452,7 +342,7 @@ init_menu = [
                         "name": "CreateAdmin",
                         "description": "注册管理员",
                         "mark": "add_admin",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Admin/QueryAdminByParam",
@@ -460,7 +350,7 @@ init_menu = [
                         "name": "QueryAdminByParam",
                         "description": "获取管理员列表",
                         "mark": "get_admin_list",
-                        "not_allow": True
+                        "forbidden": True
                     },
                     {
                         "path": "/v1/Admin/ModifyAdmin",
@@ -468,7 +358,7 @@ init_menu = [
                         "name": "ModifyAdmin",
                         "description": "修改管理员信息",
                         "mark": "set_admin",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Admin/LockAdmin",
@@ -476,7 +366,7 @@ init_menu = [
                         "name": "LockAdmin",
                         "description": "禁用管理员",
                         "mark": "lock_admin",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Admin/DelAdmin",
@@ -484,7 +374,7 @@ init_menu = [
                         "name": "DelAdmin",
                         "description": "删除管理员",
                         "mark": "del_admin",
-                        "not_allow": False
+                        "forbidden": False
                     }
                 ]
             },
@@ -493,6 +383,10 @@ init_menu = [
                 "path": "/role/role",
                 "icon": "group",
                 "mark": "role_group",
+                'name': 'RolePage',
+                'component': 'role',
+                'componentPath': 'sys/role/index',
+                'cache': True,
                 "interface": [
                     {
                         "path": "/v1/Role/CreateRole",
@@ -500,7 +394,7 @@ init_menu = [
                         "name": "CreateRole",
                         "description": "添加角色",
                         "mark": "add_role",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Role/QueryRoleByParam",
@@ -508,7 +402,7 @@ init_menu = [
                         "name": "QueryRoleByParam",
                         "description": "获取角色列表",
                         "mark": "get_role_list",
-                        "not_allow": True
+                        "forbidden": True
                     },
                     {
                         "path": "/v1/Role/ModifyRole",
@@ -516,7 +410,7 @@ init_menu = [
                         "name": "ModifyRole",
                         "description": "修改角色信息",
                         "mark": "set_role",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Role/LockRole",
@@ -524,7 +418,7 @@ init_menu = [
                         "name": "LockRole",
                         "description": "禁用角色",
                         "mark": "lock_role",
-                        "not_allow": False
+                        "forbidden": False
                     },
                     {
                         "path": "/v1/Role/DelRole",
@@ -532,7 +426,7 @@ init_menu = [
                         "name": "DelRole",
                         "description": "删除角色",
                         "mark": "del_role",
-                        "not_allow": False
+                        "forbidden": False
                     }
                 ]
             }
@@ -543,6 +437,10 @@ init_menu = [
         "path": "/log",
         "icon": "bullseye",
         "mark": "log",
+        'name': 'Log',
+        'component': 'layoutHeaderAside',
+        'componentPath': 'layout/header-aside',
+        'cache': True,
         "interface": [
             {
                 "path": "/v1/Log/QueryLogByParam",
@@ -550,7 +448,7 @@ init_menu = [
                 "name": "QueryLogByParam",
                 "description": "获取日志列表",
                 "mark": "get_log_list",
-                "not_allow": True
+                "forbidden": True
             }
         ],
         "children": [
@@ -558,24 +456,41 @@ init_menu = [
                 "title": "登录日志",
                 "path": "/log/login",
                 "icon": "street-view",
-                "mark": "log_login"
+                "mark": "log_login",
+                'name': 'LogLogin',
+                'component': 'login',
+                'componentPath': 'sys/login/index',
+                'cache': True
             },
             {
                 "title": "操作日志",
                 "path": "/log/hander",
                 "mark": "log_hander",
-                "icon": "dot-circle-o"
+                "icon": "dot-circle-o",
+                'name': 'LogHander',
+                'component': 'hander',
+                'componentPath': 'sys/hander/index',
+                'cache': True
             },
             {
                 "title": "异常日志",
                 "path": "/log/error",
                 "mark": "log_error",
-                "icon": "bug"
+                "icon": "bug",
+                'name': 'LorError',
+                'component': 'error',
+                'componentPath': 'sys/error/index',
+                'cache': True
             }
         ]
     }
 ]
 
+
+# 默认判断字段
+default = {
+    'role_mark': u'SYS_ADMIN'
+}
 
 class Config():
     def __init__(self):

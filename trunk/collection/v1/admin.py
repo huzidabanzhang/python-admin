@@ -4,13 +4,13 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2020-03-24 15:47:10
+@LastEditTime: 2020-04-28 15:39:30
 @LastEditors: Zpp
 '''
 from flask import request
 from models import db
-from models.system import Admin, Role, Route, Menu, LoginLock, Interface
-from conf.setting import Config, base_info
+from models.system import Admin, Role, Menu, LoginLock, Interface
+from conf.setting import Config, base_info, default
 import uuid
 import datetime
 import copy
@@ -46,7 +46,7 @@ class AdminModel():
             if not role:
                 return str('角色不存在')
 
-            if role.mark == 'SYS_ADMIN':
+            if role.mark == default['role_mark']:
                 return str('不能设为为超级管理员')
 
             admin = s.query(Admin).filter(Admin.username == params['username']).first()
@@ -113,17 +113,12 @@ class AdminModel():
             if admin.is_disabled:
                 return str('管理员被禁用')
 
-            route = []
             menu = []
             interface = []
 
-            routes = s.query(Route)
-            for i in routes:
-                route.append(i.to_json())
-
             role = s.query(Role).filter(Role.role_id == admin.role_id).first()
             if role:
-                if role.mark == 'SYS_ADMIN':
+                if role.mark == default['role_mark']:
                     interface = [value.to_json() for value in s.query(Interface).all()]
                     menu = [value.to_json() for value in s.query(Menu).all()]
                 else:
@@ -144,7 +139,6 @@ class AdminModel():
                 s.commit()
                     
             return {
-                'routes': route,
                 'menus': menu,
                 'interface': interface,
                 'user': user
@@ -170,7 +164,7 @@ class AdminModel():
             if not role:
                 return str('角色不存在')
 
-            if admin.role_id != role.role_id and role.mark == 'SYS_ADMIN':
+            if admin.role_id != role.role_id and role.mark == default['role_mark']:
                 return str('不能设为为超级管理员')
 
             admin.nickname = params['nickname']

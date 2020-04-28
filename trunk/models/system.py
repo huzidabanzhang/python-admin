@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2020-03-31 09:47:39
+@LastEditTime: 2020-04-28 14:09:57
 @LastEditors: Zpp
 '''
 from models import db
@@ -136,36 +136,6 @@ class Role(db.Model):
         return '<Role %r>' % self.name
 
 
-class Route(db.Model):
-    '''
-    路由
-    '''
-    __tablename__ = 'db_route'
-    id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
-    route_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
-    pid = db.Column(db.String(36), nullable=False, index=True, default='0')
-    name = db.Column(db.String(64), index=True, nullable=False, unique=True)
-    title = db.Column(db.String(255), nullable=False)
-    path = db.Column(db.String(255), nullable=False, unique=True)
-    component = db.Column(db.String(255), nullable=False)
-    componentPath = db.Column(db.String(255), nullable=False)
-    cache = db.Column(db.Boolean, index=True, default=True)
-    is_disabled = db.Column(db.Boolean, index=True, default=False)
-    __table_args__ = {
-        'useexisting': True,
-        'mysql_engine': 'InnoDB'
-    }
-
-    def to_json(self):
-        dict = self.__dict__
-        if "_sa_instance_state" in dict:
-            del dict["_sa_instance_state"]
-        return dict
-
-    def __repr__(self):
-        return '<Route %r>' % self.name
-
-
 class Menu(db.Model):
     '''
     菜单
@@ -174,10 +144,14 @@ class Menu(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     menu_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     pid = db.Column(db.String(36), nullable=False, index=True, default='0')
+    name = db.Column(db.String(64), index=True, nullable=False, unique=True)
     title = db.Column(db.String(64), nullable=False, unique=True)
     path = db.Column(db.String(255), nullable=False, unique=True)
     icon = db.Column(db.String(255), nullable=False)
     mark = db.Column(db.String(255), nullable=False, unique=True)
+    component = db.Column(db.String(255), nullable=False)
+    componentPath = db.Column(db.String(255), nullable=False)
+    cache = db.Column(db.Boolean, index=True, default=True)
     sort = db.Column(db.SmallInteger, index=True, default=1)
     is_disabled = db.Column(db.Boolean, index=True, default=False)
     interfaces = db.relationship('Interface', backref='menu')
@@ -209,7 +183,7 @@ class Interface(db.Model):
     description = db.Column(db.String(255), nullable=False)
     mark = db.Column(db.String(255), nullable=False, unique=True)
     is_disabled = db.Column(db.Boolean, index=True, default=False)
-    not_allow = db.Column(db.Boolean, index=True, default=True)
+    forbidden = db.Column(db.Boolean, index=True, default=True)
     menu_id = db.Column(db.String(36), db.ForeignKey('db_menu.menu_id', ondelete='CASCADE'))
     __table_args__ = {
         'useexisting': True,

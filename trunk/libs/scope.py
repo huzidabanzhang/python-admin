@@ -4,11 +4,11 @@
 @Description: 权限判断方法
 @Author: Zpp
 @Date: 2019-09-04 16:55:43
-@LastEditTime: 2020-03-05 09:14:27
+@LastEditTime: 2020-04-28 13:57:18
 @LastEditors: Zpp
 '''
 from models import db
-from models.system import Admin, Role, Route, Interface, Menu
+from models.system import Admin, Role, Interface, Menu
 
 
 def is_in_scope(admin_id, path):
@@ -31,9 +31,6 @@ def is_in_scope(admin_id, path):
                 return True
             m = role.menus.filter(Menu.is_disabled == False, Menu.path == path)
             if m:
-                return True
-            r = s.query(Route).filter(Route.path == path, Route.is_disabled == False).first()
-            if r:
                 return True
 
         return False

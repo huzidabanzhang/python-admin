@@ -4,12 +4,13 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2020-03-24 16:05:27
+@LastEditTime: 2020-04-28 14:19:08
 @LastEditors: Zpp
 '''
 from flask import request
 from models import db
 from models.system import Menu, Role
+from conf.setting import default
 from sqlalchemy import text
 import uuid
 
@@ -48,7 +49,7 @@ class MenuModel():
                 
                 if params.has_key('role_id'):
                     role = Role.query.filter(Role.role_id == params['role_id']).first()
-                    if role.mark == 'SYS_ADMIN':
+                    if role.mark == default['role_mark']:
                         for i in menus:
                             select.append(i['menu_id'])
                     else:
@@ -80,7 +81,11 @@ class MenuModel():
                 sort=int(params['sort']),
                 path=params['path'],
                 mark=params['mark'],
-                icon=params['icon']
+                icon=params['icon'],
+                component=params['component'],
+                componentPath=params['componentPath'],
+                name=params['name'],
+                cache=params['cache']
             )
             s.add(item)
             s.commit()
@@ -100,7 +105,7 @@ class MenuModel():
             if not menu:
                 return str('菜单不存在')
 
-            AllowableFields = ['pid', 'title', 'path', 'icon', 'sort']
+            AllowableFields = ['pid', 'title', 'path', 'icon', 'sort', 'component', 'componentPath', 'name', 'cache']
             data = {}
 
             for i in params:

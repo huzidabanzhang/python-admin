@@ -4,8 +4,8 @@
 @Description: 菜单API
 @Author: Zpp
 @Date: 2019-09-10 16:16:54
-@LastEditTime : 2020-02-14 13:52:28
-@LastEditors: Please set LastEditors
+@LastEditTime: 2020-04-28 14:19:51
+@LastEditors: Zpp
 '''
 from flask import Blueprint, request
 from collection.v1.menu import MenuModel
@@ -25,7 +25,11 @@ def CreateMenu():
         'path': request.form.get('path'),
         'icon': request.form.get('icon'),
         'mark': request.form.get('mark'),
-        'sort': request.form.get('sort')
+        'sort': request.form.get('sort'),
+        'component': request.form.get('component'),
+        'componentPath': request.form.get('componentPath'),
+        'name': request.form.get('name'),
+        'cache': request.form.get('cache')
     }
 
     result = MenuModel().CreateMenuRequest(params)
@@ -63,18 +67,6 @@ def DelMenu():
     return ResultDeal(data=result)
 
 
-@route_menu.route('/GetMenuToInterface/<menu_id>', methods=['GET'])
-@auth.login_required
-@validate_current_access
-def GetMenuToInterface(menu_id):
-    result = MenuModel().GetMenuToInterfaceRequest(menu_id=menu_id)
-
-    if type(result).__name__ == 'str':
-        return ResultDeal(msg=result, code=-1)
-
-    return ResultDeal(data=result)
-
-
 @route_menu.route('/ModifyMenu', methods=['POST'])
 @auth.login_required
 @validate_current_access
@@ -85,7 +77,11 @@ def ModifyMenu():
         'path': request.form.get('path'),
         'icon': request.form.get('icon'),
         'mark': request.form.get('mark'),
-        'sort': request.form.get('sort')
+        'sort': request.form.get('sort'),
+        'component': request.form.get('component'),
+        'componentPath': request.form.get('componentPath'),
+        'name': request.form.get('name'),
+        'cache': request.form.get('cache')
     }
 
     result = MenuModel().ModifyMenuRequest(menu_id=request.form.get('menu_id'), params=params)
