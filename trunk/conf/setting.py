@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-04-28 16:57:27
+@LastEditTime: 2020-04-29 10:13:01
 @LastEditors: Zpp
 '''
 import hashlib
@@ -106,14 +106,6 @@ init_menu = [
                         "name": "ModifyMenu",
                         "description": "修改菜单信息",
                         "mark": "set_menu",
-                        "forbidden": False
-                    },
-                    {
-                        "path": "/v1/Menu/LockMenu",
-                        "method": "POST",
-                        "name": "LockMenu",
-                        "description": "禁用菜单",
-                        "mark": "lock_menu",
                         "forbidden": False
                     },
                     {

@@ -4,7 +4,7 @@
 @Description: 菜单API
 @Author: Zpp
 @Date: 2019-09-10 16:16:54
-@LastEditTime: 2020-04-28 14:19:51
+@LastEditTime: 2020-04-29 10:55:33
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -29,7 +29,8 @@ def CreateMenu():
         'component': request.form.get('component'),
         'componentPath': request.form.get('componentPath'),
         'name': request.form.get('name'),
-        'cache': request.form.get('cache')
+        'cache': True if request.form.get('cache') == 'true' else False,
+        'is_disabled': True if request.form.get('is_disabled') == 'true' else False
     }
 
     result = MenuModel().CreateMenuRequest(params)
@@ -37,21 +38,6 @@ def CreateMenu():
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
 
-    return ResultDeal(data=result)
-
-
-@route_menu.route('/LockMenu', methods=['POST'])
-@auth.login_required
-@validate_current_access
-def LockMenu():
-    result = MenuModel().LockMenuRequest(
-        menu_id=request.form.get('menu_id'),
-        is_disabled=True if request.form.get('is_disabled') == 'true' else False
-    )
-    
-    if type(result).__name__ == 'str':
-        return ResultDeal(msg=result, code=-1)
-        
     return ResultDeal(data=result)
 
 
@@ -64,6 +50,18 @@ def DelMenu():
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
         
+    return ResultDeal(data=result)
+
+
+@route_menu.route('/GetMenuToInterface/<menu_id>', methods=['GET'])
+@auth.login_required
+@validate_current_access
+def GetMenuToInterface(menu_id):
+    result = MenuModel().GetMenuToInterfaceRequest(menu_id=menu_id)
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
     return ResultDeal(data=result)
 
 
@@ -81,7 +79,8 @@ def ModifyMenu():
         'component': request.form.get('component'),
         'componentPath': request.form.get('componentPath'),
         'name': request.form.get('name'),
-        'cache': request.form.get('cache')
+        'cache': True if request.form.get('cache') == 'true' else False,
+        'is_disabled': True if request.form.get('is_disabled') == 'true' else False
     }
 
     result = MenuModel().ModifyMenuRequest(menu_id=request.form.get('menu_id'), params=params)

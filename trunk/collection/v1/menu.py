@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2020-04-28 14:19:08
+@LastEditTime: 2020-04-29 10:15:47
 @LastEditors: Zpp
 '''
 from flask import request
@@ -85,7 +85,8 @@ class MenuModel():
                 component=params['component'],
                 componentPath=params['componentPath'],
                 name=params['name'],
-                cache=params['cache']
+                cache=params['cache'],
+                is_disabled=params['is_disabled']
             )
             s.add(item)
             s.commit()
@@ -105,7 +106,7 @@ class MenuModel():
             if not menu:
                 return str('菜单不存在')
 
-            AllowableFields = ['pid', 'title', 'path', 'icon', 'sort', 'component', 'componentPath', 'name', 'cache']
+            AllowableFields = ['pid', 'title', 'path', 'icon', 'sort', 'component', 'componentPath', 'name', 'cache', 'is_disabled']
             data = {}
 
             for i in params:
@@ -113,27 +114,6 @@ class MenuModel():
                     data[i] = params[i]
 
             s.query(Menu).filter(Menu.menu_id == menu_id).update(data)
-            s.commit()
-            return True
-        except Exception as e:
-            print e
-            s.rollback()
-            return str(e.message)
-
-    def LockMenuRequest(self, menu_id, is_disabled):
-        '''
-        禁用菜单
-        '''
-        s = db.session()
-        try:
-            menu = s.query(Menu).filter(Menu.menu_id == menu_id).first()
-
-            if not is_disabled:
-                parent = s.query(Menu).filter(Menu.menu_id == menu.pid, Menu.is_disabled == True).first()
-                if parent:
-                    return str('父菜单处于禁用状态, 该菜单不能启用')
-
-            menu.is_disabled = is_disabled
             s.commit()
             return True
         except Exception as e:

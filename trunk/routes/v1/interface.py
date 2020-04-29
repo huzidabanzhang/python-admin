@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 13:50:25
 @LastEditors: Zpp
-@LastEditTime: 2020-04-13 08:58:51
+@LastEditTime: 2020-04-29 14:13:16
 '''
 from flask import Blueprint, request
 from collection.v1.interface import InterfaceModel
@@ -27,7 +27,8 @@ def CreateInterface():
         'description': request.form.get('description'),
         'menu_id': request.form.get('menu_id'),
         'mark': request.form.get('mark'),
-        'forbidden': True if request.form.get('forbidden') == 'true' else False
+        'forbidden': True if request.form.get('forbidden') == 'true' else False,
+        'is_disabled': True if request.form.get('is_disabled') == 'true' else False
     }
 
     result = InterfaceModel().CreateInterfaceRequest(params)
@@ -75,7 +76,8 @@ def ModifyInterface():
         'method': request.form.get('method'),
         'description': request.form.get('description'),
         'menu_id': request.form.get('menu_id'),
-        'mark': request.form.get('mark')
+        'mark': request.form.get('mark'),
+        'is_disabled': True if request.form.get('is_disabled') == 'true' else False
     }
 
     result = InterfaceModel().ModifyInterfaceRequest(interface_id=request.form.get('interface_id'), params=params)

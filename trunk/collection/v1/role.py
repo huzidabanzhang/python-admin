@@ -4,7 +4,7 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2020-03-04 15:46:24
+@LastEditTime: 2020-04-29 15:23:25
 @LastEditors: Zpp
 '''
 from flask import request
@@ -29,6 +29,7 @@ class RoleModel():
                 name=params['name'],
                 mark=params['mark'],
                 role_id=uuid.uuid4(),
+                is_disabled=params['is_disabled'],
                 interfaces=interface,
                 menus=menu
             )
@@ -70,6 +71,7 @@ class RoleModel():
 
             role.name = params['name']
             role.mark = params['mark']
+            role.is_disabled = params['is_disabled']
             role.interfaces = interface
             role.menus = menu
             s.commit()

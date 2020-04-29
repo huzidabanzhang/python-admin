@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2020-04-28 14:21:29
+@LastEditTime: 2020-04-29 14:49:37
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -104,7 +104,8 @@ def CreateAdmin():
         'email': request.form.get('email', ''),
         'sex': request.form.get('sex', 1),
         'role_id': request.form.get('role_id'),
-        'avatarUrl': request.form.get('avatarUrl', '')
+        'avatarUrl': request.form.get('avatarUrl', ''),
+        'is_disabled': True if request.form.get('is_disabled') == 'true' else False
     }
 
     result = AdminModel().CreateAdminRequest(params)
@@ -154,7 +155,8 @@ def ModifyAdmin():
         'email': request.form.get('email', ''),
         'sex': int(request.form.get('sex')),
         'avatarUrl': request.form.get('avatarUrl', ''),
-        'role_id': request.form.get('role_id')
+        'role_id': request.form.get('role_id'),
+        'is_disabled': True if request.form.get('is_disabled') == 'true' else False
     }
 
     result = AdminModel().ModifyAdminRequest(admin_id=request.form.get('admin_id'), params=params)

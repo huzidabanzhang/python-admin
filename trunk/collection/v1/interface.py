@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
 @LastEditors: Zpp
-@LastEditTime: 2020-04-13 09:00:02
+@LastEditTime: 2020-04-29 14:12:51
 '''
 from flask import request
 from models import db
@@ -52,7 +52,8 @@ class InterfaceModel():
                 description=params['description'],
                 menu_id=params['menu_id'],
                 mark=params['mark'],
-                forbidden=params['forbidden']
+                forbidden=params['forbidden'],
+                is_disabled=params['is_disabled']
             )
             s.add(item)
             data = copy.deepcopy(item.to_json())
@@ -73,7 +74,7 @@ class InterfaceModel():
             if not interface:
                 return str('接口不存在')
 
-            AllowableFields = ['name', 'path', 'method', 'description', 'menu_id']
+            AllowableFields = ['name', 'path', 'method', 'description', 'menu_id', 'is_disabled']
             data = {}
 
             for i in params:

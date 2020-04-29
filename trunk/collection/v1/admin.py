@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2020-04-28 15:39:30
+@LastEditTime: 2020-04-29 14:50:08
 @LastEditors: Zpp
 '''
 from flask import request
@@ -62,7 +62,8 @@ class AdminModel():
                 email=params['email'],
                 nickname=params['nickname'],
                 avatarUrl=params['avatarUrl'],
-                role_id=params['role_id']
+                role_id=params['role_id'],
+                is_disabled=params['is_disabled']
             )
             s.add(item)
             role.admins.append(item)
@@ -172,6 +173,7 @@ class AdminModel():
             admin.role_id = params['role_id']
             admin.avatarUrl = params['avatarUrl']
             admin.email = params['email']
+            admin.is_disabled = params['is_disabled']
             if params['password'] != admin.password:
                 admin.password = Config().get_md5(params['password'])
 
