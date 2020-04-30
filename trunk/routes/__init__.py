@@ -4,7 +4,7 @@
 @Description: API蓝图初始化注册
 @Author: Zpp
 @Date: 2019-09-04 10:23:46
-@LastEditTime: 2020-04-28 13:58:18
+@LastEditTime: 2020-04-30 13:52:54
 @LastEditors: Zpp
 '''
 from .v1.admin import route_admin
@@ -15,8 +15,6 @@ from .v1.document import route_document
 from .v1.folder import route_folder
 from .v1.log import route_log
 from .v1.base import route_base
-from .v2.salary import route_salary
-from .v2.user import route_salary_user
 
 from flask import current_app, session
 from libs.code import ResultDeal, GetTimestamp
@@ -89,5 +87,3 @@ def init_app(app):
     app.register_blueprint(route_folder)
     app.register_blueprint(route_log)
     app.register_blueprint(route_base)
-    app.register_blueprint(route_salary)
-    app.register_blueprint(route_salary_user)
