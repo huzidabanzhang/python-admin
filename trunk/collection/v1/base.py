@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-@LastEditTime: 2020-04-28 15:33:12
+@LastEditTime: 2020-04-30 16:17:06
 @LastEditors: Zpp
 '''
 from models import db
@@ -12,7 +12,6 @@ from models.system import Admin, Role, Menu, Interface, InitSql, Folder
 from models.log import Log
 from conf.setting import Config, init_menu, sql_dir, GeoLite2_dir, default
 from sqlalchemy import func, desc
-import geoip2.database
 import uuid
 import datetime
 import random
@@ -200,131 +199,5 @@ class BaseModel():
             return True
         except Exception as e:
             s.rollback()
-            print e
-            return str(e.message)
-
-    def GetLoginInfo(self, username):
-        '''
-        获取用户登录情况
-        '''
-        s = db.session()
-        try:
-            params = {
-                'username': username,
-                'type': 1
-            }
-
-            user_time = s.query(
-                func.count(Log.username),
-                func.date_format(Log.create_time, '%Y-%m-%d').label('date')
-            ).filter_by(**params).group_by('date').all()
-
-            last_time = s.query(
-                func.date_format(Log.create_time, '%Y-%m-%d %H:%m:%S')
-            ).filter_by(**params).order_by(desc('id')).first()
-
-            role_info = s.query(
-                Role.name,
-                Role.mark,
-                Admin.avatarUrl
-            ).filter(
-                Admin.username == username,
-                Admin.role_id == Role.role_id
-            ).first()
-
-            data = []
-            for i in user_time:
-                data.append({
-                    u'日期': i[1],
-                    username: i[0]
-                })
-
-            return {
-                'rows': data,
-                'columns': [u'日期', username],
-                'info': {
-                    'time': last_time[0],
-                    'role_name': role_info[0],
-                    'mark': role_info[1],
-                    'avatarUrl': role_info[2],
-                    'isAdmin': role_info[1] == default['role_mark']
-                }
-            }
-        except Exception as e:
-            print e
-            return str(e.message)
-
-    def GetAllUserLoginCount(self):
-        '''
-        获取所有用户登录次数
-        '''
-        s = db.session()
-        try:
-            user_count = s.query(
-                Log.username,
-                func.count(Log.username)
-            ).filter(
-                Log.type == 1
-            ).group_by('username').all()
-
-            user_list = [u'用户', u'登录次数']
-            data = []
-            for i in user_count:
-                user_list.append(i[0])
-                data.append({
-                    u'用户': i[0],
-                    u'登录次数': i[1]
-                })
-
-            return {
-                'data': data,
-                'user': user_list
-            }
-        except Exception as e:
-            print e
-            return str(e.message)
-
-    def GetUserLoginIp(self):
-        '''
-        获取用户登录IP分布情况
-        '''
-        s = db.session()
-        try:
-            params = {
-                'type': 1
-            }
-
-            ip_list = s.query(
-                Log.ip
-            ).filter_by(**params).group_by('ip').all()
-
-            reader = geoip2.database.Reader(GeoLite2_dir)
-
-            ip = {}
-            city = {}
-            for i in ip_list:
-                try:
-                    response = reader.city(i[0])
-                    if not ip.has_key(response.city.names["zh-CN"]):
-                        ip[response.city.names["zh-CN"]] = {
-                            'count': 1,
-                            'ip': [i[0]]
-                        }
-                    else:
-                        ip[response.city.names["zh-CN"]]['count'] += 1
-                        ip[response.city.names["zh-CN"]]['ip'].append(i[0])
-
-                    city[response.city.names["zh-CN"]] = [
-                        response.location.longitude,
-                        response.location.latitude
-                    ]
-                except:
-                    continue
-
-            return {
-                'ip': ip,
-                'city': city
-            }
-        except Exception as e:
             print e
             return str(e.message)

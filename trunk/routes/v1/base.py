@@ -4,7 +4,7 @@
 @Description: 数据库API
 @Author: Zpp
 @Date: 2020-02-21 13:02:28
-@LastEditTime: 2020-04-26 14:05:24
+@LastEditTime: 2020-04-30 16:17:20
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session, abort
@@ -66,42 +66,6 @@ def ImportSql():
         return ResultDeal(msg=u'请选择上传文件', code=-1)
 
     result = BaseModel().ImportSql(file)
-
-    if type(result).__name__ == 'str':
-        return ResultDeal(msg=result, code=-1)
-
-    return ResultDeal(data=result)
-
-
-@route_base.route('/GetLoginInfo', methods=['POST'])
-@auth.login_required
-@validate_current_access
-def GetLoginInfo():
-    result = BaseModel().GetLoginInfo(session.get('username'))
-
-    if type(result).__name__ == 'str':
-        return ResultDeal(msg=result, code=-1)
-
-    return ResultDeal(data=result)
-
-
-@route_base.route('/GetAllUserLoginCount', methods=['POST'])
-@auth.login_required
-@validate_current_access
-def GetAllUserLoginCount():
-    result = BaseModel().GetAllUserLoginCount()
-
-    if type(result).__name__ == 'str':
-        return ResultDeal(msg=result, code=-1)
-
-    return ResultDeal(data=result)
-
-
-@route_base.route('/GetUserLoginIp', methods=['POST'])
-@auth.login_required
-@validate_current_access
-def GetUserLoginIp():
-    result = BaseModel().GetUserLoginIp()
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)

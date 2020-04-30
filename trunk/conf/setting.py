@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-04-29 10:13:01
+@LastEditTime: 2020-04-30 16:43:02
 @LastEditors: Zpp
 '''
 import hashlib
@@ -475,6 +475,90 @@ init_menu = [
                 'cache': True
             }
         ]
+    },
+    {
+        "title": "工资考勤",
+        "path": "/salary",
+        "icon": "cog",
+        "mark": "salary",
+        'component': 'layoutHeaderAside',
+        'componentPath': 'layout/header-aside',
+        'name': 'Salary',
+        'cache': True,
+        "children": [
+            {
+                "title": "工资管理",
+                "path": "/salary/index",
+                "icon": "cc",
+                "mark": "salary_index",
+                'name': 'SalaryIndex',
+                'component': 'salary',
+                'componentPath': 'salary/index',
+                'cache': True,
+                "interface": [
+                    {
+                        "path": "/v2/Salary/ImportSalary",
+                        "method": "POST",
+                        "name": "ImportSalary",
+                        "description": "导入工资",
+                        "mark": "import_salary",
+                        "forbidden": True
+                    },
+                    {
+                        "path": "/v2/Salary/DelSalary",
+                        "method": "POST",
+                        "name": "DelSalary",
+                        "description": "删除工资记录",
+                        "mark": "del_salary",
+                        "forbidden": True
+                    },
+                    {
+                        "path": "/v2/Salary/QuerySalaryByParam",
+                        "method": "POST",
+                        "name": "QuerySalaryByParam",
+                        "description": "获取工资考勤列表",
+                        "mark": "get_salary_list",
+                        "forbidden": False
+                    }
+                ]
+            },
+            {
+                "title": "考勤管理",
+                "path": "/salary/attence",
+                "icon": "calendar-check-o",
+                "mark": "salary_attence",
+                'name': 'SalaryAttence',
+                'component': 'attence',
+                'componentPath': 'salary/attence',
+                'cache': True,
+                "interface": [
+                    {
+                        "path": "/v2/Salary/ImportAttendance",
+                        "method": "POST",
+                        "name": "ImportAttendance",
+                        "description": "导入考勤",
+                        "mark": "import_attence",
+                        "forbidden": True
+                    },
+                    {
+                        "path": "/v2/Salary/DelAttendance",
+                        "method": "POST",
+                        "name": "DelAttendance",
+                        "description": "删除考勤记录",
+                        "mark": "del_attence",
+                        "forbidden": True
+                    },
+                    {
+                        "path": "/v2/Salary/QueryAttendanceByParam",
+                        "method": "POST",
+                        "name": "QueryAttendanceByParam",
+                        "description": "获取考勤考勤列表",
+                        "mark": "get_attence_list",
+                        "forbidden": False
+                    }
+                ]
+            }
+        ]
     }
 ]
 
@@ -489,7 +573,7 @@ class Config():
         # mysql 配置信息
         self.host = '127.0.0.1'
         self.port = 3306
-        self.admin = 'root'
+        self.admin = 'flask_user'
         self.password = 'intersky'
         self.db = 'flask'
         self.charset = 'utf8'
