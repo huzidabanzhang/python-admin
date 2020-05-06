@@ -4,11 +4,20 @@
 @Description: 权限判断方法
 @Author: Zpp
 @Date: 2019-09-04 16:55:43
-@LastEditTime: 2020-04-28 13:57:18
+@LastEditTime: 2020-05-06 10:02:51
 @LastEditors: Zpp
 '''
 from models import db
-from models.system import Admin, Role, Interface, Menu
+from models.system import Admin, Role, Interface, Menu, InitSql
+
+
+def checkDb():
+    try:
+        s = db.session()
+        res = s.query(InitSql).first()
+        return res.isInit
+    except Exception as e:
+        return str('数据库未连接或者其他错误请查看错误信息：' + e.message)
 
 
 def is_in_scope(admin_id, path):

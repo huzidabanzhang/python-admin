@@ -4,11 +4,13 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-04-30 16:43:02
+@LastEditTime: 2020-05-06 10:04:56
 @LastEditors: Zpp
 '''
 import hashlib
 import os
+from libs.utils import isWindows
+
 
 basedir = os.path.abspath(os.path.dirname(__file__) + '/..')
 
@@ -572,11 +574,17 @@ class Config():
     def __init__(self):
         # mysql 配置信息
         self.host = '127.0.0.1'
-        self.port = 3306
-        self.admin = 'flask_user'
-        self.password = 'intersky'
-        self.db = 'flask'
         self.charset = 'utf8'
+        if isWindows():
+            self.port = 3306
+            self.admin = 'root'
+            self.password = 'intersky'
+            self.db = 'admin'
+        else:
+            self.port = 3306
+            self.admin = 'flask_user'
+            self.password = 'intersky'
+            self.db = 'flask'
 
     def get_sql_url(self):
         return "mysql://%s:%s@%s:%s/%s?charset=utf8" % (self.admin, self.password, self.host, self.port, self.db)

@@ -5,12 +5,12 @@
 @Author: Zpp
 @Date: 2020-04-10 13:30:34
 @LastEditors: Zpp
-@LastEditTime: 2020-04-23 12:05:14
+@LastEditTime: 2020-05-06 09:22:55
 '''
 from flask import request
 from models import db
 from models.salary import Salary, SalaryUser, Attendance
-from sqlalchemy import text
+from sqlalchemy import text, desc
 from conf.setting import excel_dir
 from libs.aliyun import AliyunModel
 import logging
@@ -27,7 +27,7 @@ class SalaryModel():
         self.phone = re.compile('^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$')
         self.id_card = re.compile('^\d{6}(18|19|20)\d{2}(0\d|10|11|12)([0-2]\d|30|31)\d{3}[\dXx]$')
 
-    def QuerySalaryByParamRequest(self, params, page=1, page_size=20, order_by='id'):
+    def QuerySalaryByParamRequest(self, params, page=1, page_size=20, order_by=desc('id')):
         '''
         工资列表
         '''
@@ -67,7 +67,7 @@ class SalaryModel():
                 'phone': res.phone
             }
 
-            result = Salary.query.filter_by(**data).order_by('id').paginate(page, page_size, error_out=False)
+            result = Salary.query.filter_by(**data).order_by(desc('id')).paginate(page, page_size, error_out=False)
 
             return {'data': [value.to_json() for value in result.items], 'total': result.total}
         except Exception as e:
@@ -124,7 +124,7 @@ class SalaryModel():
             logging.info('-------删除工资记录失败%s' % e)
             return str('删除工资记录失败')
 
-    def QueryAttendanceByParamRequest(self, params, page=1, page_size=20, order_by='id'):
+    def QueryAttendanceByParamRequest(self, params, page=1, page_size=20, order_by=desc('id')):
         '''
         获取考勤列表
         '''
@@ -156,7 +156,7 @@ class SalaryModel():
                 'user_id': str(params['user_id'])
             }
 
-            result = Attendance.query.filter_by(**data).order_by('id').paginate(page, page_size, error_out=False)
+            result = Attendance.query.filter_by(**data).order_by(desc('id')).paginate(page, page_size, error_out=False)
 
             return {'data': [value.to_json() for value in result.items], 'total': result.total}
         except Exception as e:
