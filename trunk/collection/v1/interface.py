@@ -5,17 +5,52 @@
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
 @LastEditors: Zpp
-@LastEditTime: 2020-04-29 14:12:51
+@LastEditTime: 2020-05-06 17:04:16
 '''
 from flask import request
 from models import db
 from models.system import Interface
 from sqlalchemy import text
+from libs.scope import isExists
 import uuid
 import copy
 
 
 class InterfaceModel():
+    def __init__(self):
+        self.exists = {
+            'name': u'接口名称',
+            'path': u'路由',
+            'mark': u'标识'
+        }
+
+    def isCreateExists(self, s, params):
+        '''
+        判断记录是否存在
+        '''
+        d = {}
+        for i in self.exists:
+            d[i] = {
+                'value': params[i],
+                'name': self.exists[i]
+            }
+
+        return isExists(s, Interface, d)
+
+    def isSaveExists(self, s, params, data):
+        '''
+        判断修改时记录是否存在
+        '''
+        d = {}
+        for i in self.exists:
+            if params.has_key(i) and params[i] != data.__dict__[i]:
+                d[i] = {
+                    'value': params[i],
+                    'name': self.exists[i]
+                }
+
+        return isExists(s, Interface, d)
+
     def QueryInterfaceByParamRequest(self, params, page=1, page_size=20, order_by='id'):
         '''
         接口列表
@@ -43,6 +78,11 @@ class InterfaceModel():
         新建接口
         '''
         s = db.session()
+        is_exists = self.isCreateExists(s, params)
+
+        if is_exists != True:
+            return str(is_exists['error'].encode('utf8'))
+
         try:
             item = Interface(
                 interface_id=uuid.uuid4(),
@@ -80,6 +120,11 @@ class InterfaceModel():
             for i in params:
                 if i in AllowableFields and params.has_key(i):
                     data[i] = params[i]
+
+            is_exists = self.isSaveExists(s, data, interface)
+
+            if is_exists != True:
+                return str(is_exists['error'].encode('utf8'))
 
             s.query(Interface).filter(Interface.interface_id == interface_id).update(data)
             s.commit()

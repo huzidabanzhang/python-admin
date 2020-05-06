@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-05-06 10:22:18
+@LastEditTime: 2020-05-06 10:57:40
 @LastEditors: Zpp
 '''
 import hashlib
@@ -257,7 +257,7 @@ init_menu = [
                         "path": "/v1/Folder/QueryFolderByParam",
                         "method": "POST",
                         "name": "QueryFolderByParam",
-                        "description": "获取附件列表",
+                        "description": "获取文件列表",
                         "mark": "query_folder",
                         "forbidden": True
                     }
@@ -434,16 +434,6 @@ init_menu = [
         'component': 'layoutHeaderAside',
         'componentPath': 'layout/header-aside',
         'cache': True,
-        "interface": [
-            {
-                "path": "/v1/Log/QueryLogByParam",
-                "method": "POST",
-                "name": "QueryLogByParam",
-                "description": "获取日志列表",
-                "mark": "get_log_list",
-                "forbidden": True
-            }
-        ],
         "children": [
             {
                 "title": "登录日志",
@@ -453,7 +443,17 @@ init_menu = [
                 'name': 'LogLogin',
                 'component': 'login',
                 'componentPath': 'sys/login/index',
-                'cache': True
+                'cache': True,
+                "interface": [
+                    {
+                        "path": "/v1/Log/QueryLogByParam",
+                        "method": "POST",
+                        "name": "QueryLogByParam",
+                        "description": "获取日志列表",
+                        "mark": "get_log_list",
+                        "forbidden": True
+                    }
+                ]
             },
             {
                 "title": "操作日志",
@@ -463,7 +463,17 @@ init_menu = [
                 'name': 'LogHander',
                 'component': 'hander',
                 'componentPath': 'sys/hander/index',
-                'cache': True
+                'cache': True,
+                "interface": [
+                    {
+                        "path": "/v1/Log/QueryLogByParam",
+                        "method": "POST",
+                        "name": "QueryLogByParam",
+                        "description": "获取日志列表",
+                        "mark": "get_log_list",
+                        "forbidden": True
+                    }
+                ]
             },
             {
                 "title": "异常日志",
@@ -473,7 +483,17 @@ init_menu = [
                 'name': 'LorError',
                 'component': 'error',
                 'componentPath': 'sys/error/index',
-                'cache': True
+                'cache': True,
+                "interface": [
+                    {
+                        "path": "/v1/Log/QueryLogByParam",
+                        "method": "POST",
+                        "name": "QueryLogByParam",
+                        "description": "获取日志列表",
+                        "mark": "get_log_list",
+                        "forbidden": True
+                    }
+                ]
             }
         ]
     }

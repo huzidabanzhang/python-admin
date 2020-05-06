@@ -4,12 +4,14 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-@LastEditTime: 2020-04-28 15:33:12
+@LastEditTime: 2020-05-06 15:51:32
 @LastEditors: Zpp
 '''
 from models import db
 from models.system import Admin, Role, Menu, Interface, InitSql, Folder
 from models.log import Log
+from .interface import InterfaceModel
+from .menu import MenuModel
 from conf.setting import Config, init_menu, sql_dir, GeoLite2_dir, default
 from sqlalchemy import func, desc
 import geoip2.database
@@ -25,12 +27,15 @@ class BaseModel():
     def __init__(self):
         self.role_name = u'超级管理员'
         self.user_name = u'Admin'
+        self.M = MenuModel()
+        self.I = InterfaceModel()
 
     def CreateDropRequest(self, isInit, params=None):
+        db.drop_all()
+        db.create_all()
+
         s = db.session()
         try:
-            db.drop_all()
-            db.create_all()
             s.add(InitSql(isInit=False))
             s.commit()
 
@@ -63,7 +68,7 @@ class BaseModel():
             s.add(admin)
             s.commit()
 
-            self.__init_menus(init_menu)
+            self.__init_menus(s, init_menu)
 
             folder = Folder(
                 folder_id=uuid.uuid4(),
@@ -74,7 +79,7 @@ class BaseModel():
             s.add(folder)
             s.commit()
 
-            sql = s.query(InitSql).first()
+            sql = s.query(InitSql).one()
             sql.isInit = True
             s.commit()
             return {
@@ -98,24 +103,32 @@ class BaseModel():
         code_num = ''.join(code)
         return code_num
 
-    def __init_menus(self, data, pid='0'):
-        s = db.session()
+    def __init_menus(self, s, data, pid='0'):
         for m in data:
             menu_id = uuid.uuid4()
-            menu = self.__create_menu(m, menu_id, pid)
+            is_exists = self.M.isCreateExists(s, m)
+
+            if is_exists == True:
+                menu = self.__create_menu(m, menu_id, pid)
+                s.add(menu)
+            else:
+                menu = is_exists['value']
 
             if m.has_key('interface'):
                 interfaces = []
                 for f in m['interface']:
-                    interface = self.__create_interface(f, uuid.uuid4(), menu_id)
+                    is_exists = self.I.isCreateExists(s, f)
+                    if is_exists == True:
+                        interface = self.__create_interface(s, f, uuid.uuid4())
+                    else:
+                        interface = is_exists['value']
                     s.add(interface)
                     interfaces.append(interface)
                 menu.interfaces = interfaces
 
-            s.add(menu)
             s.commit()
             if m.has_key('children'):
-                self.__init_menus(m['children'], menu_id)
+                self.__init_menus(s, m['children'], menu_id)
 
     def __create_menu(self, params, menu_id, pid):
         return Menu(
@@ -131,9 +144,8 @@ class BaseModel():
             cache=params['cache']
         )
 
-    def __create_interface(self, params, interface_id, menu_id):
+    def __create_interface(self, s, params, interface_id):
         return Interface(
-            menu_id=menu_id,
             interface_id=interface_id,
             name=params['name'],
             path=params['path'],

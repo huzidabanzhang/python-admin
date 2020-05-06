@@ -4,18 +4,55 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2020-04-29 10:15:47
+@LastEditTime: 2020-05-06 17:02:20
 @LastEditors: Zpp
 '''
 from flask import request
 from models import db
 from models.system import Menu, Role
 from conf.setting import default
+from libs.scope import isExists
 from sqlalchemy import text
 import uuid
+import json
 
 
 class MenuModel():
+    def __init__(self):
+        self.exists = {
+            'name': u'路由名称',
+            'title': u'菜单名称',
+            'path': u'路由',
+            'mark': u'标识'
+        }
+
+    def isCreateExists(self, s, params):
+        '''
+        判断新增时记录是否存在
+        '''
+        d = {}
+        for i in self.exists:
+            d[i] = {
+                'value': params[i],
+                'name': self.exists[i]
+            }
+
+        return isExists(s, Menu, d)
+
+    def isSaveExists(self, s, params, data):
+        '''
+        判断修改时记录是否存在
+        '''
+        d = {}
+        for i in self.exists:
+            if params.has_key(i) and params[i] != data.__dict__[i]:
+                d[i] = {
+                    'value': params[i],
+                    'name': self.exists[i]
+                }
+
+        return isExists(s, Menu, d)
+
     def QueryMenuByParamRequest(self, params, is_interface=False):
         '''
         菜单列表
@@ -37,7 +74,7 @@ class MenuModel():
                         interfaces.append({
                             'type': 'INTERFACE',
                             'title': item.description,
-                            'menu_id': item.interface_id
+                            'menu_id': '%s%s' % (value.menu_id, item.interface_id)
                         })
                     menus.append({
                         'type': 'MENU',
@@ -53,8 +90,8 @@ class MenuModel():
                         for i in menus:
                             select.append(i['menu_id'])
                     else:
-                        for value in role.interfaces:
-                            select.append(value.interface_id)
+                        for value in json.loads(role.role_list):
+                            select.append(value)
                         # for value in role.menus:
                         #     select.append(value.menu_id)
 
@@ -73,6 +110,11 @@ class MenuModel():
         新建菜单
         '''
         s = db.session()
+        is_exists = self.isCreateExists(s, params)
+
+        if is_exists != True:
+            return str(is_exists['error'].encode('utf8'))
+            
         try:
             item = Menu(
                 menu_id=uuid.uuid4(),
@@ -112,6 +154,11 @@ class MenuModel():
             for i in params:
                 if i in AllowableFields and params.has_key(i):
                     data[i] = params[i]
+
+            is_exists = self.isSaveExists(s, data, menu)
+
+            if is_exists != True:
+                return str(is_exists['error'].encode('utf8'))
 
             s.query(Menu).filter(Menu.menu_id == menu_id).update(data)
             s.commit()

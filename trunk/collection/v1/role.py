@@ -4,7 +4,7 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2020-04-29 15:23:25
+@LastEditTime: 2020-05-06 17:06:16
 @LastEditors: Zpp
 '''
 from flask import request
@@ -16,22 +16,56 @@ import json
 
 
 class RoleModel():
+    def __init__(self):
+        self.exists = {
+            'name': u'角色名称',
+            'mark': u'标识'
+        }
+
+    def isCreateExists(self, s, params):
+        '''
+        判断新增时记录是否存在
+        '''
+        d = {}
+        for i in self.exists:
+            d[i] = {
+                'value': params[i],
+                'name': self.exists[i]
+            }
+
+        return isExists(s, Role, d)
+
+    def isSaveExists(self, s, params, data):
+        '''
+        判断修改时记录是否存在
+        '''
+        d = {}
+        for i in self.exists:
+            if params.has_key(i) and params[i] != data.__dict__[i]:
+                d[i] = {
+                    'value': params[i],
+                    'name': self.exists[i]
+                }
+
+        return isExists(s, Role, d)
+
     def CreateRoleRequest(self, params):
         '''
         新建权限
         '''
         s = db.session()
-        try:
-            interface = s.query(Interface).filter(Interface.interface_id.in_(params['interface_id'])).all()
-            menu = s.query(Menu).filter(Menu.menu_id.in_(params['menu_id'])).all()
+        is_exists = self.isCreateExists(s, params)
 
+        if is_exists != True:
+            return str(is_exists['error'].encode('utf8'))
+
+        try:
             item = Role(
                 name=params['name'],
                 mark=params['mark'],
                 role_id=uuid.uuid4(),
                 is_disabled=params['is_disabled'],
-                interfaces=interface,
-                menus=menu
+                role_list=json.dumps(params['role_list'])
             )
             s.add(item)
             s.commit()
@@ -66,14 +100,15 @@ class RoleModel():
             if not role:
                 return str('数据不存在')
 
-            interface = s.query(Interface).filter(Interface.interface_id.in_(params['interface_id'])).all()
-            menu = s.query(Menu).filter(Menu.menu_id.in_(params['menu_id'])).all()
+            is_exists = self.isSaveExists(s, params, role)
+
+            if is_exists != True:
+                return str(is_exists['error'].encode('utf8'))
 
             role.name = params['name']
             role.mark = params['mark']
             role.is_disabled = params['is_disabled']
-            role.interfaces = interface
-            role.menus = menu
+            role.role_list = json.dumps(params['role_list'])
             s.commit()
             return True
         except Exception as e:

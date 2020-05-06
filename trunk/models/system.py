@@ -4,23 +4,17 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2020-04-28 14:09:57
+@LastEditTime: 2020-05-06 16:28:05
 @LastEditors: Zpp
 '''
 from models import db
 import datetime
+import json
 
 
-MenuToRole = db.Table(
-    'db_menu_to_role',
-    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id', ondelete='CASCADE')),
-    db.Column('menu_id', db.String(36), db.ForeignKey('db_menu.menu_id', ondelete='CASCADE'))
-)
-
-
-InterfaceToRole = db.Table(
-    'db_interface_to_role',
-    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id', ondelete='CASCADE')),
+InterfaceToMenu = db.Table(
+    'db_interface_to_menu',
+    db.Column('menu_id', db.String(36), db.ForeignKey('db_menu.menu_id', ondelete='CASCADE')),
     db.Column('interface_id', db.String(36), db.ForeignKey('db_interface.interface_id', ondelete='CASCADE'))
 )
 
@@ -112,15 +106,8 @@ class Role(db.Model):
     name = db.Column(db.String(64), nullable=False, unique=True)
     mark = db.Column(db.String(64), nullable=False, unique=True)
     is_disabled = db.Column(db.Boolean, index=True, default=False)
+    role_list = db.Column(db.Text)
     admins = db.relationship('Admin', backref='role')
-    menus = db.relationship('Menu',
-                            secondary=MenuToRole,
-                            backref=db.backref('db_role', lazy='dynamic'),
-                            lazy='dynamic')
-    interfaces = db.relationship('Interface',
-                                 secondary=InterfaceToRole,
-                                 backref=db.backref('db_interface', lazy='dynamic'),
-                                 lazy='dynamic')
     __table_args__ = {
         'useexisting': True,
         'mysql_engine': 'InnoDB'
@@ -130,6 +117,8 @@ class Role(db.Model):
         dict = self.__dict__
         if "_sa_instance_state" in dict:
             del dict["_sa_instance_state"]
+        if "role_list" in dict:
+            del dict["role_list"]
         return dict
 
     def __repr__(self):
@@ -154,7 +143,10 @@ class Menu(db.Model):
     cache = db.Column(db.Boolean, index=True, default=True)
     sort = db.Column(db.SmallInteger, index=True, default=1)
     is_disabled = db.Column(db.Boolean, index=True, default=False)
-    interfaces = db.relationship('Interface', backref='menu')
+    interfaces = db.relationship('Interface',
+                                 secondary=InterfaceToMenu,
+                                 backref=db.backref('db_interface', lazy='dynamic'),
+                                 lazy='dynamic')
     __table_args__ = {
         'useexisting': True,
         'mysql_engine': 'InnoDB'
@@ -184,7 +176,6 @@ class Interface(db.Model):
     mark = db.Column(db.String(255), nullable=False, unique=True)
     is_disabled = db.Column(db.Boolean, index=True, default=False)
     forbidden = db.Column(db.Boolean, index=True, default=True)
-    menu_id = db.Column(db.String(36), db.ForeignKey('db_menu.menu_id', ondelete='CASCADE'))
     __table_args__ = {
         'useexisting': True,
         'mysql_engine': 'InnoDB'
