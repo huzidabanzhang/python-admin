@@ -4,11 +4,12 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-04-29 10:13:01
+@LastEditTime: 2020-05-06 10:22:18
 @LastEditors: Zpp
 '''
 import hashlib
 import os
+from libs.utils import isWindows
 
 basedir = os.path.abspath(os.path.dirname(__file__) + '/..')
 
@@ -25,7 +26,7 @@ token_info = {
 # 启动服务参数 字典类型
 server_info = {
     "host": '0.0.0.0',
-    "port": 91,  # 启动服务的端口号
+    "port": 92,  # 启动服务的端口号
 }
 
 # 文档路径
@@ -488,11 +489,17 @@ class Config():
     def __init__(self):
         # mysql 配置信息
         self.host = '127.0.0.1'
-        self.port = 3306
-        self.admin = 'root'
-        self.password = 'intersky'
-        self.db = 'flask'
         self.charset = 'utf8'
+        if isWindows():
+            self.port = 3306
+            self.admin = 'root'
+            self.password = 'intersky'
+            self.db = 'flask'
+        else:
+            self.port = 3306
+            self.admin = 'admin_zpp'
+            self.password = 'Zt931210'
+            self.db = 'admin'
 
     def get_sql_url(self):
         return "mysql://%s:%s@%s:%s/%s?charset=utf8" % (self.admin, self.password, self.host, self.port, self.db)

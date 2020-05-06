@@ -1,0 +1,11 @@
+MySQL-python
+Flask=0.12.2
+Werkzeug=0.12.2
+Flask-Session
+aliyun-python-sdk-core
+Flask-Cache
+SQLAlchemy
+Pillow
+Flask-HTTPAuth
+Flask-Compress
+geoip2

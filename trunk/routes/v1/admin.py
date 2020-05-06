@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2020-04-29 14:49:37
+@LastEditTime: 2020-05-06 10:23:36
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -14,7 +14,7 @@ from conf.setting import default
 from libs.code import ResultDeal
 from libs.captcha import Captcha
 from io import BytesIO
-from libs.utils import checkDb
+from libs.scope import checkDb
 import json
 
 route_admin = Blueprint('Admin', __name__, url_prefix='/v1/Admin')
