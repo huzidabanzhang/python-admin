@@ -4,13 +4,14 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2020-05-06 17:06:16
+@LastEditTime: 2020-05-06 17:22:43
 @LastEditors: Zpp
 '''
 from flask import request
 from models import db
 from models.system import Role, Interface, Menu
 from sqlalchemy import text
+from libs.scope import isExists
 import uuid
 import json
 
