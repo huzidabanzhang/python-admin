@@ -4,7 +4,7 @@
 @Description: 菜单API
 @Author: Zpp
 @Date: 2019-09-10 16:16:54
-@LastEditTime: 2020-04-29 10:55:33
+@LastEditTime: 2020-05-07 09:52:22
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -53,11 +53,11 @@ def DelMenu():
     return ResultDeal(data=result)
 
 
-@route_menu.route('/GetMenuToInterface/<menu_id>', methods=['GET'])
+@route_menu.route('/GetMenuToInterface', methods=['GET'])
 @auth.login_required
 @validate_current_access
-def GetMenuToInterface(menu_id):
-    result = MenuModel().GetMenuToInterfaceRequest(menu_id=menu_id)
+def GetMenuToInterface():
+    result = MenuModel().GetMenuToInterfaceRequest(menu_id=request.args.get('menu_id'))
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)

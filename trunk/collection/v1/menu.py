@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2020-05-06 17:02:20
+@LastEditTime: 2020-05-06 17:29:52
 @LastEditors: Zpp
 '''
 from flask import request
@@ -74,7 +74,7 @@ class MenuModel():
                         interfaces.append({
                             'type': 'INTERFACE',
                             'title': item.description,
-                            'menu_id': '%s%s' % (value.menu_id, item.interface_id)
+                            'menu_id': '%s.%s' % (value.menu_id, item.interface_id)
                         })
                     menus.append({
                         'type': 'MENU',
@@ -90,7 +90,7 @@ class MenuModel():
                         for i in menus:
                             select.append(i['menu_id'])
                     else:
-                        for value in json.loads(role.role_list):
+                        for value in json.loads(role.role_list)['I']:
                             select.append(value)
                         # for value in role.menus:
                         #     select.append(value.menu_id)

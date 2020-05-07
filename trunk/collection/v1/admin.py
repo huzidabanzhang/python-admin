@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2020-04-29 14:50:08
+@LastEditTime: 2020-05-07 09:38:32
 @LastEditors: Zpp
 '''
 from flask import request
@@ -14,6 +14,7 @@ from conf.setting import Config, base_info, default
 import uuid
 import datetime
 import copy
+import json
 
 
 class AdminModel():
@@ -123,10 +124,13 @@ class AdminModel():
                     interface = [value.to_json() for value in s.query(Interface).all()]
                     menu = [value.to_json() for value in s.query(Menu).all()]
                 else:
-                    for i in role.menus.order_by(Menu.sort, Menu.id):
-                        menu.append(i.to_json())
-                    for i in role.interfaces:
-                        interface.append(i.to_json())
+                    i = []
+                    I = json.loads(role.role_list)['I']
+                    M = json.loads(role.role_list)['M']
+                    for x in I:
+                        i.append(x.split('.')[1])
+                    interface = [value.to_json() for value in s.query(Interface).filter(Interface.interface_id.in_(i)).all()]
+                    menu = [value.to_json() for value in s.query(Menu).filter(Menu.menu_id.in_(M)).all()]
 
             user = copy.deepcopy(admin.to_json())
             del user['id']

@@ -4,7 +4,7 @@
 @Description: 权限API
 @Author: Zpp
 @Date: 2019-09-12 10:30:39
-@LastEditTime: 2020-05-06 16:41:56
+@LastEditTime: 2020-05-06 17:29:17
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -24,7 +24,8 @@ def CreateRole():
         'name': request.form.get('name'),
         'mark': request.form.get('mark'),
         'is_disabled': True if request.form.get('is_disabled') == 'true' else False,
-        'role_list': request.form.getlist('role_list[]')
+        'role_list': request.form.getlist('role_list[]'),
+        'menu': request.form.getlist('menu[]')
     }
 
     result = RoleModel().CreateRoleRequest(params)
@@ -72,7 +73,8 @@ def ModifyRole():
         'name': request.form.get('name'),
         'mark': request.form.get('mark'),
         'is_disabled': True if request.form.get('is_disabled') == 'true' else False,
-        'role_list': request.form.getlist('role_list[]')
+        'role_list': request.form.getlist('role_list[]'),
+        'menu': request.form.getlist('menu[]')
     }
     result = RoleModel().ModifyRoleRequest(role_id=request.form.get('role_id'), params=params)
 

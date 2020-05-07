@@ -4,12 +4,13 @@
 @Description: 权限判断方法
 @Author: Zpp
 @Date: 2019-09-04 16:55:43
-@LastEditTime: 2020-05-06 15:41:10
+@LastEditTime: 2020-05-07 09:43:10
 @LastEditors: Zpp
 '''
 from models import db
 from models.system import Admin, Role, Interface, Menu, InitSql
 from sqlalchemy import exists
+import json
 
 
 def checkDb():
@@ -61,11 +62,17 @@ def is_in_scope(admin_id, path):
 
         role = s.query(Role).filter(Role.role_id == admin.role_id, Role.is_disabled == False).one()
         if role:
-            i = role.interfaces.filter(Interface.is_disabled == False, Interface.path == path).one()
-            if i:
+            i = []
+            I = json.loads(role.role_list)['I']
+            M = json.loads(role.role_list)['M']
+            for x in I:
+                i.append(x.split('.')[1])
+
+            interface = s.query(Interface).filter(Interface.interface_id.in_(i), Interface.is_disabled == False, Interface.path == path).one()
+            if interface:
                 return True
-            m = role.menus.filter(Menu.is_disabled == False, Menu.path == path).one()
-            if m:
+            menu = s.query(Menu).filter(Menu.menu_id.in_(M), Menu.is_disabled == False, Menu.path == path).one()
+            if menu:
                 return True
 
         return False
