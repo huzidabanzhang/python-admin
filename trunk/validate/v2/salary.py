@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-20 14:35:28
 @LastEditors: Zpp
-@LastEditTime: 2020-04-22 15:00:03
+@LastEditTime: 2020-05-07 14:06:00
 '''
 
 
@@ -192,6 +192,61 @@ params = {
             'value': 'page_size',
             'type': 'int',
             'default': 20
+        }
+    ],
+    # 获取用户列表
+    'QueryUserByParam': [
+        {
+            'name': u'手机号',
+            'value': 'phone',
+            'type': 'str'
+        },
+        {
+            'name': u'身份证',
+            'value': 'id_card',
+            'type': 'str'
+        },
+        {
+            'name': u'页码',
+            'value': 'page',
+            'type': 'int',
+            'default': 1
+        },
+        {
+            'name': u'条数',
+            'value': 'page_size',
+            'type': 'int',
+            'default': 20
+        }
+    ],
+    # 删除用户
+    'DelUser': [
+        {
+            'name': u'编号',
+            'value': 'rid[]',
+            'type': 'list',
+            'required': True
+        }
+    ],
+    # 修改用户
+    'SetUser': [
+        {
+            'name': u'编号',
+            'value': 'salary_user_id',
+            'type': 'str',
+            'required': True
+        },
+        {
+            'name': u'手机号',
+            'value': 'phone',
+            'type': 'phone',
+            'required': True
+        },
+        {
+            'name': u'身份证',
+            'value': 'id_card',
+            'type': 'ic',
+            'required': True
         }
     ]
 }

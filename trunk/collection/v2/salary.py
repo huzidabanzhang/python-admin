@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 13:30:34
 @LastEditors: Zpp
-@LastEditTime: 2020-05-06 09:22:55
+@LastEditTime: 2020-05-07 14:49:14
 '''
 from flask import request
 from models import db
@@ -90,6 +90,14 @@ class SalaryModel():
                 return {
                     'openid': res.openid
                 }
+
+            res = Salary.query.filter_by(**{
+                'id_card': params['id_card'],
+                'phone': int(params['phone'])
+            }).first()
+
+            if not res:
+                return str('号码或者身份证不存在')
 
             openid = str(uuid.uuid4())
 
@@ -179,6 +187,55 @@ class SalaryModel():
             print e
             logging.info('-------删除考勤记录失败%s' % e)
             return str('删除考勤记录失败')
+
+    def QueryUserByParamRequest(self, params, page=1, page_size=20):
+        '''
+        获取用户列表
+        '''
+        s = db.session()
+        try:
+            result = SalaryUser.query.filter(
+                SalaryUser.phone.like('%' + params['phone'] + '%') if params.has_key('phone') else text(''),
+                SalaryUser.id_card.like('%' + params['id_card'] + '%') if params.has_key('id_card') else text('')
+            ).order_by(desc('id')).paginate(page, page_size, error_out=False)
+
+            return {'data': [value.to_json() for value in result.items], 'total': result.total}
+        except Exception as e:
+            print e
+            logging.info('-------获取用户列表失败%s' % e)
+            return str('获取用户列表失败')
+
+    def DelUserRequest(self, rid):
+        '''
+        删除用户
+        '''
+        s = db.session()
+        try:
+            result = s.query(SalaryUser).filter(SalaryUser.salary_user_id.in_(rid)).all()
+            for i in result:
+                s.delete(i)
+            s.commit()
+            return True
+        except Exception as e:
+            print e
+            logging.info('-------删除用户失败%s' % e)
+            return str('删除用户失败')
+
+    def SetUserRequest(self, params):
+        '''
+        修改用户
+        '''
+        s = db.session()
+        try:
+            res = s.query(SalaryUser).filter(SalaryUser.salary_user_id == params['salary_user_id']).first()
+            res.id_card = params['id_card']
+            res.phone = params['phone']
+            s.commit()
+            return True
+        except Exception as e:
+            print e
+            logging.info('-------修改用户失败%s' % e)
+            return str('修改用户失败')
 
     def GetCodeRequest(self, phone):
         '''

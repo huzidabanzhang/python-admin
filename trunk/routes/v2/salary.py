@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-10 14:17:37
 @LastEditors: Zpp
-@LastEditTime: 2020-04-22 15:35:09
+@LastEditTime: 2020-05-07 14:03:28
 '''
 from flask import Blueprint, request
 from collection.v2.salary import SalaryModel
@@ -105,6 +105,55 @@ def QueryAttendanceByParam():
             params[i] = request.form.get(i)
 
     result = SalaryModel().QueryAttendanceByParamRequest(
+        params=params,
+        page=int(request.form.get('page')),
+        page_size=int(request.form.get('page_size'))
+    )
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
+    return ResultDeal(data=result)
+
+
+@route_salary.route('/SetUser', methods=['POST'], endpoint='SetUser')
+@auth.login_required
+@validate_current_access
+@validate.form('SetUser')
+def SetUser():
+    result = SalaryModel().SetUserRequest(request.form)
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
+    return ResultDeal(data=result)
+
+
+@route_salary.route('/DelUser', methods=['POST'], endpoint='DelUser')
+@auth.login_required
+@validate_current_access
+@validate.form('DelUser')
+def DelUser():
+    result = SalaryModel().DelUserRequest(request.form.getlist('rid[]'))
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
+    return ResultDeal(data=result)
+
+
+@route_salary.route('/QueryUserByParam', methods=['POST'], endpoint='QueryUserByParam')
+@auth.login_required
+@validate_current_access
+@validate.form('QueryUserByParam')
+def QueryUserByParam():
+    params = {}
+    Ary = ['phone', 'id_card']
+    for i in Ary:
+        if request.form.get(i):
+            params[i] = request.form.get(i)
+
+    result = SalaryModel().QueryUserByParamRequest(
         params=params,
         page=int(request.form.get('page')),
         page_size=int(request.form.get('page_size'))

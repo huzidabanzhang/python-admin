@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-05-06 10:04:56
+@LastEditTime: 2020-05-07 14:29:24
 @LastEditors: Zpp
 '''
 import hashlib
@@ -556,6 +556,42 @@ init_menu = [
                         "name": "QueryAttendanceByParam",
                         "description": "获取考勤考勤列表",
                         "mark": "get_attence_list",
+                        "forbidden": False
+                    }
+                ]
+            },
+            {
+                "title": "用户管理",
+                "path": "/salary/user",
+                "icon": "user-o",
+                "mark": "salary_user",
+                'name': 'SalaryUser',
+                'component': 'user',
+                'componentPath': 'salary/user',
+                'cache': True,
+                "interface": [
+                    {
+                        "path": "/v2/Salary/SetUser",
+                        "method": "POST",
+                        "name": "SetUser",
+                        "description": "修改用户",
+                        "mark": "set_user",
+                        "forbidden": True
+                    },
+                    {
+                        "path": "/v2/Salary/DelUser",
+                        "method": "POST",
+                        "name": "DelUser",
+                        "description": "删除用户",
+                        "mark": "del_user",
+                        "forbidden": True
+                    },
+                    {
+                        "path": "/v2/Salary/QueryUserByParam",
+                        "method": "POST",
+                        "name": "QueryUserByParam",
+                        "description": "获取用户列表",
+                        "mark": "get_user_list",
                         "forbidden": False
                     }
                 ]
