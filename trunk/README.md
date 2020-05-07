@@ -1,9 +1,9 @@
 ![默哀](https://github.com/huzidabanzhang/python-admin/blob/master/trunk/static/image/markdown/desktop.jpg "默哀")
 
 ## 演示
-  https://ig132n.cn/
+  https://test.ig132n.cn/
   
-  测试账号：Test 密码：123456
+  测试账号：Test 密码：111111
   
   前端地址 [Vue](https://github.com/huzidabanzhang/python-admin-pm "Vue")
   
