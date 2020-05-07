@@ -1,6 +1,7 @@
 *.pyc
 sql
-logs
+logs/*.log
+logs/*.log.*
 .vscode/*.json
 document
 sessions
