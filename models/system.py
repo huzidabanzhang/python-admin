@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2020-05-06 16:28:05
+@LastEditTime: 2020-05-09 14:21:27
 @LastEditors: Zpp
 '''
 from models import db
@@ -145,7 +145,7 @@ class Menu(db.Model):
     is_disabled = db.Column(db.Boolean, index=True, default=False)
     interfaces = db.relationship('Interface',
                                  secondary=InterfaceToMenu,
-                                 backref=db.backref('db_interface', lazy='dynamic'),
+                                 backref=db.backref('menus', lazy='dynamic'),
                                  lazy='dynamic')
     __table_args__ = {
         'useexisting': True,
@@ -182,9 +182,14 @@ class Interface(db.Model):
     }
 
     def to_json(self):
+        menus = []
+        for i in self.menus.all():
+            menus.append(i.menu_id)
+
         dict = self.__dict__
         if "_sa_instance_state" in dict:
             del dict["_sa_instance_state"]
+        dict['menus'] = menus
         return dict
 
     def __repr__(self):

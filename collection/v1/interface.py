@@ -5,11 +5,11 @@
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
 @LastEditors: Zpp
-@LastEditTime: 2020-05-06 17:04:16
+@LastEditTime: 2020-05-09 15:07:15
 '''
 from flask import request
 from models import db
-from models.system import Interface
+from models.system import Interface, Menu
 from sqlalchemy import text
 from libs.scope import isExists
 import uuid
@@ -84,16 +84,18 @@ class InterfaceModel():
             return str(is_exists['error'].encode('utf8'))
 
         try:
+            menus = s.query(Menu).filter(Menu.menu_id.in_(params['menus'])).all()
+
             item = Interface(
                 interface_id=uuid.uuid4(),
                 name=params['name'],
                 path=params['path'],
                 method=params['method'],
                 description=params['description'],
-                menu_id=params['menu_id'],
                 mark=params['mark'],
                 forbidden=params['forbidden'],
-                is_disabled=params['is_disabled']
+                is_disabled=params['is_disabled'],
+                menus=menus
             )
             s.add(item)
             data = copy.deepcopy(item.to_json())
@@ -114,7 +116,7 @@ class InterfaceModel():
             if not interface:
                 return str('接口不存在')
 
-            AllowableFields = ['name', 'path', 'method', 'description', 'menu_id', 'is_disabled']
+            AllowableFields = ['name', 'path', 'method', 'description', 'is_disabled']
             data = {}
 
             for i in params:
@@ -126,6 +128,8 @@ class InterfaceModel():
             if is_exists != True:
                 return str(is_exists['error'].encode('utf8'))
 
+            menus = s.query(Menu).filter(Menu.menu_id.in_(params['menus'])).all()
+            interface.menus = menus
             s.query(Interface).filter(Interface.interface_id == interface_id).update(data)
             s.commit()
             return True
