@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-@LastEditTime: 2020-05-06 15:51:32
+@LastEditTime: 2020-05-09 16:52:36
 @LastEditors: Zpp
 '''
 from models import db
@@ -31,6 +31,7 @@ class BaseModel():
         self.I = InterfaceModel()
 
     def CreateDropRequest(self, isInit, params=None):
+        db.session.remove()
         db.drop_all()
         db.create_all()
 
