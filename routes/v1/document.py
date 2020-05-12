@@ -4,8 +4,8 @@
 @Description: 附件API
 @Author: Zpp
 @Date: 2019-10-14 15:56:20
-@LastEditors  : Please set LastEditors
-@LastEditTime : 2020-02-14 14:59:26
+@LastEditors: Zpp
+@LastEditTime: 2020-05-11 14:27:05
 '''
 from flask import Blueprint, request, make_response, abort, send_from_directory, session
 from collection.v1.document import DocumentModel
@@ -34,7 +34,7 @@ def CreateDocument():
 
     files = request.files.getlist('document')
     if not files:
-        return ResultDeal(msg=u'请选择上传文件', code=-1)
+        return ResultDeal(msg=str('请选择上传文件'), code=-1)
 
     result = DocumentModel().CreateDocumentRequest(files, params)
     return ResultDeal(data=result)
