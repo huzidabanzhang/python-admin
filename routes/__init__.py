@@ -4,7 +4,7 @@
 @Description: API蓝图初始化注册
 @Author: Zpp
 @Date: 2019-09-04 10:23:46
-@LastEditTime: 2020-04-30 13:52:54
+@LastEditTime: 2020-05-13 14:58:23
 @LastEditors: Zpp
 '''
 from .v1.admin import route_admin
@@ -16,7 +16,7 @@ from .v1.folder import route_folder
 from .v1.log import route_log
 from .v1.base import route_base
 
-from flask import current_app, session
+from flask import current_app, session, make_response, request
 from libs.code import ResultDeal, GetTimestamp
 from models import db
 from models.system import InitSql
@@ -48,6 +48,21 @@ def init_app(app):
     def handel_teardown_request(response):
         if response:
             db.session.close()
+
+    @app.after_request
+    def handel_after_request(resp):
+        """
+        #请求钩子，在所有的请求发生后执行，加入headers
+        :param resp:
+        :return:
+        """
+        resp = make_response(resp)
+        resp.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
+        resp.headers['Access-Control-Allow-Methods'] = 'GET, POST'
+        resp.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type,Authorization,isCheck,Origin'
+        resp.headers['Access-Control-Allow-Credentials'] = 'true'
+
+        return resp
 
 
     @app.errorhandler(401)
