@@ -4,8 +4,8 @@
 @Description: 上传控制器
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
-@LastEditors  : Please set LastEditors
-@LastEditTime : 2020-02-14 15:01:10
+@LastEditors: Zpp
+@LastEditTime: 2020-05-13 15:17:29
 '''
 from flask import request
 from models import db
@@ -99,6 +99,7 @@ class DocumentModel():
                     'res': 1
                 })
             except Exception as e:
+                print e
                 s.rollback()
                 data.append({
                     'uid': uids[i],

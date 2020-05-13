@@ -4,7 +4,7 @@
 @Description: API蓝图初始化注册
 @Author: Zpp
 @Date: 2019-09-04 10:23:46
-@LastEditTime: 2020-05-13 14:58:23
+@LastEditTime: 2020-05-13 15:13:48
 @LastEditors: Zpp
 '''
 from .v1.admin import route_admin
@@ -57,10 +57,13 @@ def init_app(app):
         :return:
         """
         resp = make_response(resp)
-        resp.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
-        resp.headers['Access-Control-Allow-Methods'] = 'GET, POST'
-        resp.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type,Authorization,isCheck,Origin'
-        resp.headers['Access-Control-Allow-Credentials'] = 'true'
+        allow_address = ['http://localhost:5001', 'https://test.ig132n.cn']
+        origin = request.headers['Origin'] if request.headers.has_key('Origin') else None
+        if origin in allow_address:
+            resp.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
+            resp.headers['Access-Control-Allow-Methods'] = 'GET, POST'
+            resp.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type,Authorization,isCheck,Origin'
+            resp.headers['Access-Control-Allow-Credentials'] = 'true'
 
         return resp
 
