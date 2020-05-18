@@ -4,13 +4,13 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 10:23:44
-@LastEditTime: 2020-05-06 10:23:22
+@LastEditTime: 2020-05-18 15:17:33
 @LastEditors: Zpp
 '''
 from flask_session import Session
 from flask_compress import Compress
 from flask_cache import Cache
-from conf.setting import token_info, session_info, cache_info
+from conf.setting import token_info, session_info, cache_info, _config
 from libs.utils import isWindows
 
 cache = Cache()

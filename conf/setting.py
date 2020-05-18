@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-05-06 10:57:40
+@LastEditTime: 2020-05-18 10:40:01
 @LastEditors: Zpp
 '''
 import hashlib
@@ -528,3 +528,5 @@ class Config():
         h = hashlib.md5()
         h.update(m.encode('utf-8'))
         return h.hexdigest()
+
+_config = Config()

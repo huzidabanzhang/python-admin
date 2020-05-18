@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-@LastEditTime: 2020-05-09 16:52:36
+@LastEditTime: 2020-05-18 10:41:41
 @LastEditors: Zpp
 '''
 from models import db
@@ -12,7 +12,7 @@ from models.system import Admin, Role, Menu, Interface, InitSql, Folder
 from models.log import Log
 from .interface import InterfaceModel
 from .menu import MenuModel
-from conf.setting import Config, init_menu, sql_dir, GeoLite2_dir, default
+from conf.setting import _config, init_menu, sql_dir, GeoLite2_dir, default
 from sqlalchemy import func, desc
 import geoip2.database
 import uuid
@@ -54,7 +54,7 @@ class BaseModel():
                 admin = Admin(
                     admin_id=uuid.uuid4(),
                     username=self.user_name,
-                    password=Config().get_md5(password),
+                    password=_config.get_md5(password),
                     avatarUrl='',
                     role_id=role_id
                 )
@@ -158,7 +158,6 @@ class BaseModel():
 
     def ExportSql(self, type=1):
         try:
-            config = Config()
             if not os.path.exists(sql_dir):
                 os.mkdir(sql_dir)
 
@@ -172,11 +171,11 @@ class BaseModel():
                 sqlfromat = "%s -h%s -u%s -p%s -P%s -t %s >%s"  # 不包含表结构
 
             sql = (sqlfromat % ('mysqldump ',
-                                config.host,
-                                config.admin,
-                                config.password,
-                                config.port,
-                                config.db,
+                                _config.host,
+                                _config.admin,
+                                _config.password,
+                                _config.port,
+                                _config.db,
                                 filename))
             os.system(sql)
             return {
@@ -191,7 +190,7 @@ class BaseModel():
         s = db.session()
         try:
             filename = 'TABLE%s.sql' % int(time.time() * 1000)
-            config = Config()
+            config = _config
 
             if not os.path.exists(sql_dir):
                 os.mkdir(sql_dir)
@@ -201,11 +200,11 @@ class BaseModel():
 
             sqlfromat = "%s -h%s -u%s -p%s -P%s %s <%s"
             sql = (sqlfromat % ('mysql ',
-                                config.host,
-                                config.admin,
-                                config.password,
-                                config.port,
-                                config.db,
+                                _config.host,
+                                _config.admin,
+                                _config.password,
+                                _config.port,
+                                _config.db,
                                 file_path))
 
             db.drop_all()

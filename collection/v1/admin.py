@@ -4,13 +4,13 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2020-05-07 09:38:32
+@LastEditTime: 2020-05-18 10:40:42
 @LastEditors: Zpp
 '''
 from flask import request
 from models import db
 from models.system import Admin, Role, Menu, LoginLock, Interface
-from conf.setting import Config, base_info, default
+from conf.setting import _config, base_info, default
 import uuid
 import datetime
 import copy
@@ -58,7 +58,7 @@ class AdminModel():
             item = Admin(
                 admin_id=uuid.uuid4(),
                 username=params['username'],
-                password=Config().get_md5(params['password']),
+                password=_config.get_md5(params['password']),
                 sex=int(params['sex']),
                 email=params['email'],
                 nickname=params['nickname'],
@@ -90,7 +90,7 @@ class AdminModel():
                 if datetime.datetime.now() < is_lock.lock_time:
                     return str('账号锁定中, 请在%s分钟后重试' % (is_lock.lock_time - datetime.datetime.now()).minute)
 
-            if admin.password != Config().get_md5(password):
+            if admin.password != _config.get_md5(password):
                 number = 1
                 if is_lock:
                     number = is_lock.number + 1
@@ -179,7 +179,7 @@ class AdminModel():
             admin.email = params['email']
             admin.is_disabled = params['is_disabled']
             if params['password'] != admin.password:
-                admin.password = Config().get_md5(params['password'])
+                admin.password = _config.get_md5(params['password'])
 
             user = copy.deepcopy(admin.to_json())
             del user['id']
