@@ -4,11 +4,13 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-05 16:07:19
-@LastEditTime: 2020-03-31 09:47:09
+@LastEditTime: 2020-05-19 14:58:39
 @LastEditors: Zpp
 '''
 from flask import Flask
+from flask_socketio import SocketIO
 from conf.setting import server_info
+import sockets
 import models
 import routes
 import services
@@ -28,11 +30,13 @@ logs.init_app()
 # 初始化
 logging.info(u'-----初始化项目-----')
 app = create_app()
+socketio = SocketIO(app)
+sockets.init_app(socketio)
 logging.info('--------------------')
 
 try:
     logging.info(u'------启动成功------')
-    app.run(port=server_info['port'], host=server_info['host'])
+    socketio.run(app, host=server_info['host'], port=server_info['port'])
 except Exception as e:
     print e
     logging.error(u'------启动失败------')
