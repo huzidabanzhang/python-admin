@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-05-19 14:43:38
 @LastEditors: Zpp
-@LastEditTime: 2020-05-19 17:29:45
+@LastEditTime: 2020-05-20 09:45:36
 '''
 from flask_socketio import emit, Namespace
 
@@ -17,8 +17,9 @@ class MyCustomNamespace(Namespace):
     def on_disconnect(self):
         print('Client disconnected')
 
-    def on_my_event(self, data):
-        emit('my_response', data)
+    def on_my_response(self, data):
+        print data
+        # emit('my_response', data)
 
 
 def init_app(socketio):
