@@ -5,21 +5,38 @@
 @Author: Zpp
 @Date: 2020-05-19 14:43:38
 @LastEditors: Zpp
-@LastEditTime: 2020-05-20 09:45:36
+@LastEditTime: 2020-05-21 16:12:45
 '''
+from flask import request
 from flask_socketio import emit, Namespace
+
+client = []
 
 
 class MyCustomNamespace(Namespace):
+    def on_error(self, e):
+        print e
+
+    def on_error_default(self, e):
+        print e
+
     def on_connect(self):
-        emit('my_response', {'data': 'Connected'})
+        client.append(request.sid)
+        print client
+        emit('my_response', '连接成功')
 
     def on_disconnect(self):
-        print('Client disconnected')
+        sid = request.sid
+        if sid in client:
+            client.remove(sid)
+        print client
+
+    def on_heart(self, data):
+        print data
+        emit('heart', 'server')
 
     def on_my_response(self, data):
         print data
-        # emit('my_response', data)
 
 
 def init_app(socketio):
