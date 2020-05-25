@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-@LastEditTime: 2020-05-18 10:41:41
+@LastEditTime: 2020-05-25 10:27:10
 @LastEditors: Zpp
 '''
 from models import db
@@ -21,6 +21,7 @@ import random
 import copy
 import os
 import time
+import calendar
 
 
 class BaseModel():
@@ -215,53 +216,50 @@ class BaseModel():
             print e
             return str(e.message)
 
-    def GetLoginInfo(self, username):
+    def GetLoginInfo(self, admin_id, query_time):
         '''
-        获取用户登录情况
+        获取用户登录情况(根据用户名分组)
         '''
         s = db.session()
         try:
+            admin = s.query(Admin).filter(Admin.admin_id == admin_id).first()
+            role = admin.role
+
+            is_admin = False
+            if role and role.mark == default['role_mark']:
+                is_admin = True
+
             params = {
-                'username': username,
-                'type': 1
+                'type': 1,
+                'status': 0
             }
+            if not is_admin:
+                params['username'] = admin.username
 
-            user_time = s.query(
-                func.count(Log.username),
-                func.date_format(Log.create_time, '%Y-%m-%d').label('date')
-            ).filter_by(**params).group_by('date').all()
+            query_time = datetime.datetime.strptime(query_time, '%Y-%m')
+            days = calendar.monthrange(query_time.year, query_time.month)[1]
 
-            last_time = s.query(
-                func.date_format(Log.create_time, '%Y-%m-%d %H:%m:%S')
-            ).filter_by(**params).order_by(desc('id')).first()
-
-            role_info = s.query(
-                Role.name,
-                Role.mark,
-                Admin.avatarUrl
+            res = s.query(
+                Log.username,
+                func.date_format(Log.create_time, '%Y-%m-%d').label('date'),
+                func.count('date')
             ).filter(
-                Admin.username == username,
-                Admin.role_id == Role.role_id
-            ).first()
+                Log.create_time.between(
+                    datetime.datetime(query_time.year, query_time.month, 1),
+                    datetime.datetime(query_time.year, query_time.month, days)
+                )
+            ).filter_by(**params).group_by('date', 'username').all()
 
-            data = []
-            for i in user_time:
-                data.append({
-                    u'日期': i[1],
-                    username: i[0]
+            data = {}
+            for i in res:
+                if not data.has_key(i[1]):
+                    data[i[1]] = []
+                data[i[1]].append({
+                    'name': i[0],
+                    'count': i[2]
                 })
 
-            return {
-                'rows': data,
-                'columns': [u'日期', username],
-                'info': {
-                    'time': last_time[0],
-                    'role_name': role_info[0],
-                    'mark': role_info[1],
-                    'avatarUrl': role_info[2],
-                    'isAdmin': role_info[1] == default['role_mark']
-                }
-            }
+            return data
         except Exception as e:
             print e
             return str(e.message)
@@ -276,7 +274,8 @@ class BaseModel():
                 Log.username,
                 func.count(Log.username)
             ).filter(
-                Log.type == 1
+                Log.type == 1,
+                Log.status == 0
             ).group_by('username').all()
 
             user_list = [u'用户', u'登录次数']
@@ -302,13 +301,12 @@ class BaseModel():
         '''
         s = db.session()
         try:
-            params = {
-                'type': 1
-            }
-
             ip_list = s.query(
                 Log.ip
-            ).filter_by(**params).group_by('ip').all()
+            ).filter(
+                Log.type == 1,
+                Log.status == 0
+            ).group_by('ip').all()
 
             reader = geoip2.database.Reader(GeoLite2_dir)
 

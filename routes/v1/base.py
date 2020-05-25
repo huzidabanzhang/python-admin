@@ -4,7 +4,7 @@
 @Description: 数据库API
 @Author: Zpp
 @Date: 2020-02-21 13:02:28
-@LastEditTime: 2020-04-26 14:05:24
+@LastEditTime: 2020-05-25 10:29:27
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session, abort
@@ -77,7 +77,10 @@ def ImportSql():
 @auth.login_required
 @validate_current_access
 def GetLoginInfo():
-    result = BaseModel().GetLoginInfo(session.get('username'))
+    result = BaseModel().GetLoginInfo(
+        request.form.get('admin_id'),
+        request.form.get('time')
+    )
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)

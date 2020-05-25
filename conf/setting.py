@@ -14,8 +14,8 @@ from libs.utils import isWindows
 basedir = os.path.abspath(os.path.dirname(__file__) + '/..')
 
 base_info = {
-    'lock_times': 5, # 开始锁定的次数
-    'lock_every_time': 5 # 超过锁定次数每次加的时间
+    'lock_times': 5,  # 开始锁定的次数
+    'lock_every_time': 5  # 超过锁定次数每次加的时间
 }
 
 token_info = {
@@ -505,6 +505,7 @@ default = {
     'role_mark': u'SYS_ADMIN'
 }
 
+
 class Config():
     def __init__(self):
         # mysql 配置信息
@@ -528,5 +529,6 @@ class Config():
         h = hashlib.md5()
         h.update(m.encode('utf-8'))
         return h.hexdigest()
+
 
 _config = Config()
