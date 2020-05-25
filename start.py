@@ -4,12 +4,13 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-05 16:07:19
-@LastEditTime: 2020-05-19 14:58:39
+@LastEditTime: 2020-05-25 14:16:38
 @LastEditors: Zpp
 '''
 from flask import Flask
 from flask_socketio import SocketIO
 from conf.setting import server_info
+from libs.utils import isWindows
 import sockets
 import models
 import routes
@@ -36,7 +37,10 @@ logging.info('--------------------')
 
 try:
     logging.info(u'------启动成功------')
-    socketio.run(app, host=server_info['host'], port=server_info['port'])
+    if isWindows():
+        socketio.run(app, host=server_info['host'], port=server_info['port'])
+    else:
+        socketio.run(app)
 except Exception as e:
     print e
     logging.error(u'------启动失败------')
