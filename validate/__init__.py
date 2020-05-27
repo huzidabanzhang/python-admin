@@ -5,17 +5,19 @@
 @Author: Zpp
 @Date: 2020-04-20 13:43:42
 @LastEditors: Zpp
-@LastEditTime: 2020-04-22 15:00:15
+@LastEditTime: 2020-05-27 17:08:54
 '''
 from flask import request
 from libs.code import ResultDeal
 import re
 import datetime
 
+
 class validate_form():
     '''
     表单验证器
     '''
+
     def __init__(self, params):
         self.params = params
         self.phone = re.compile('^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$')
@@ -75,6 +77,8 @@ class validate_form():
         if i['type'] == 'boolean':
             if f != 'true' and f != 'false':
                 error = True
+            else:
+                self.boolean_change(i['value'], f)
 
         if i['type'] == 'list':
             if type(f) != list:
@@ -83,7 +87,7 @@ class validate_form():
         if i['type'] == 'ic':
             if not self.id_card.match(f):
                 error = True
-        
+
         if i['type'] == 'phone':
             if not self.phone.match(f):
                 error = True
@@ -95,12 +99,12 @@ class validate_form():
         if i['type'] == 'time':
             if type(f) != datetime.datetime:
                 error = True
-                
+
         if error == True:
             return ResultDeal(code=-1, msg=u'%s格式错误' % i['name'])
         elif error == None:
             if i.has_key('default'):
-                self.add_default(f, i['default'])
+                self.add_default(i['value'], i['default'])
         else:
             return ResultDeal(code=-1, msg=error)
 
@@ -110,6 +114,14 @@ class validate_form():
         '''
         r = request.form.copy()
         r[f] = default
+        request.form = r
+
+    def boolean_change(self, f, value):
+        '''
+        前端布尔值改为py的布尔值
+        '''
+        r = request.form.copy()
+        r[f] = True if value == 'true' else False
         request.form = r
 
     def get_data(self, f, t):
@@ -137,7 +149,7 @@ class validate_form():
                     if self.params.has_key(args):
                         for i in self.params[args]:
                             data = self.get_data(i['value'], i['type'])
-                            
+
                             if not i.has_key('required') or not i['required']:
                                 if data:
                                     self.validate_params(data, i, f)
@@ -157,5 +169,5 @@ class validate_form():
                 except Exception as e:
                     return ResultDeal(code=-1, msg=e.message)
             return one
-        
+
         return validate
