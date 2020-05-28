@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2020-05-11 14:26:45
+@LastEditTime: 2020-05-28 10:22:23
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -15,9 +15,12 @@ from libs.code import ResultDeal
 from libs.captcha import Captcha
 from io import BytesIO
 from libs.scope import checkDb
+from validate import validate_form
+from validate.v1.admin import params
 import json
 
 route_admin = Blueprint('Admin', __name__, url_prefix='/v1/Admin')
+validate = validate_form(params)
 
 
 @route_admin.route('/checkDb', methods=['GET'])
@@ -42,13 +45,12 @@ def GetCaptcha():
     return resp
 
 
-@route_admin.route('/Login', methods=['POST'])
+@route_admin.route('/Login', methods=['POST'], endpoint='Login')
+@validate.form('Login')
 def Login():
     # 验证码校验
     captcha = request.form.get('code')
     sesson_captcha = session.get('Captcha')
-    if not captcha:
-        return ResultDeal(msg=str('请输入验证码'), code=-1)
 
     if not sesson_captcha:
         return ResultDeal(msg=str('请刷新验证码'), code=-1)
@@ -135,13 +137,11 @@ def LockAdmin():
 @auth.login_required
 @validate_current_access
 def DelAdmin():
-    result = AdminModel().DelAdminRequest(
-        admins=json.loads(request.form.get('admins'))
-    )
-    
+    result = AdminModel().DelAdminRequest(request.form.getlist('admin_id[]'))
+
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
-        
+
     return ResultDeal(data=result)
 
 
@@ -181,7 +181,7 @@ def ModifyAdmin():
             'token': token,
             'is_self': True
         })
-    
+
     return ResultDeal(data={
         'user': result,
         'token': None,

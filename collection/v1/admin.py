@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2020-05-18 10:40:42
+@LastEditTime: 2020-05-28 09:42:20
 @LastEditors: Zpp
 '''
 from flask import request
@@ -142,7 +142,7 @@ class AdminModel():
             if is_lock:
                 s.delete(is_lock)
                 s.commit()
-                    
+
             return {
                 'menus': menu,
                 'interface': interface,
@@ -163,7 +163,7 @@ class AdminModel():
                 return str('管理员不存在')
             if admin.is_disabled:
                 return str('管理员被禁用')
-            
+
             role = s.query(Role).filter(Role.role_id == params['role_id']).first()
 
             if not role:
@@ -215,7 +215,7 @@ class AdminModel():
         s = db.session()
         try:
             for admin in admins:
-                result = s.query(Admin).filter(Admin.admin_id == admin['admin_id']).first()
+                result = s.query(Admin).filter(Admin.admin_id == admin).first()
                 s.delete(result)
             s.commit()
             return True

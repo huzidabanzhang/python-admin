@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
 @LastEditors: Zpp
-@LastEditTime: 2020-05-13 15:17:29
+@LastEditTime: 2020-05-27 16:21:04
 '''
 from flask import request
 from models import db
@@ -105,7 +105,7 @@ class DocumentModel():
                     'uid': uids[i],
                     'res': 2
                 })
-        
+
         return data
 
     def GetDocumentRequest(self, document_id):
@@ -146,11 +146,9 @@ class DocumentModel():
             res = s.query(Document).filter(Document.document_id.in_(document_id))
 
             for i in res:
-                if(os.path.exists(document_dir + i.path)):
-                    os.remove(document_dir + i.path)
-
-            for i in res:
                 s.delete(i)
+                if os.path.exists(document_dir + i.path):
+                    os.remove(document_dir + i.path)
             s.commit()
             return True
         except Exception as e:
