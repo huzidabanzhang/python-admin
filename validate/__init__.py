@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-20 13:43:42
 @LastEditors: Zpp
-@LastEditTime: 2020-05-28 10:27:06
+@LastEditTime: 2020-05-28 10:55:02
 '''
 from flask import request
 from libs.code import ResultDeal
@@ -31,12 +31,12 @@ class validate_form():
         error = None
 
         if i.has_key('max'):
-            if value > i:
-                error = u'%s最多不能超过%s个字符' % (i['name'], i['max'])
+            if (value if type(value) != list else len(value)) > i:
+                error = u'%s最多不能超过%s个' % (i['name'], i['max'])
 
         if i.has_key('min'):
-            if value < i:
-                error = u'%s不能少于%s个字符' % (i['name'], i['min'])
+            if (value if type(value) != list else len(value)) < i:
+                error = u'%s不能少于%s个' % (i['name'], i['min'])
 
         return error
 
@@ -46,7 +46,7 @@ class validate_form():
         '''
         error = None
 
-        if i.has_key('between') and type(i['between']) == list and len(i['between']) == 2:
+        if type(value) != list and i.has_key('between') and type(i['between']) == list and len(i['between']) == 2:
             if not value in i['between']:
                 error = u'%s只能在%s和%s之间' % (i['name'], i['between'][0], i['between'][1])
 
@@ -62,17 +62,9 @@ class validate_form():
             if type(value) != int:
                 error = True
 
-            error = self.validate_min_max(value, i)
-            if not error:
-                error = self.validate_between(value, i)
-
         if i['type'] == 'str':
             if type(value) != str:
                 error = True
-
-            error = self.validate_min_max(value, i)
-            if not error:
-                error = self.validate_between(value, i)
 
         if i['type'] == 'boolean':
             if value != 'true' and value != 'false':
@@ -99,6 +91,11 @@ class validate_form():
         if i['type'] == 'time':
             if type(value) != datetime.datetime:
                 error = True
+
+        if i['type'] != 'boolean':
+            error = self.validate_min_max(value, i)
+            if not error:
+                error = self.validate_between(value, i)
 
         if error == True:
             return ResultDeal(code=-1, msg=u'%s格式错误' % i['name'])

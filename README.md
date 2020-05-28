@@ -29,14 +29,24 @@ validate = validate_form(params)
 ```python
 # 验证器路径/validate/v1中
 params = {
+    # 引用验证字段场景
+    'Test': ['admin_id[]', 'is_disabled'],
+    # 验证场景中需要修改字段里面的内容或者增加字段内容
+    # 用dict里面加入field这个很重要要判断是哪个字段dict会覆盖原来的判断条件
+    'Test2': [{
+        'field': 'code',
+        'required': False
+    }],
     # 验证字段
     'fields': {
         'code': {
             'name': u'验证码',
-            'type': 'str',
-            'min': 4,
-            'max': 4,
-            'required': True
+            'type': 'str', # 字段类型包括str, list, int, boolean, ic, phone, email, time
+            'min': 4, # 字符长度最小值 其中list判断长度
+            'max': 4, # 字符长度最小值 其中list判断长度
+            'between': [888, 999], # 字符必须在list中
+            'required': True, # 是否必填
+            'default': 111  # 默认值
         },
         'email': {
             'name': u'邮件',
@@ -57,16 +67,7 @@ params = {
             'type': 'list',
             'required': True
         }
-    },
-    # 引用验证字段场景
-    'Test': ['admin_id[]', 'is_disabled'],
-    # test
-    'Test2': [{
-        'field': 'code',
-        'required': False
-    }]
-    # 验证场景中需要修改字段里面的内容或者增加字段内容
-    # 用dict里面加入field这个很重要要判断是哪个字段dict会覆盖原来的判断条件
+    }
 }
 ```
 
