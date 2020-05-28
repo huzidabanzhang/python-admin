@@ -17,16 +17,56 @@ https://test.ig132n.cn/
 [验证器](https://github.com/huzidabanzhang/python-admin/blob/master/trunk/validate/__init__.py "验证器")
 
 ```python
-{
-    'name': u'手机号',  # 字段名称
-    'value': 'phone',   # 字段
-    'type': 'phone',    # 有int str list file files phone email time ic boolean
-    'required': True,   # 是否必填
-    // 'max': 99,     # 最大值 只有int str 有
-    // 'min': 1,     # 最小值 只有int str 有
-    // 'between': [1, 2],   # 值在list之间 只有int str 有
-    // 'default': 133333333,   # 默认值
-    // 'msg': u'手机号必填',     # 有msg将代替默认错误提示
+# 路由中引用验证器
+from validate import validate_form
+from validate.v1.admin import params
+validate = validate_form(params)
+
+@route_admin.route('/Login', methods=['POST'], endpoint='Login') # endpoint这个一定要加 不然报错
+@validate.form('Login') # 需要验证的场景
+```
+
+```python
+# 验证器路径/validate/v1中
+params = {
+    # 验证字段
+    'fields': {
+        'code': {
+            'name': u'验证码',
+            'type': 'str',
+            'min': 4,
+            'max': 4,
+            'required': True
+        },
+        'email': {
+            'name': u'邮件',
+            'type': 'email'
+        },
+        'sex': {
+            'name': u'性别',
+            'type': 'int',
+            'default': 1
+        },
+        'is_disabled': {
+            'name': u'可见性',
+            'type': 'boolean',
+            'required': True
+        },
+        'admin_id[]': {
+            'name': u'管理员编号',
+            'type': 'list',
+            'required': True
+        }
+    },
+    # 引用验证字段场景
+    'Test': ['admin_id[]', 'is_disabled'],
+    # test
+    'Test2': [{
+        'field': 'code',
+        'required': False
+    }]
+    # 验证场景中需要修改字段里面的内容或者增加字段内容
+    # 用dict里面加入field这个很重要要判断是哪个字段dict会覆盖原来的判断条件
 }
 ```
 
