@@ -4,7 +4,7 @@
 @Description: 数据库API
 @Author: Zpp
 @Date: 2020-02-21 13:02:28
-@LastEditTime: 2020-05-25 10:29:27
+@LastEditTime: 2020-05-28 13:53:18
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session, abort
@@ -12,10 +12,13 @@ from collection.v1.base import BaseModel
 from ..token_auth import auth, generate_auth_token, validate_current_access, get_auth_token
 from libs.code import ResultDeal
 from libs.utils import readFile
+from validate import validate_form
+from validate.v1.base import params
 import json
 import os
 
 route_base = Blueprint('Base', __name__, url_prefix='/v1/Base')
+validate = validate_form(params)
 
 
 @route_base.route('/CreateDrop', methods=['GET'])
@@ -38,9 +41,10 @@ def AgainCreateDrop():
     return ResultDeal(data=result)
 
 
-@route_base.route('/ExportSql', methods=['POST'])
+@route_base.route('/ExportSql', methods=['POST'], endpoint='ExportSql')
 @auth.login_required
 @validate_current_access
+@validate.form('Export')
 def ExportSql():
     result = BaseModel().ExportSql(int(request.form.get('type')))
 
@@ -57,15 +61,12 @@ def ExportSql():
         abort(404)
 
 
-@route_base.route('/ImportSql', methods=['POST'])
+@route_base.route('/ImportSql', methods=['POST'], endpoint='ImportSql')
 @auth.login_required
 @validate_current_access
+@validate.form('Import')
 def ImportSql():
-    file = request.files.get('document')
-    if not file:
-        return ResultDeal(msg=u'请选择上传文件', code=-1)
-
-    result = BaseModel().ImportSql(file)
+    result = BaseModel().ImportSql(request.files.get('document'))
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -73,9 +74,10 @@ def ImportSql():
     return ResultDeal(data=result)
 
 
-@route_base.route('/GetLoginInfo', methods=['POST'])
+@route_base.route('/GetLoginInfo', methods=['POST'], endpoint='GetLoginInfo')
 @auth.login_required
 @validate_current_access
+@validate.form('Login')
 def GetLoginInfo():
     result = BaseModel().GetLoginInfo(
         request.form.get('admin_id'),

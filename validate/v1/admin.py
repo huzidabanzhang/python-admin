@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-05-27 16:56:52
 @LastEditors: Zpp
-@LastEditTime: 2020-05-28 10:37:40
+@LastEditTime: 2020-05-28 11:10:19
 '''
 
 params = {
@@ -32,11 +32,13 @@ params = {
         },
         'nickname': {
             'name': u'昵称',
-            'type': 'str'
+            'type': 'str',
+            'default': ''
         },
         'email': {
             'name': u'邮件',
-            'type': 'email'
+            'type': 'email',
+            'default': ''
         },
         'sex': {
             'name': u'性别',
@@ -56,6 +58,7 @@ params = {
         'avatarUrl': {
             'name': u'头像',
             'type': 'str',
+            'default': ''
         },
         'admin_id': {
             'name': u'管理员编号',

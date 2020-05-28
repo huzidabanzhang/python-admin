@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
 @LastEditors: Zpp
-@LastEditTime: 2020-05-27 16:21:04
+@LastEditTime: 2020-05-28 15:08:21
 '''
 from flask import request
 from models import db
@@ -24,7 +24,7 @@ class DocumentModel():
         '''
         s = db.session()
         try:
-            deleted = Document.deleted == (True if params['deleted'] == 'true' else False)
+            deleted = Document.deleted == params['deleted']
             folder = Document.folder_id == params['folder_id']
             if params['folder_id'] == '0':
                 folder = or_(
@@ -60,7 +60,7 @@ class DocumentModel():
         '''
         s = db.session()
         data = []
-        uids = params['uid']
+        uids = params['uid[]'].split(',')
         for i, file in enumerate(files):
             # 上传
             file_name = file.filename

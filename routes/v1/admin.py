@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2020-05-28 10:22:23
+@LastEditTime: 2020-05-28 15:03:21
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -95,22 +95,12 @@ def Logout():
     return ResultDeal()
 
 
-@route_admin.route('/CreateAdmin', methods=['POST'])
+@route_admin.route('/CreateAdmin', methods=['POST'], endpoint='CreateAdmin')
 @auth.login_required
 @validate_current_access
+@validate.form('Create')
 def CreateAdmin():
-    params = {
-        'username': request.form.get('username'),
-        'password': request.form.get('password'),
-        'nickname': request.form.get('nickname', ''),
-        'email': request.form.get('email', ''),
-        'sex': request.form.get('sex', 1),
-        'role_id': request.form.get('role_id'),
-        'avatarUrl': request.form.get('avatarUrl', ''),
-        'is_disabled': True if request.form.get('is_disabled') == 'true' else False
-    }
-
-    result = AdminModel().CreateAdminRequest(params)
+    result = AdminModel().CreateAdminRequest(request.form)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -118,13 +108,14 @@ def CreateAdmin():
     return ResultDeal(data=result)
 
 
-@route_admin.route('/LockAdmin', methods=['POST'])
+@route_admin.route('/LockAdmin', methods=['POST'], endpoint='LockAdmin')
 @auth.login_required
 @validate_current_access
+@validate.form('Lock')
 def LockAdmin():
     result = AdminModel().LockAdminRequest(
         admin_id=request.form.getlist('admin_id[]'),
-        is_disabled=True if request.form.get('is_disabled') == 'true' else False
+        is_disabled=request.form.get('is_disabled')
     )
 
     if type(result).__name__ == 'str':
@@ -133,9 +124,10 @@ def LockAdmin():
     return ResultDeal(data=result)
 
 
-@route_admin.route('/DelAdmin', methods=['POST'])
+@route_admin.route('/DelAdmin', methods=['POST'], endpoint='DelAdmin')
 @auth.login_required
 @validate_current_access
+@validate.form('Del')
 def DelAdmin():
     result = AdminModel().DelAdminRequest(request.form.getlist('admin_id[]'))
 
@@ -145,21 +137,15 @@ def DelAdmin():
     return ResultDeal(data=result)
 
 
-@route_admin.route('/ModifyAdmin', methods=['POST'])
+@route_admin.route('/ModifyAdmin', methods=['POST'], endpoint='ModifyAdmin')
 @auth.login_required
 @validate_current_access
+@validate.form('Modify')
 def ModifyAdmin():
-    params = {
-        'password': request.form.get('password'),
-        'nickname': request.form.get('nickname'),
-        'email': request.form.get('email', ''),
-        'sex': int(request.form.get('sex')),
-        'avatarUrl': request.form.get('avatarUrl', ''),
-        'role_id': request.form.get('role_id'),
-        'is_disabled': True if request.form.get('is_disabled') == 'true' else False
-    }
-
-    result = AdminModel().ModifyAdminRequest(admin_id=request.form.get('admin_id'), params=params)
+    result = AdminModel().ModifyAdminRequest(
+        admin_id=request.form.get('admin_id'),
+        params=request.form
+    )
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)

@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-20 13:43:42
 @LastEditors: Zpp
-@LastEditTime: 2020-05-28 10:55:02
+@LastEditTime: 2020-05-28 14:50:20
 '''
 from flask import request
 from libs.code import ResultDeal
@@ -70,7 +70,7 @@ class validate_form():
             if value != 'true' and value != 'false':
                 error = True
             else:
-                self.boolean_change(value, i['value'])
+                self.boolean_change(value, i['field'])
 
         if i['type'] == 'list':
             if type(value) != list:
@@ -100,8 +100,8 @@ class validate_form():
         if error == True:
             return ResultDeal(code=-1, msg=u'%s格式错误' % i['name'])
         elif error == None:
-            if i.has_key('default'):
-                self.add_default(i['default'], i['value'])
+            if i.has_key('default') and not value:
+                self.add_default(i['default'], i['field'])
         else:
             return ResultDeal(code=-1, msg=error)
 
