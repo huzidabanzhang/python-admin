@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
 @LastEditors: Zpp
-@LastEditTime: 2020-05-09 15:07:15
+@LastEditTime: 2020-05-29 16:37:50
 '''
 from flask import request
 from models import db
@@ -84,7 +84,7 @@ class InterfaceModel():
             return str(is_exists['error'].encode('utf8'))
 
         try:
-            menus = s.query(Menu).filter(Menu.menu_id.in_(params['menus'])).all()
+            menus = s.query(Menu).filter(Menu.menu_id.in_(params.getlist('menus[]'))).all()
 
             item = Interface(
                 interface_id=uuid.uuid4(),
@@ -128,7 +128,7 @@ class InterfaceModel():
             if is_exists != True:
                 return str(is_exists['error'].encode('utf8'))
 
-            menus = s.query(Menu).filter(Menu.menu_id.in_(params['menus'])).all()
+            menus = s.query(Menu).filter(Menu.menu_id.in_(params.getlist('menus[]'))).all()
             interface.menus = menus
             s.query(Interface).filter(Interface.interface_id == interface_id).update(data)
             s.commit()

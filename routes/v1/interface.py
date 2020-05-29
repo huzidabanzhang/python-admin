@@ -5,33 +5,26 @@
 @Author: Zpp
 @Date: 2019-10-14 13:50:25
 @LastEditors: Zpp
-@LastEditTime: 2020-05-09 14:36:57
+@LastEditTime: 2020-05-29 16:39:01
 '''
 from flask import Blueprint, request
 from collection.v1.interface import InterfaceModel
 from ..token_auth import auth, validate_current_access
 from libs.code import ResultDeal
+from validate import validate_form
+from validate.v1.interface import params
 import json
 
 route_interface = Blueprint('Interface', __name__, url_prefix='/v1/Interface')
+validate = validate_form(params)
 
 
-@route_interface.route('/CreateInterface', methods=['POST'])
+@route_interface.route('/CreateInterface', methods=['POST'], endpoint='CreateInterface')
 @auth.login_required
 @validate_current_access
+@validate.form('Create')
 def CreateInterface():
-    params = {
-        'name': request.form.get('name'),
-        'path': request.form.get('path'),
-        'method': request.form.get('method'),
-        'description': request.form.get('description'),
-        'menus': request.form.getlist('menus[]'),
-        'mark': request.form.get('mark'),
-        'forbidden': True if request.form.get('forbidden') == 'true' else False,
-        'is_disabled': True if request.form.get('is_disabled') == 'true' else False
-    }
-
-    result = InterfaceModel().CreateInterfaceRequest(params)
+    result = InterfaceModel().CreateInterfaceRequest(request.form)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -39,48 +32,41 @@ def CreateInterface():
     return ResultDeal(data=result)
 
 
-@route_interface.route('/LockInterface', methods=['POST'])
+@route_interface.route('/LockInterface', methods=['POST'], endpoint='LockInterface')
 @auth.login_required
 @validate_current_access
+@validate.form('Lock')
 def LockInterface():
     result = InterfaceModel().LockInterfaceRequest(
-        interface_id=request.form.getlist('interface_id[]'), 
-        is_disabled=True if request.form.get('is_disabled') == 'true' else False
+        request.form.getlist('interface_id[]'),
+        request.form.get('is_disabled')
     )
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
-        
+
     return ResultDeal(data=result)
 
 
-@route_interface.route('/DelInterface', methods=['POST'])
+@route_interface.route('/DelInterface', methods=['POST'], endpoint='DelInterface')
 @auth.login_required
 @validate_current_access
+@validate.form('Del')
 def DelInterface():
-    result = InterfaceModel().DelInterfaceRequest(interface_id=request.form.getlist('interface_id[]'))
-    
+    result = InterfaceModel().DelInterfaceRequest(request.form.getlist('interface_id[]'))
+
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
-        
+
     return ResultDeal(data=result)
 
 
-@route_interface.route('/ModifyInterface', methods=['POST'])
+@route_interface.route('/ModifyInterface', methods=['POST'], endpoint='ModifyInterface')
 @auth.login_required
 @validate_current_access
+@validate.form('Modify')
 def ModifyInterface():
-    params = {
-        'name': request.form.get('name'),
-        'path': request.form.get('path'),
-        'method': request.form.get('method'),
-        'description': request.form.get('description'),
-        'menus': request.form.getlist('menus[]'),
-        'mark': request.form.get('mark'),
-        'is_disabled': True if request.form.get('is_disabled') == 'true' else False
-    }
-
-    result = InterfaceModel().ModifyInterfaceRequest(interface_id=request.form.get('interface_id'), params=params)
+    result = InterfaceModel().ModifyInterfaceRequest(request.form.get('interface_id'), request.form)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -88,14 +74,13 @@ def ModifyInterface():
     return ResultDeal(data=result)
 
 
-@route_interface.route('/QueryInterfaceByParam', methods=['POST'])
+@route_interface.route('/QueryInterfaceByParam', methods=['POST'], endpoint='QueryInterfaceByParam')
 @auth.login_required
 @validate_current_access
+@validate.form('Query')
 def QueryInterfaceByParam():
     params = {}
-    if request.form.get('is_disabled'):
-        params['is_disabled'] = True if request.form.get('is_disabled') == 'true' else False
-    Ary = ['name', 'method']
+    Ary = ['name', 'method', 'is_disabled']
     for i in Ary:
         if request.form.get(i):
             params[i] = request.form.get(i)
@@ -104,7 +89,7 @@ def QueryInterfaceByParam():
         params=params,
         page=int(request.form.get('page')),
         page_size=int(request.form.get('page_size')),
-        order_by=request.form.get('order_by', None)
+        order_by=request.form.get('order_by')
     )
 
     if type(result).__name__ == 'str':
