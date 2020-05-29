@@ -4,31 +4,27 @@
 @Description: 权限API
 @Author: Zpp
 @Date: 2019-09-12 10:30:39
-@LastEditTime: 2020-05-06 17:29:17
+@LastEditTime: 2020-05-29 14:29:30
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
 from collection.v1.role import RoleModel
 from ..token_auth import auth, validate_current_access
 from libs.code import ResultDeal
+from validate import validate_form
+from validate.v1.role import params
 import json
 
 route_role = Blueprint('Role', __name__, url_prefix='/v1/Role')
+validate = validate_form(params)
 
 
-@route_role.route('/CreateRole', methods=['POST'])
+@route_role.route('/CreateRole', methods=['POST'], endpoint='CreateRole')
 @auth.login_required
 @validate_current_access
+@validate.form('Create')
 def CreateRole():
-    params = {
-        'name': request.form.get('name'),
-        'mark': request.form.get('mark'),
-        'is_disabled': True if request.form.get('is_disabled') == 'true' else False,
-        'role_list': request.form.getlist('role_list[]'),
-        'menu': request.form.getlist('menu[]')
-    }
-
-    result = RoleModel().CreateRoleRequest(params)
+    result = RoleModel().CreateRoleRequest(request.form)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -36,24 +32,26 @@ def CreateRole():
     return ResultDeal(data=result)
 
 
-@route_role.route('/LockRole', methods=['POST'])
+@route_role.route('/LockRole', methods=['POST'], endpoint='LockRole')
 @auth.login_required
 @validate_current_access
+@validate.form('Lock')
 def LockRole():
     result = RoleModel().LockRoleRequest(
         role_id=request.form.getlist('role_id[]'),
-        is_disabled=True if request.form.get('is_disabled') == 'true' else False
+        is_disabled=request.form.get('is_disabled')
     )
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
-        
+
     return ResultDeal(data=result)
 
 
-@route_role.route('/DelRole', methods=['POST'])
+@route_role.route('/DelRole', methods=['POST'], endpoint='DelRole')
 @auth.login_required
 @validate_current_access
+@validate.form('Del')
 def DelRole():
     result = RoleModel().DelRoleRequest(
         role_id=request.form.getlist('role_id[]')
@@ -61,22 +59,16 @@ def DelRole():
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
-        
+
     return ResultDeal(data=result)
 
 
-@route_role.route('/ModifyRole', methods=['POST'])
+@route_role.route('/ModifyRole', methods=['POST'], endpoint='ModifyRole')
 @auth.login_required
 @validate_current_access
+@validate.form('Modify')
 def ModifyRole():
-    params = {
-        'name': request.form.get('name'),
-        'mark': request.form.get('mark'),
-        'is_disabled': True if request.form.get('is_disabled') == 'true' else False,
-        'role_list': request.form.getlist('role_list[]'),
-        'menu': request.form.getlist('menu[]')
-    }
-    result = RoleModel().ModifyRoleRequest(role_id=request.form.get('role_id'), params=params)
+    result = RoleModel().ModifyRoleRequest(request.form.get('role_id'), request.form)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
@@ -84,13 +76,14 @@ def ModifyRole():
     return ResultDeal(data=result)
 
 
-@route_role.route('/QueryRoleByParam', methods=['POST'])
+@route_role.route('/QueryRoleByParam', methods=['POST'], endpoint='QueryRoleByParam')
 @auth.login_required
 @validate_current_access
+@validate.form('Query')
 def QueryRoleByParam():
     params = {}
     if request.form.get('is_disabled'):
-        params['is_disabled'] = True if request.form.get('is_disabled') == 'true' else False
+        params['is_disabled'] = request.form.get('is_disabled')
 
     result = RoleModel().QueryRoleByParamRequest(params=params)
 

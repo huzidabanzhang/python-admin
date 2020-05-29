@@ -5,19 +5,23 @@
 @Author: Zpp
 @Date: 2019-10-17 15:46:30
 @LastEditors: Zpp
-@LastEditTime: 2019-10-22 10:28:11
+@LastEditTime: 2020-05-29 14:06:22
 '''
 from flask import Blueprint, request
 from collection.v1.log import LogModel
 from ..token_auth import auth, validate_current_access
 from libs.code import ResultDeal
+from validate import validate_form
+from validate.v1.log import params
 
 route_log = Blueprint('Log', __name__, url_prefix='/v1/Log')
+validate = validate_form(params)
 
 
-@route_log.route('/QueryLogByParam', methods=['POST'])
+@route_log.route('/QueryLogByParam', methods=['POST'], endpoint='QueryLogByParam')
 @auth.login_required
 @validate_current_access
+@validate.form('Query')
 def QueryLogByParam():
     lists = [
         {'name': 'type', 'key': 'type[]'},

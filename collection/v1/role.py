@@ -4,7 +4,7 @@
 @Description: 权限控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2020-05-06 17:30:16
+@LastEditTime: 2020-05-29 14:37:31
 @LastEditors: Zpp
 '''
 from flask import request
@@ -67,8 +67,8 @@ class RoleModel():
                 role_id=uuid.uuid4(),
                 is_disabled=params['is_disabled'],
                 role_list=json.dumps({
-                    'I': params['role_list'],
-                    'M': params['menu']
+                    'I': params.getlist('role_list[]'),
+                    'M': params.getlist('menu[]')
                 })
             )
             s.add(item)
@@ -113,8 +113,8 @@ class RoleModel():
             role.mark = params['mark']
             role.is_disabled = params['is_disabled']
             role.role_list = json.dumps({
-                'I': params['role_list'],
-                'M': params['menu']
+                'I': params.getlist('role_list[]'),
+                'M': params.getlist('menu[]')
             })
             s.commit()
             return True
