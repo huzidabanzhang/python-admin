@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-20 13:43:42
 @LastEditors: Zpp
-@LastEditTime: 2020-05-28 14:50:20
+@LastEditTime: 2020-05-29 13:47:57
 '''
 from flask import request
 from libs.code import ResultDeal
@@ -180,10 +180,13 @@ class validate_form():
                                             self.add_default(field['default'], field['field'])
                                 else:
                                     if not value:
-                                        if field.has_key('msg'):
-                                            return ResultDeal(code=-1, msg=field['msg'])
+                                        if field.has_key('default'):
+                                            self.add_default(field['default'], field['field'])
                                         else:
-                                            return ResultDeal(code=-1, msg=u'请填写%s' % field['name'])
+                                            if field.has_key('msg'):
+                                                return ResultDeal(code=-1, msg=field['msg'])
+                                            else:
+                                                return ResultDeal(code=-1, msg=u'请填写%s' % field['name'])
                                     else:
                                         self.validate_params(value, field, f)
 
