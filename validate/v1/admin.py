@@ -50,12 +50,12 @@ params = {
             'type': 'str',
             'required': True
         },
-        'is_disabled': {
+        'disable': {
             'name': u'可见性',
             'type': 'boolean',
             'required': True
         },
-        'avatarUrl': {
+        'avatar': {
             'name': u'头像',
             'type': 'str',
             'default': ''
@@ -74,11 +74,11 @@ params = {
     # 登录验证
     'Login': ['code', 'username', 'password'],
     # 创建管理员
-    'Create': ['username', 'password', 'nickname', 'email', 'sex', 'role_id', 'is_disabled', 'avatarUrl'],
+    'Create': ['username', 'password', 'nickname', 'email', 'sex', 'role_id', 'disable', 'avatar'],
     # 编辑管理员
-    'Modify': ['admin_id', 'password', 'nickname', 'email', 'sex', 'role_id', 'is_disabled', 'avatarUrl'],
+    'Modify': ['admin_id', 'password', 'nickname', 'email', 'sex', 'role_id', 'disable', 'avatar'],
     # 禁用管理员
-    'Lock': ['admin_id[]', 'is_disabled'],
+    'Lock': ['admin_id[]', 'disable'],
     # 删除管理员
     'Del': ['admin_id[]']
 }

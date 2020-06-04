@@ -21,7 +21,7 @@ params = {
             'type': 'str',
             'required': True
         },
-        'is_disabled': {
+        'disable': {
             'name': u'可见性',
             'type': 'boolean',
             'required': True
@@ -47,12 +47,12 @@ params = {
             'required': True
         }
     },
-    'Create': ['name', 'mark', 'role_list[]', 'is_disabled', 'menu[]'],
-    'Modify': ['role_id', 'name', 'mark', 'role_list[]', 'is_disabled', 'menu[]'],
-    'Lock': ['role_id[]', 'is_disabled'],
+    'Create': ['name', 'mark', 'role_list[]', 'disable', 'menu[]'],
+    'Modify': ['role_id', 'name', 'mark', 'role_list[]', 'disable', 'menu[]'],
+    'Lock': ['role_id[]', 'disable'],
     'Del': ['role_id[]'],
     'Query': [{
-        'field': 'is_disabled',
+        'field': 'disable',
         'required': False
     }]
 }

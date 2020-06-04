@@ -39,7 +39,7 @@ def CreateRole():
 def LockRole():
     result = RoleModel().LockRoleRequest(
         role_id=request.form.getlist('role_id[]'),
-        is_disabled=request.form.get('is_disabled')
+        disable=request.form.get('disable')
     )
 
     if type(result).__name__ == 'str':
@@ -82,8 +82,8 @@ def ModifyRole():
 @validate.form('Query')
 def QueryRoleByParam():
     params = {}
-    if request.form.get('is_disabled'):
-        params['is_disabled'] = request.form.get('is_disabled')
+    if request.form.get('disable'):
+        params['disable'] = request.form.get('disable')
 
     result = RoleModel().QueryRoleByParamRequest(params=params)
 

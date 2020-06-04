@@ -65,7 +65,7 @@ class RoleModel():
                 name=params['name'],
                 mark=params['mark'],
                 role_id=uuid.uuid4(),
-                is_disabled=params['is_disabled'],
+                disable=params['disable'],
                 role_list=json.dumps({
                     'I': params.getlist('role_list[]'),
                     'M': params.getlist('menu[]')
@@ -111,7 +111,7 @@ class RoleModel():
 
             role.name = params['name']
             role.mark = params['mark']
-            role.is_disabled = params['is_disabled']
+            role.disable = params['disable']
             role.role_list = json.dumps({
                 'I': params.getlist('role_list[]'),
                 'M': params.getlist('menu[]')
@@ -123,13 +123,13 @@ class RoleModel():
             s.rollback()
             return str(e.message)
 
-    def LockRoleRequest(self, role_id, is_disabled):
+    def LockRoleRequest(self, role_id, disable):
         '''
         禁用权限
         '''
         s = db.session()
         try:
-            s.query(Role).filter(Role.role_id.in_(role_id)).update({Role.is_disabled: is_disabled}, synchronize_session=False)
+            s.query(Role).filter(Role.role_id.in_(role_id)).update({Role.disable: disable}, synchronize_session=False)
             s.commit()
             return True
         except Exception as e:
@@ -160,8 +160,8 @@ class RoleModel():
         s = db.session()
         try:
             data = {}
-            if params.has_key('is_disabled'):
-                data['is_disabled'] = params['is_disabled']
+            if params.has_key('disable'):
+                data['disable'] = params['disable']
 
             result = Role.query.filter_by(**data).order_by(Role.id).all()
 

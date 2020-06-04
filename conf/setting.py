@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-05-18 10:40:01
+@LastEditTime: 2020-06-04 14:53:13
 @LastEditors: Zpp
 '''
 import hashlib
@@ -91,15 +91,15 @@ init_menu = [
                         "name": "CreateMenu",
                         "description": "添加菜单",
                         "mark": "add_menu",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Menu/QueryMenuByParam",
                         "method": "POST",
                         "name": "QueryMenuByParam",
                         "description": "获取菜单列表",
-                        "mark": "get_menu_list",
-                        "forbidden": True
+                        "mark": "list_menu",
+                        "forbid": True
                     },
                     {
                         "path": "/v1/Menu/ModifyMenu",
@@ -107,7 +107,7 @@ init_menu = [
                         "name": "ModifyMenu",
                         "description": "修改菜单信息",
                         "mark": "set_menu",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Menu/DelMenu",
@@ -115,15 +115,15 @@ init_menu = [
                         "name": "DelMenu",
                         "description": "删除菜单",
                         "mark": "del_menu",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Menu/GetMenuToInterface",
                         "method": "GET",
                         "name": "GetMenuToInterface",
                         "description": "获取菜单下级联的API接口",
-                        "mark": "get_menu_to_interface",
-                        "forbidden": False
+                        "mark": "interface_menu",
+                        "forbid": False
                     }
                 ]
             },
@@ -143,15 +143,15 @@ init_menu = [
                         "name": "CreateInterface",
                         "description": "添加接口",
                         "mark": "add_interface",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Interface/QueryInterfaceByParam",
                         "method": "POST",
                         "name": "QueryInterfaceByParam",
                         "description": "获取接口列表",
-                        "mark": "get_interface_list",
-                        "forbidden": True
+                        "mark": "list_interface",
+                        "forbid": True
                     },
                     {
                         "path": "/v1/Interface/ModifyInterface",
@@ -159,7 +159,7 @@ init_menu = [
                         "name": "ModifyInterface",
                         "description": "修改接口信息",
                         "mark": "set_interface",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Interface/LockInterface",
@@ -167,7 +167,7 @@ init_menu = [
                         "name": "LockInterface",
                         "description": "禁用接口",
                         "mark": "lock_interface",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Interface/DelInterface",
@@ -175,7 +175,7 @@ init_menu = [
                         "name": "DelInterface",
                         "description": "删除接口",
                         "mark": "del_interface",
-                        "forbidden": False
+                        "forbid": False
                     }
                 ]
             },
@@ -195,15 +195,15 @@ init_menu = [
                         "name": "CreateDocument",
                         "description": "添加附件",
                         "mark": "add_document",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Document/QueryDocumentByParam",
                         "method": "POST",
                         "name": "QueryDocumentByParam",
                         "description": "获取附件列表",
-                        "mark": "get_document_list",
-                        "forbidden": True
+                        "mark": "list_document",
+                        "forbid": True
                     },
                     {
                         "path": "/v1/Document/DownDocument",
@@ -211,7 +211,7 @@ init_menu = [
                         "name": "DownDocument",
                         "description": "下载附件",
                         "mark": "down_document",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Document/DelDocument",
@@ -219,7 +219,7 @@ init_menu = [
                         "name": "DelDocument",
                         "description": "删除附件",
                         "mark": "del_document",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Document/RetrieveDocument",
@@ -227,39 +227,39 @@ init_menu = [
                         "name": "RetrieveDocument",
                         "description": "回收附件",
                         "mark": "retrieve_document",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Folder/CreateFolder",
                         "method": "POST",
                         "name": "CreateFolder",
                         "description": "创建文件夹",
-                        "mark": "create_folder",
-                        "forbidden": False
+                        "mark": "addf_folder",
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Folder/DelFolder",
                         "method": "POST",
                         "name": "DelFolder",
                         "description": "删除文件夹",
-                        "mark": "del_folder",
-                        "forbidden": False
+                        "mark": "delf_folder",
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Folder/ModifyFolder",
                         "method": "POST",
                         "name": "ModifyFolder",
                         "description": "修改文件夹",
-                        "mark": "modify_folder",
-                        "forbidden": False
+                        "mark": "setf_folder",
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Folder/QueryFolderByParam",
                         "method": "POST",
                         "name": "QueryFolderByParam",
                         "description": "获取文件列表",
-                        "mark": "query_folder",
-                        "forbidden": True
+                        "mark": "listf_folder",
+                        "forbid": True
                     }
                 ]
             },
@@ -279,7 +279,7 @@ init_menu = [
                         "name": "ExportSql",
                         "description": "导出数据库",
                         "mark": "export_sql",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Base/GetLoginInfo",
@@ -287,7 +287,7 @@ init_menu = [
                         "name": "GetLoginInfo",
                         "description": "获取用户登录情况",
                         "mark": "get_login_info",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Base/GetAllUserLoginCount",
@@ -295,7 +295,7 @@ init_menu = [
                         "name": "GetAllUserLoginCount",
                         "description": "获取所有用户登录次数",
                         "mark": "get_all_user_login_count",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Base/GetUserLoginIp",
@@ -303,7 +303,7 @@ init_menu = [
                         "name": "GetUserLoginIp",
                         "description": "获取用户登录IP分布情况",
                         "mark": "get_user_ip",
-                        "forbidden": False
+                        "forbid": False
                     }
                 ]
             }
@@ -335,15 +335,15 @@ init_menu = [
                         "name": "CreateAdmin",
                         "description": "注册管理员",
                         "mark": "add_admin",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Admin/QueryAdminByParam",
                         "method": "POST",
                         "name": "QueryAdminByParam",
                         "description": "获取管理员列表",
-                        "mark": "get_admin_list",
-                        "forbidden": True
+                        "mark": "list_admin",
+                        "forbid": True
                     },
                     {
                         "path": "/v1/Admin/ModifyAdmin",
@@ -351,7 +351,7 @@ init_menu = [
                         "name": "ModifyAdmin",
                         "description": "修改管理员信息",
                         "mark": "set_admin",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Admin/LockAdmin",
@@ -359,7 +359,7 @@ init_menu = [
                         "name": "LockAdmin",
                         "description": "禁用管理员",
                         "mark": "lock_admin",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Admin/DelAdmin",
@@ -367,7 +367,7 @@ init_menu = [
                         "name": "DelAdmin",
                         "description": "删除管理员",
                         "mark": "del_admin",
-                        "forbidden": False
+                        "forbid": False
                     }
                 ]
             },
@@ -387,15 +387,15 @@ init_menu = [
                         "name": "CreateRole",
                         "description": "添加角色",
                         "mark": "add_role",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Role/QueryRoleByParam",
                         "method": "POST",
                         "name": "QueryRoleByParam",
                         "description": "获取角色列表",
-                        "mark": "get_role_list",
-                        "forbidden": True
+                        "mark": "list_role",
+                        "forbid": True
                     },
                     {
                         "path": "/v1/Role/ModifyRole",
@@ -403,7 +403,7 @@ init_menu = [
                         "name": "ModifyRole",
                         "description": "修改角色信息",
                         "mark": "set_role",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Role/LockRole",
@@ -411,7 +411,7 @@ init_menu = [
                         "name": "LockRole",
                         "description": "禁用角色",
                         "mark": "lock_role",
-                        "forbidden": False
+                        "forbid": False
                     },
                     {
                         "path": "/v1/Role/DelRole",
@@ -419,7 +419,7 @@ init_menu = [
                         "name": "DelRole",
                         "description": "删除角色",
                         "mark": "del_role",
-                        "forbidden": False
+                        "forbid": False
                     }
                 ]
             }
@@ -451,7 +451,7 @@ init_menu = [
                         "name": "QueryLogByParam",
                         "description": "获取日志列表",
                         "mark": "get_log_list",
-                        "forbidden": True
+                        "forbid": True
                     }
                 ]
             },
@@ -471,7 +471,7 @@ init_menu = [
                         "name": "QueryLogByParam",
                         "description": "获取日志列表",
                         "mark": "get_log_list",
-                        "forbidden": True
+                        "forbid": True
                     }
                 ]
             },
@@ -491,7 +491,7 @@ init_menu = [
                         "name": "QueryLogByParam",
                         "description": "获取日志列表",
                         "mark": "get_log_list",
-                        "forbidden": True
+                        "forbid": True
                     }
                 ]
             }

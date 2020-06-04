@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2020-05-11 10:22:14
+@LastEditTime: 2020-06-04 16:08:40
 @LastEditors: Zpp
 '''
 from models import db
@@ -31,8 +31,8 @@ class Admin(db.Model):
     nickname = db.Column(db.String(64))
     email = db.Column(db.String(255))
     sex = db.Column(db.SmallInteger, default=1)
-    avatarUrl = db.Column(db.String(255))
-    is_disabled = db.Column(db.Boolean, index=True, default=False)
+    avatar = db.Column(db.String(255))
+    disable = db.Column(db.Boolean, index=True, default=False)
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     update_time = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     role_id = db.Column(db.String(36), db.ForeignKey('db_role.role_id', ondelete='CASCADE'))
@@ -75,7 +75,7 @@ class LoginLock(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     lock_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     user_id = db.Column(db.String(36), index=True, nullable=False)
-    flag = db.Column(db.Boolean, index=True, default=False) # 是否锁定
+    flag = db.Column(db.Boolean, index=True, default=False)  # 是否锁定
     number = db.Column(db.Integer, primary_key=True, default=0)
     ip = db.Column(db.String(36), index=True)
     lock_time = db.Column(db.DateTime)
@@ -105,7 +105,7 @@ class Role(db.Model):
     role_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
     mark = db.Column(db.String(64), nullable=False, unique=True)
-    is_disabled = db.Column(db.Boolean, index=True, default=False)
+    disable = db.Column(db.Boolean, index=True, default=False)
     role_list = db.Column(db.Text)
     admins = db.relationship('Admin', backref='role')
     __table_args__ = {
@@ -142,7 +142,7 @@ class Menu(db.Model):
     componentPath = db.Column(db.String(255), nullable=False)
     cache = db.Column(db.Boolean, index=True, default=True)
     sort = db.Column(db.SmallInteger, index=True, default=1)
-    is_disabled = db.Column(db.Boolean, index=True, default=False)
+    disable = db.Column(db.Boolean, index=True, default=False)
     interfaces = db.relationship('Interface',
                                  secondary=InterfaceToMenu,
                                  backref=db.backref('menus', lazy='dynamic'),
@@ -174,8 +174,8 @@ class Interface(db.Model):
     method = db.Column(db.String(36), nullable=False)
     description = db.Column(db.String(255), nullable=False)
     mark = db.Column(db.String(255), nullable=False, unique=True)
-    is_disabled = db.Column(db.Boolean, index=True, default=False)
-    forbidden = db.Column(db.Boolean, index=True, default=True)
+    disable = db.Column(db.Boolean, index=True, default=False)
+    forbid = db.Column(db.Boolean, index=True, default=True)
     __table_args__ = {
         'useexisting': True,
         'mysql_engine': 'InnoDB'
@@ -209,7 +209,7 @@ class Document(db.Model):
     status = db.Column(db.SmallInteger, index=True, default=1)  # 1=图片 2=附件 （其他的自己定义了）
     ext = db.Column(db.String(64), nullable=False)
     size = db.Column(db.Integer, nullable=False)
-    deleted = db.Column(db.Boolean, index=True, default=False) # True = 回收站
+    deleted = db.Column(db.Boolean, index=True, default=False)  # True = 回收站
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     folder_id = db.Column(db.String(36), db.ForeignKey('db_folder.folder_id', ondelete='CASCADE'))
     __table_args__ = {
@@ -239,7 +239,7 @@ class Folder(db.Model):
     admin_id = db.Column(db.String(36), index=True)
     pid = db.Column(db.String(36), nullable=False, index=True, default='0')
     name = db.Column(db.String(36), index=True, nullable=False)
-    is_sys = db.Column(db.Boolean, index=True, default=True) # True = 系统文件夹
+    is_sys = db.Column(db.Boolean, index=True, default=True)  # True = 系统文件夹
     create_time = db.Column(db.DateTime, index=True, default=datetime.datetime.now)
     documents = db.relationship('Document', backref='folder')
     __table_args__ = {
@@ -265,7 +265,7 @@ class InitSql(db.Model):
     '''
     __tablename__ = 'db_init_sql'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
-    isInit = db.Column(db.Boolean, index=True, default=True)
+    is_init = db.Column(db.Boolean, index=True, default=True)
     __table_args__ = {
         'useexisting': True,
         'mysql_engine': 'InnoDB'

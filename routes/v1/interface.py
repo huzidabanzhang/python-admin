@@ -39,7 +39,7 @@ def CreateInterface():
 def LockInterface():
     result = InterfaceModel().LockInterfaceRequest(
         request.form.getlist('interface_id[]'),
-        request.form.get('is_disabled')
+        request.form.get('disable')
     )
 
     if type(result).__name__ == 'str':
@@ -80,7 +80,7 @@ def ModifyInterface():
 @validate.form('Query')
 def QueryInterfaceByParam():
     params = {}
-    Ary = ['name', 'method', 'is_disabled']
+    Ary = ['name', 'method', 'disable']
     for i in Ary:
         if request.form.get(i):
             params[i] = request.form.get(i)

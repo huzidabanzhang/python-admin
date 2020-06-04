@@ -30,7 +30,7 @@ validate = validate_form(params)
 # 验证器路径/validate/v1中
 params = {
     # 引用验证字段场景
-    'Test': ['admin_id[]', 'is_disabled'],
+    'Test': ['admin_id[]', 'disable'],
     # 验证场景中需要修改字段里面的内容或者增加字段内容
     # 用dict里面加入field这个很重要要判断是哪个字段dict会覆盖原来的判断条件
     'Test2': [{
@@ -57,7 +57,7 @@ params = {
             'type': 'int',
             'default': 1
         },
-        'is_disabled': {
+        'disable': {
             'name': u'可见性',
             'type': 'boolean',
             'required': True
@@ -98,6 +98,7 @@ python start.py # 启动服务
 ```
 
 ## 计划
-   暂无
+
+暂无
 
 <a href="https://github.com/d2-projects/d2-admin" target="_blank"><img src="https://raw.githubusercontent.com/FairyEver/d2-admin/master/docs/image/d2-admin@2x.png" width="200"></a>

@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2020-05-28 15:03:21
+@LastEditTime: 2020-06-04 10:51:02
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -68,11 +68,12 @@ def Login():
 
     try:
         user = result['user']
+        user['is_admin'] = user['mark'] == default['role_mark']
 
         token = generate_auth_token({
             'admin_id': user['admin_id'],
             'password': user['password'],
-            'is_admin': True if user['mark'] == default['role_mark'] else False
+            'is_admin': user['mark'] == default['role_mark']
         })
 
         session['admin'] = token
@@ -115,7 +116,7 @@ def CreateAdmin():
 def LockAdmin():
     result = AdminModel().LockAdminRequest(
         admin_id=request.form.getlist('admin_id[]'),
-        is_disabled=request.form.get('is_disabled')
+        disable=request.form.get('disable')
     )
 
     if type(result).__name__ == 'str':
@@ -180,8 +181,8 @@ def ModifyAdmin():
 @validate_current_access
 def QueryAdminByParam():
     params = {}
-    if request.form.get('is_disabled'):
-        params['is_disabled'] = True if request.form.get('is_disabled') == 'true' else False
+    if request.form.get('disable'):
+        params['disable'] = True if request.form.get('disable') == 'true' else False
     if request.form.get('role_id'):
         params['role_id'] = request.form.get('role_id')
 

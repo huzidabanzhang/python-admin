@@ -42,12 +42,12 @@ params = {
             'type': 'list',
             'required': True
         },
-        'forbidden': {
+        'forbid': {
             'name': u'可隐藏',
             'type': 'boolean',
             'required': True
         },
-        'is_disabled': {
+        'disable': {
             'name': u'可见性',
             'type': 'boolean',
             'required': True
@@ -78,12 +78,12 @@ params = {
             'default': None
         }
     },
-    'Create': ['name', 'path', 'method', 'description', 'menus[]', 'mark', 'forbidden', 'is_disabled'],
-    'Modify': ['interface_id', 'name', 'path', 'method', 'description', 'menus[]', 'mark', 'forbidden', 'is_disabled'],
+    'Create': ['name', 'path', 'method', 'description', 'menus[]', 'mark', 'forbid', 'disable'],
+    'Modify': ['interface_id', 'name', 'path', 'method', 'description', 'menus[]', 'mark', 'forbid', 'disable'],
     'Del': ['interface_id[]'],
-    'Lock': ['interface_id[]', 'is_disabled'],
+    'Lock': ['interface_id[]', 'disable'],
     'Query': [{
-        'field': 'is_disabled',
+        'field': 'disable',
         'required': False
     }, {
         'field': 'name',

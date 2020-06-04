@@ -25,7 +25,7 @@ class AdminModel():
         s = db.session()
         try:
             data = {}
-            for i in ['role_id', 'is_disabled']:
+            for i in ['role_id', 'disable']:
                 if params.has_key(i):
                     data[i] = params[i]
 
@@ -62,9 +62,9 @@ class AdminModel():
                 sex=int(params['sex']),
                 email=params['email'],
                 nickname=params['nickname'],
-                avatarUrl=params['avatarUrl'],
+                avatar=params['avatar'],
                 role_id=params['role_id'],
-                is_disabled=params['is_disabled']
+                disable=params['disable']
             )
             s.add(item)
             role.admins.append(item)
@@ -112,7 +112,7 @@ class AdminModel():
                 else:
                     return str('密码不正确, 还有%s次机会' % (base_info['lock_times'] - number))
 
-            if admin.is_disabled:
+            if admin.disable:
                 return str('管理员被禁用')
 
             menu = []
@@ -161,7 +161,7 @@ class AdminModel():
             admin = s.query(Admin).filter(Admin.admin_id == admin_id).first()
             if not admin:
                 return str('管理员不存在')
-            if admin.is_disabled:
+            if admin.disable:
                 return str('管理员被禁用')
 
             role = s.query(Role).filter(Role.role_id == params['role_id']).first()
@@ -175,9 +175,9 @@ class AdminModel():
             admin.nickname = params['nickname']
             admin.sex = params['sex']
             admin.role_id = params['role_id']
-            admin.avatarUrl = params['avatarUrl']
+            admin.avatar = params['avatar']
             admin.email = params['email']
-            admin.is_disabled = params['is_disabled']
+            admin.disable = params['disable']
             if params['password'] != admin.password:
                 admin.password = _config.get_md5(params['password'])
 
@@ -194,13 +194,13 @@ class AdminModel():
             s.rollback()
             return str(e.message)
 
-    def LockAdminRequest(self, admin_id, is_disabled):
+    def LockAdminRequest(self, admin_id, disable):
         '''
         禁用管理员
         '''
         s = db.session()
         try:
-            s.query(Admin).filter(Admin.admin_id.in_(admin_id)).update({Admin.is_disabled: is_disabled}, synchronize_session=False)
+            s.query(Admin).filter(Admin.admin_id.in_(admin_id)).update({Admin.disable: disable}, synchronize_session=False)
             s.commit()
             return True
         except Exception as e:

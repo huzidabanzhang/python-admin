@@ -76,8 +76,8 @@ def ModifyMenu():
 @validate.form('Query')
 def QueryMenuByParam():
     params = {}
-    if request.form.get('is_disabled'):
-        params['is_disabled'] = request.form.get('is_disabled')
+    if request.form.get('disable'):
+        params['disable'] = request.form.get('disable')
     if request.form.get('role_id'):
         params['role_id'] = request.form.get('role_id')
 

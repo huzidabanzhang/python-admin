@@ -60,8 +60,8 @@ class MenuModel():
         s = db.session()
         try:
             data = {}
-            if params.has_key('is_disabled'):
-                data['is_disabled'] = params['is_disabled']
+            if params.has_key('disable'):
+                data['disable'] = params['disable']
 
             result = Menu.query.filter_by(**data).order_by(Menu.sort, Menu.id).all()
 
@@ -83,7 +83,7 @@ class MenuModel():
                         'pid': value.pid,
                         'children': interfaces
                     })
-                
+
                 if params.has_key('role_id'):
                     role = Role.query.filter(Role.role_id == params['role_id']).first()
                     if role.mark == default['role_mark']:
@@ -114,7 +114,7 @@ class MenuModel():
 
         if is_exists != True:
             return str(is_exists['error'].encode('utf8'))
-            
+
         try:
             item = Menu(
                 menu_id=uuid.uuid4(),
@@ -128,7 +128,7 @@ class MenuModel():
                 componentPath=params['componentPath'],
                 name=params['name'],
                 cache=params['cache'],
-                is_disabled=params['is_disabled']
+                disable=params['disable']
             )
             s.add(item)
             s.commit()
@@ -148,7 +148,7 @@ class MenuModel():
             if not menu:
                 return str('菜单不存在')
 
-            AllowableFields = ['pid', 'title', 'path', 'icon', 'sort', 'component', 'componentPath', 'name', 'cache', 'is_disabled']
+            AllowableFields = ['pid', 'title', 'path', 'icon', 'sort', 'component', 'componentPath', 'name', 'cache', 'disable']
             data = {}
 
             for i in params:

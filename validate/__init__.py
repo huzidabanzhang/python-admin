@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-04-20 13:43:42
 @LastEditors: Zpp
-@LastEditTime: 2020-05-29 13:47:57
+@LastEditTime: 2020-06-04 15:22:36
 '''
 from flask import request
 from libs.code import ResultDeal
@@ -134,7 +134,10 @@ class validate_form():
         if t == 'files':
             return request.files.getlist(f)
 
-        return request.form.get(f)
+        if request.method == 'GET':
+            return request.args.get(f)
+        else:
+            return request.form.get(f)
 
     def get_field(self, value, params=None):
         '''

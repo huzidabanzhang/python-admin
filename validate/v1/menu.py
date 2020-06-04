@@ -57,7 +57,7 @@ params = {
             'type': 'str',
             'required': True
         },
-        'is_disabled': {
+        'disable': {
             'name': u'可见性',
             'type': 'boolean',
             'required': True
@@ -82,12 +82,12 @@ params = {
             'type': 'boolean'
         }
     },
-    'Create': ['pid', 'title', 'path', 'icon', 'mark', 'sort', 'component', 'componentPath', 'name', 'cache', 'is_disabled'],
+    'Create': ['pid', 'title', 'path', 'icon', 'mark', 'sort', 'component', 'componentPath', 'name', 'cache', 'disable'],
     'Get': ['menu_id'],
-    'Modify': ['menu_id', 'pid', 'title', 'path', 'icon', 'mark', 'sort', 'component', 'componentPath', 'name', 'cache', 'is_disabled'],
+    'Modify': ['menu_id', 'pid', 'title', 'path', 'icon', 'mark', 'sort', 'component', 'componentPath', 'name', 'cache', 'disable'],
     'Del': ['menu_id'],
     'Query': ['is_interface', {
-        'field': 'is_disabled',
+        'field': 'disable',
         'required': False
     }, {
         'field': 'role_id',

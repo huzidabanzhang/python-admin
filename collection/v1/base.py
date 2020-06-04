@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-@LastEditTime: 2020-05-25 10:27:10
+@LastEditTime: 2020-06-04 10:13:56
 @LastEditors: Zpp
 '''
 from models import db
@@ -31,14 +31,14 @@ class BaseModel():
         self.M = MenuModel()
         self.I = InterfaceModel()
 
-    def CreateDropRequest(self, isInit, params=None):
+    def CreateDropRequest(self, is_init, params=None):
         db.session.remove()
         db.drop_all()
         db.create_all()
 
         s = db.session()
         try:
-            s.add(InitSql(isInit=False))
+            s.add(InitSql(is_init=False))
             s.commit()
 
             role_id = uuid.uuid4()
@@ -51,12 +51,12 @@ class BaseModel():
             s.commit()
 
             password = self.__get_code()
-            if not isInit:
+            if not is_init:
                 admin = Admin(
                     admin_id=uuid.uuid4(),
                     username=self.user_name,
                     password=_config.get_md5(password),
-                    avatarUrl='',
+                    avatar='',
                     role_id=role_id
                 )
             else:
@@ -64,7 +64,7 @@ class BaseModel():
                     admin_id=params['admin_id'],
                     username=self.user_name,
                     password=params['password'],
-                    avatarUrl='',
+                    avatar='',
                     role_id=role_id
                 )
             s.add(admin)
@@ -82,7 +82,7 @@ class BaseModel():
             s.commit()
 
             sql = s.query(InitSql).one()
-            sql.isInit = True
+            sql.is_init = True
             s.commit()
             return {
                 'username': 'Admin',
@@ -154,7 +154,7 @@ class BaseModel():
             method=params['method'],
             description=params['description'],
             mark=params['mark'],
-            forbidden=params['forbidden']
+            forbid=params['forbid']
         )
 
     def ExportSql(self, type=1):

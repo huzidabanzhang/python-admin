@@ -17,7 +17,7 @@ def checkDb():
     s = db.session()
     try:
         res = s.query(InitSql).first()
-        return res.isInit
+        return res.is_init
     except Exception as e:
         return str('数据库未连接或者其他错误请查看错误信息：' + e.message)
 
@@ -57,10 +57,10 @@ def is_in_scope(admin_id, path):
         admin = s.query(Admin).filter(Admin.admin_id == admin_id).first()
         if not admin:
             return str('管理员不存在')
-        if admin.is_disabled:
+        if admin.disable:
             return str('管理员被禁用')
 
-        role = s.query(Role).filter(Role.role_id == admin.role_id, Role.is_disabled == False).one()
+        role = s.query(Role).filter(Role.role_id == admin.role_id, Role.disable == False).one()
         if role:
             i = []
             I = json.loads(role.role_list)['I']
@@ -68,10 +68,10 @@ def is_in_scope(admin_id, path):
             for x in I:
                 i.append(x.split('.')[1])
 
-            interface = s.query(Interface).filter(Interface.interface_id.in_(i), Interface.is_disabled == False, Interface.path == path).one()
+            interface = s.query(Interface).filter(Interface.interface_id.in_(i), Interface.disable == False, Interface.path == path).one()
             if interface:
                 return True
-            menu = s.query(Menu).filter(Menu.menu_id.in_(M), Menu.is_disabled == False, Menu.path == path).one()
+            menu = s.query(Menu).filter(Menu.menu_id.in_(M), Menu.disable == False, Menu.path == path).one()
             if menu:
                 return True
 

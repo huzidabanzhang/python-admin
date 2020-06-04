@@ -57,7 +57,7 @@ class InterfaceModel():
         '''
         s = db.session()
         try:
-            Int = ['menu_id', 'is_disabled', 'method']
+            Int = ['menu_id', 'disable', 'method']
             data = {}
 
             for i in Int:
@@ -93,8 +93,8 @@ class InterfaceModel():
                 method=params['method'],
                 description=params['description'],
                 mark=params['mark'],
-                forbidden=params['forbidden'],
-                is_disabled=params['is_disabled'],
+                forbid=params['forbid'],
+                disable=params['disable'],
                 menus=menus
             )
             s.add(item)
@@ -116,7 +116,7 @@ class InterfaceModel():
             if not interface:
                 return str('接口不存在')
 
-            AllowableFields = ['name', 'path', 'method', 'description', 'is_disabled']
+            AllowableFields = ['name', 'path', 'method', 'description', 'disable']
             data = {}
 
             for i in params:
@@ -138,13 +138,13 @@ class InterfaceModel():
             s.rollback()
             return str(e.message)
 
-    def LockInterfaceRequest(self, interface_id, is_disabled):
+    def LockInterfaceRequest(self, interface_id, disable):
         '''
         禁用接口
         '''
         s = db.session()
         try:
-            s.query(Interface).filter(Interface.interface_id.in_(interface_id)).update({Interface.is_disabled: is_disabled}, synchronize_session=False)
+            s.query(Interface).filter(Interface.interface_id.in_(interface_id)).update({Interface.disable: disable}, synchronize_session=False)
             s.commit()
             return True
         except Exception as e:
