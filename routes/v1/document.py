@@ -37,7 +37,7 @@ def CreateDocument():
 
 @route_document.route('/GetDocument/<path:filename>', methods=['GET'])
 def GetDocument(filename):
-    path = document_dir + '/' + filename
+    path = os.path.join(document_dir, filename)
     if os.path.exists(path):
         return send_from_directory(document_dir, filename)
     else:
@@ -48,7 +48,7 @@ def GetDocument(filename):
 @auth.login_required
 @validate_current_access
 def DownDocument(filename, name):
-    path = document_dir + '/' + filename
+    path = os.path.join(document_dir, filename)
     if os.path.exists(path):
         res = make_response(readFile(path, 'rb'))
         res.headers['Content-Type'] = 'application/octet-stream'

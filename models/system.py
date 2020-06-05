@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-@LastEditTime: 2020-06-04 16:08:40
+@LastEditTime: 2020-06-05 09:41:48
 @LastEditors: Zpp
 '''
 from models import db
@@ -206,7 +206,7 @@ class Document(db.Model):
     admin_id = db.Column(db.String(36), index=True, nullable=False)
     name = db.Column(db.String(64), index=True, nullable=False)
     path = db.Column(db.String(255), nullable=False)
-    status = db.Column(db.SmallInteger, index=True, default=1)  # 1=图片 2=附件 （其他的自己定义了）
+    status = db.Column(db.SmallInteger, index=True, default=1)  # 1=图片 2=附件 3=头像
     ext = db.Column(db.String(64), nullable=False)
     size = db.Column(db.Integer, nullable=False)
     deleted = db.Column(db.Boolean, index=True, default=False)  # True = 回收站

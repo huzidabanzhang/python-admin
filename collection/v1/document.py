@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 上传控制器
+@Description: 文档控制器
 @Author: Zpp
 @Date: 2019-10-14 14:53:05
 @LastEditors: Zpp
-@LastEditTime: 2020-05-28 15:08:21
+@LastEditTime: 2020-06-05 10:32:13
 '''
 from flask import request
 from models import db
-from models.system import Document
+from models.system import Document, Admin
 from conf.setting import document_dir
 from sqlalchemy import text, or_
 import uuid
@@ -32,13 +32,23 @@ class DocumentModel():
                     Document.folder_id == None
                 )
 
-            status = text('')
+            status = Document.status != 3
             if params.has_key('status'):
                 status = Document.status == int(params['status'])
 
-            result = Document.query.filter(folder, deleted, status).order_by(order_by).paginate(page, page_size, error_out=False)
+            result = s.query(Document, Admin.username)\
+                .filter(folder, deleted, status)\
+                .filter(Admin.admin_id == Document.admin_id)\
+                .order_by(order_by)\
+                .paginate(page, page_size, error_out=False)
 
-            return {'data': [value.to_json() for value in result.items], 'total': result.total}
+            data = []
+            for i in result.items:
+                value = i[0].to_json()
+                value['username'] = i[1]
+                data.append(value)
+
+            return {'data': data, 'total': result.total}
         except Exception as e:
             print e
             return str(e.message)
@@ -67,7 +77,7 @@ class DocumentModel():
             ext = self.file_extension(file_name)
             size = len(file.read())
             file_status = params['status']
-            if not self.allowed_file(file_name):
+            if not self.allowed_file(file_name) and params['status'] != 3:
                 file_status = 2
 
             try:
