@@ -4,7 +4,7 @@
 @Description: 权限API
 @Author: Zpp
 @Date: 2019-09-12 10:30:39
-@LastEditTime: 2020-05-29 14:29:30
+@LastEditTime: 2020-06-05 09:52:23
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request
@@ -82,7 +82,7 @@ def ModifyRole():
 @validate.form('Query')
 def QueryRoleByParam():
     params = {}
-    if request.form.get('disable'):
+    if request.form.get('disable') != None:
         params['disable'] = request.form.get('disable')
 
     result = RoleModel().QueryRoleByParamRequest(params=params)

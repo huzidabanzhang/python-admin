@@ -4,7 +4,7 @@
 @Description: 管理员API
 @Author: Zpp
 @Date: 2019-09-06 14:19:29
-@LastEditTime: 2020-06-04 10:51:02
+@LastEditTime: 2020-06-05 10:24:47
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session
@@ -53,7 +53,7 @@ def Login():
     sesson_captcha = session.get('Captcha')
 
     if not sesson_captcha:
-        return ResultDeal(msg=str('请刷新验证码'), code=-1)
+        return ResultDeal(msg=str('验证码已过期, 请刷新'), code=-1)
 
     if session.get('Captcha').lower() != captcha.lower():
         return ResultDeal(msg=str('验证码不正确'), code=-1)
@@ -176,13 +176,14 @@ def ModifyAdmin():
     })
 
 
-@route_admin.route('/QueryAdminByParam', methods=['POST'])
+@route_admin.route('/QueryAdminByParam', methods=['POST'], endpoint='QueryAdminByParam')
 @auth.login_required
 @validate_current_access
+@validate.form('Query')
 def QueryAdminByParam():
     params = {}
-    if request.form.get('disable'):
-        params['disable'] = True if request.form.get('disable') == 'true' else False
+    if request.form.get('disable') != None:
+        params['disable'] = request.form.get('disable')
     if request.form.get('role_id'):
         params['role_id'] = request.form.get('role_id')
 
@@ -190,7 +191,7 @@ def QueryAdminByParam():
         params=params,
         page=int(request.form.get('page')),
         page_size=int(request.form.get('page_size')),
-        order_by=request.form.get('order_by', None)
+        order_by=request.form.get('order_by')
     )
 
     if type(result).__name__ == 'str':

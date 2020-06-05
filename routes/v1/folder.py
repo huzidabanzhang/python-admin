@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-12-23 15:42:19
 @LastEditors: Zpp
-@LastEditTime: 2020-05-29 14:39:40
+@LastEditTime: 2020-06-05 09:53:03
 '''
 from flask import Blueprint, request, session
 from collection.v1.folder import FolderModel
@@ -50,7 +50,7 @@ def DelFolder():
 @validate.form('Modify')
 def ModifyFolder():
     params = {'name': request.form.get('name')}
-    if request.form.get('pid'):
+    if request.form.get('pid') != None:
         params['pid'] = request.form.get('pid')
 
     result = FolderModel().ModifyFolderRequest(request.form.get('folder_id'), params=params)

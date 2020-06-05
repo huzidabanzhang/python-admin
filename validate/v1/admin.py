@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-05-27 16:56:52
 @LastEditors: Zpp
-@LastEditTime: 2020-05-28 11:10:19
+@LastEditTime: 2020-06-05 09:54:06
 '''
 
 params = {
@@ -69,6 +69,21 @@ params = {
             'name': u'管理员编号',
             'type': 'list',
             'required': True
+        },
+        'page': {
+            'name': u'页码',
+            'type': 'int',
+            'default': 1
+        },
+        'page_size': {
+            'name': u'条数',
+            'type': 'int',
+            'default': 20
+        },
+        'order_by': {
+            'name': u'排序字段',
+            'type': 'str',
+            'default': None
         }
     },
     # 登录验证
@@ -80,5 +95,12 @@ params = {
     # 禁用管理员
     'Lock': ['admin_id[]', 'disable'],
     # 删除管理员
-    'Del': ['admin_id[]']
+    'Del': ['admin_id[]'],
+    'Query': [{
+        'field': 'disable',
+        'required': False
+    }, {
+        'field': 'role_id',
+        'required': False
+    }, 'page', 'page_size', 'order_by']
 }

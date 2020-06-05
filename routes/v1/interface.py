@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2019-10-14 13:50:25
 @LastEditors: Zpp
-@LastEditTime: 2020-05-29 16:39:01
+@LastEditTime: 2020-06-05 09:48:53
 '''
 from flask import Blueprint, request
 from collection.v1.interface import InterfaceModel
@@ -82,7 +82,7 @@ def QueryInterfaceByParam():
     params = {}
     Ary = ['name', 'method', 'disable']
     for i in Ary:
-        if request.form.get(i):
+        if request.form.get(i) != None:
             params[i] = request.form.get(i)
 
     result = InterfaceModel().QueryInterfaceByParamRequest(
