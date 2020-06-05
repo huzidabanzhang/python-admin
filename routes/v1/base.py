@@ -4,7 +4,7 @@
 @Description: 数据库API
 @Author: Zpp
 @Date: 2020-02-21 13:02:28
-@LastEditTime: 2020-05-28 13:53:18
+@LastEditTime: 2020-06-05 16:09:12
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session, abort
@@ -107,6 +107,18 @@ def GetAllUserLoginCount():
 @validate_current_access
 def GetUserLoginIp():
     result = BaseModel().GetUserLoginIp()
+
+    if type(result).__name__ == 'str':
+        return ResultDeal(msg=result, code=-1)
+
+    return ResultDeal(data=result)
+
+
+@route_base.route('/GetReadmeContent', methods=['POST'])
+@auth.login_required
+@validate_current_access
+def GetReadmeContent():
+    result = BaseModel().GetReadmeContent()
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)
