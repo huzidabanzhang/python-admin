@@ -12,7 +12,7 @@ from collection.v1.document import DocumentModel
 from ..token_auth import auth, validate_current_access, get_auth_token
 from libs.code import ResultDeal
 from conf.setting import document_dir
-from libs.utils import readFile
+from libs.utils import ReadFile
 from validate import validate_form
 from validate.v1.document import params
 import os
@@ -50,7 +50,7 @@ def GetDocument(filename):
 def DownDocument(filename, name):
     path = os.path.join(document_dir, filename)
     if os.path.exists(path):
-        res = make_response(readFile(path, 'rb'))
+        res = make_response(ReadFile(path, 'rb'))
         res.headers['Content-Type'] = 'application/octet-stream'
         res.headers['Content-Disposition'] = 'attachment; filename=' + name
         return res

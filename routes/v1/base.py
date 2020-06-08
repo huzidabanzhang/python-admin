@@ -4,14 +4,14 @@
 @Description: 数据库API
 @Author: Zpp
 @Date: 2020-02-21 13:02:28
-@LastEditTime: 2020-06-05 16:09:12
+@LastEditTime: 2020-06-08 10:00:40
 @LastEditors: Zpp
 '''
 from flask import Blueprint, request, make_response, session, abort
 from collection.v1.base import BaseModel
 from ..token_auth import auth, generate_auth_token, validate_current_access, get_auth_token
 from libs.code import ResultDeal
-from libs.utils import readFile
+from libs.utils import ReadFile
 from validate import validate_form
 from validate.v1.base import params
 import json
@@ -52,7 +52,7 @@ def ExportSql():
         return ResultDeal(msg=result, code=-1)
 
     if os.path.exists(result['path']):
-        res = make_response(readFile(result['path'], 'rb'))
+        res = make_response(ReadFile(result['path'], 'rb'))
         res.headers['Content-Type'] = 'application/octet-stream'
         res.headers['filename'] = result['name']
         res.headers['Content-Disposition'] = 'attachment; filename=' + result['name']

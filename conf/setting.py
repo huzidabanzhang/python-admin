@@ -9,7 +9,7 @@
 '''
 import hashlib
 import os
-from libs.utils import isWindows
+from libs.utils import IsWindows
 
 basedir = os.path.abspath(os.path.dirname(__file__) + '/..')
 
@@ -511,7 +511,7 @@ class Config():
         # mysql 配置信息
         self.host = '127.0.0.1'
         self.charset = 'utf8'
-        if isWindows():
+        if IsWindows():
             self.port = 3306
             self.admin = 'root'
             self.password = 'intersky'

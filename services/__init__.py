@@ -11,15 +11,16 @@ from flask_session import Session
 from flask_compress import Compress
 from flask_cache import Cache
 from conf.setting import token_info, session_info, cache_info, _config
-from libs.utils import isWindows
+from libs.utils import IsWindows
 
 cache = Cache()
+
 
 def init_app(app):
     # 密钥
     app.config['SECRET_KEY'] = token_info['SECRET_KEY']
     # 调试模式
-    app.config['DEBUG'] = isWindows()
+    app.config['DEBUG'] = IsWindows()
     # SESSION配置
     app.config.update(session_info)
     # CACHE配置

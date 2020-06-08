@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-@LastEditTime: 2020-06-05 16:07:38
+@LastEditTime: 2020-06-08 09:55:34
 @LastEditors: Zpp
 '''
 from models import db
@@ -13,7 +13,7 @@ from models.log import Log
 from .interface import InterfaceModel
 from .menu import MenuModel
 from conf.setting import _config, init_menu, sql_dir, GeoLite2_dir, default, basedir
-from libs.utils import readFile
+from libs.utils import ReadFile, WriteFile
 from sqlalchemy import func, desc
 import geoip2.database
 import uuid
@@ -346,7 +346,7 @@ class BaseModel():
         '''
         try:
             path = os.path.join(basedir, 'README.md')
-            content = readFile(path)
+            content = ReadFile(path)
 
             return {
                 'content': content

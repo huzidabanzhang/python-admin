@@ -10,7 +10,7 @@
 from flask import Flask
 from flask_socketio import SocketIO
 from conf.setting import server_info
-from libs.utils import isWindows
+from libs.utils import IsWindows
 import sockets
 import models
 import routes
@@ -37,7 +37,7 @@ logging.info('--------------------')
 
 try:
     logging.info(u'------启动成功------')
-    if isWindows():
+    if IsWindows():
         socketio.run(app, host=server_info['host'], port=server_info['port'])
     else:
         socketio.run(app)

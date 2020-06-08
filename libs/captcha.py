@@ -16,7 +16,7 @@ ImageDraw: 画笔
 ImageFont: 字体
 """
 from PIL import Image, ImageDraw, ImageFont
-from .utils import isWindows
+from .utils import IsWindows
 
 
 class Captcha(object):
@@ -74,7 +74,7 @@ class Captcha(object):
         """
         fonts = ["consola.ttf", "consolab.ttf", "consolai.ttf"]
         font = random.choice(fonts)
-        return ("utils/captcha/" if isWindows() else "/home/") + font
+        return ("utils/captcha/" if IsWindows() else "/home/") + font
 
     @classmethod
     def gen_text(cls, number):
