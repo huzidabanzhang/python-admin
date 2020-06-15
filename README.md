@@ -87,7 +87,7 @@ tools/manage.py 为数据库版本控制的 py，具体的使用介绍你可以�
 
 其中 conf 下有 aliyun.py 是放阿里云密钥需要自己创建
 
-新加了 GeoLite2 的 IP 转换地址
+加了 GeoLite2 的 IP 转换地址
 
 ## 启动
 
