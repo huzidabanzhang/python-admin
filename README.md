@@ -43,7 +43,7 @@ params = {
             'name': u'验证码',
             'type': 'str', # 字段类型包括str, list, int, boolean, ic, phone, email, time
             'min': 4, # 字符长度最小值 其中list判断长度
-            'max': 4, # 字符长度最小值 其中list判断长度
+            'max': 4, # 字符长度最大值 其中list判断长度
             'between': [888, 999], # 字符必须在list中
             'required': True, # 是否必填
             'default': 111  # 默认值
