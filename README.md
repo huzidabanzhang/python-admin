@@ -22,7 +22,7 @@ from validate import validate_form
 from validate.v1.admin import params
 validate = validate_form(params)
 
-@route_admin.route('/Login', methods=['POST'], endpoint='Login') # endpoint这个一定要加 不然报错
+@route_admin.route('/Login', methods=['POST'], endpoint='Login') # endpoint这个一定要加不然报错
 @validate.form('Login') # 需要验证的场景
 ```
 
