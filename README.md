@@ -31,7 +31,7 @@ validate = validate_form(params)
 params = {
     # 引用验证字段场景
     'Test': ['admin_id[]', 'disable'],
-    # 验证场景中需要修改字段里面的内容或者增加字段内容
+    # 验证场景中需要修改字段里面的内容或增加字段内容
     # 用dict里面加入field这个很重要要判断是哪个字段dict会覆盖原来的判断条件
     'Test2': [{
         'field': 'code',
