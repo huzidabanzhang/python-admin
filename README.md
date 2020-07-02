@@ -85,7 +85,7 @@ params = {
 
 tools/manage.py 为数据库版本控制的 py，具体的使用介绍你可以看： [章胖胖的笔记](https://huzidabanzhang.github.io/notes/2020-03-30.html#python-flask-migrate-%E8%BF%81%E7%A7%BB%E6%95%B0%E6%8D%AE%E5%BA%93 "章胖胖的笔记")
 
-其中 conf 下有 aliyun.py 主要放密钥 需要的自己创建
+其中 conf 下有 aliyun.py 主要放密钥 需要的自己新建
 
 加入 GeoLite2 的 IP 转换地址
 
