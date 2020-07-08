@@ -27,7 +27,7 @@ validate = validate_form(params)
 ```
 
 ```python
-# 验证器路径/validate/v1中
+# 验证器路径/validate/v1
 params = {
     # 引用验证字段场景
     'Test': ['admin_id[]', 'disable'],
