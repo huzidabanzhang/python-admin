@@ -5,7 +5,7 @@ https://test.ig132n.cn/
 测试账号：Test 密码：111111
 
 
-前端地址 [Vue](https://github.com/huzidabanzhang/python-admin-pm "Vue")
+前端地址 [章胖胖](https://github.com/huzidabanzhang/python-admin-pm "章胖胖")
 
 ![首页](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/desktop.png "首页")
 
