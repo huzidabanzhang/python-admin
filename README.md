@@ -103,6 +103,8 @@ python start.py # 启动服务
 
 ## 计划
 
+升级到python3
+
 
 ........
 
