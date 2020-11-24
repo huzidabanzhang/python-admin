@@ -4,8 +4,8 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 16:06:14
-@LastEditTime: 2019-12-09 16:35:33
-@LastEditors: Zpp
+LastEditTime: 2020-11-24 16:59:20
+LastEditors: Zpp
 '''
 
 from flask import current_app, request, session, abort
@@ -48,7 +48,7 @@ def generate_auth_token(params, expiration=24 * 3600):
     params 参数
     """
     s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
-    return s.dumps(params)
+    return s.dumps(params).decode()
 
 
 def verify_auth_token(token, pwd):
@@ -75,11 +75,11 @@ def get_auth_token(token):
 def validate_current_access(f):
     @wraps(f)
     def decorated_function(*args, **kws):
-         # 路由权限
+        # 路由权限
         info = get_auth_token(session.get('admin'))
         if info['is_admin']:
             return f(*args, **kws)
-        
+
         allow = is_in_scope(info['admin_id'], request.path)
         if not allow:
             abort(403)
