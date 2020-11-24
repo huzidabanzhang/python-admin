@@ -12,76 +12,76 @@ params = {
     # 验证字段
     'fields': {
         'code': {
-            'name': u'验证码',
+            'name': '验证码',
             'type': 'str',
             'min': 4,
             'max': 4,
             'required': True
         },
         'username': {
-            'name': u'用户名',
+            'name': '用户名',
             'type': 'str',
             'min': 6,
             'required': True
         },
         'password': {
-            'name': u'密码',
+            'name': '密码',
             'type': 'str',
             'min': 6,
             'required': True
         },
         'nickname': {
-            'name': u'昵称',
+            'name': '昵称',
             'type': 'str',
             'default': ''
         },
         'email': {
-            'name': u'邮件',
+            'name': '邮件',
             'type': 'email',
             'default': ''
         },
         'sex': {
-            'name': u'性别',
+            'name': '性别',
             'type': 'int',
             'default': 1
         },
         'role_id': {
-            'name': u'角色',
+            'name': '角色',
             'type': 'str',
             'required': True
         },
         'disable': {
-            'name': u'可见性',
+            'name': '可见性',
             'type': 'boolean',
             'required': True
         },
         'avatar': {
-            'name': u'头像',
+            'name': '头像',
             'type': 'str',
             'default': ''
         },
         'admin_id': {
-            'name': u'管理员编号',
+            'name': '管理员编号',
             'type': 'str',
             'required': True
         },
         'admin_id[]': {
-            'name': u'管理员编号',
+            'name': '管理员编号',
             'type': 'list',
             'required': True
         },
         'page': {
-            'name': u'页码',
+            'name': '页码',
             'type': 'int',
             'default': 1
         },
         'page_size': {
-            'name': u'条数',
+            'name': '条数',
             'type': 'int',
             'default': 20
         },
         'order_by': {
-            'name': u'排序字段',
+            'name': '排序字段',
             'type': 'str',
             'default': None
         }

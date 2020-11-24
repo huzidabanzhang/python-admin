@@ -86,8 +86,8 @@ def Login():
             'info': user
         })
     except Exception as e:
-        print e
-        return ResultDeal(msg=e.message, code=-1)
+        print(e)
+        return ResultDeal(msg=e, code=-1)
 
 
 @route_admin.route('/Logout', methods=['GET'])

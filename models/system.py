@@ -51,7 +51,7 @@ class Admin(db.Model):
         return False
 
     def get_id(self):
-        return unicode(self.admin_id)
+        return str(self.admin_id)
 
     def to_json(self):
         dict = self.__dict__

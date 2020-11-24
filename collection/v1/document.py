@@ -33,7 +33,7 @@ class DocumentModel():
                 )
 
             status = Document.status != 3
-            if params.has_key('status'):
+            if 'status' in params:
                 status = Document.status == int(params['status'])
 
             result = s.query(Document, Admin.username)\
@@ -50,8 +50,8 @@ class DocumentModel():
 
             return {'data': data, 'total': result.total}
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def file_extension(self, filename):
         ary = filename.split('.')
@@ -109,7 +109,7 @@ class DocumentModel():
                     'res': 1
                 })
             except Exception as e:
-                print e
+                print(e)
                 s.rollback()
                 data.append({
                     'uid': uids[i],
@@ -130,8 +130,8 @@ class DocumentModel():
 
             return document.to_json()
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def RetrieveDocument(self, document_id, deleted):
         '''
@@ -143,9 +143,9 @@ class DocumentModel():
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)
 
     def DelDocument(self, document_id):
         '''
@@ -162,6 +162,6 @@ class DocumentModel():
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)

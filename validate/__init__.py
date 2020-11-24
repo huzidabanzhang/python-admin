@@ -4,8 +4,8 @@
 @Description: 验证器
 @Author: Zpp
 @Date: 2020-04-20 13:43:42
-@LastEditors: Zpp
-@LastEditTime: 2020-06-04 15:22:36
+LastEditors: Zpp
+LastEditTime: 2020-11-24 16:39:20
 '''
 from flask import request
 from libs.code import ResultDeal
@@ -30,13 +30,13 @@ class validate_form():
         '''
         error = None
 
-        if i.has_key('max'):
-            if (value if type(value) != list else len(value)) > i:
-                error = u'%s最多不能超过%s个' % (i['name'], i['max'])
+        if 'max' in i:
+            if (value if not type(value) in [list, str] else len(value)) > i['max']:
+                error = '%s最多不能超过%s个' % (i['name'], i['max'])
 
-        if i.has_key('min'):
-            if (value if type(value) != list else len(value)) < i:
-                error = u'%s不能少于%s个' % (i['name'], i['min'])
+        if 'min' in i:
+            if (value if not type(value) in [list, str] else len(value)) < i['min']:
+                error = '%s不能少于%s个' % (i['name'], i['min'])
 
         return error
 
@@ -46,9 +46,9 @@ class validate_form():
         '''
         error = None
 
-        if type(value) != list and i.has_key('between') and type(i['between']) == list and len(i['between']) == 2:
+        if type(value) != list and 'between' in i and type(i['between']) == list and len(i['between']) == 2:
             if not value in i['between']:
-                error = u'%s只能在%s和%s之间' % (i['name'], i['between'][0], i['between'][1])
+                error = '%s只能在%s和%s之间' % (i['name'], i['between'][0], i['between'][1])
 
         return error
 
@@ -98,9 +98,9 @@ class validate_form():
                 error = self.validate_between(value, i)
 
         if error == True:
-            return ResultDeal(code=-1, msg=u'%s格式错误' % i['name'])
+            return ResultDeal(code=-1, msg='%s格式错误' % i['name'])
         elif error == None:
-            if i.has_key('default') and not value:
+            if 'default' in i and not value:
                 self.add_default(i['default'], i['field'])
         else:
             return ResultDeal(code=-1, msg=error)
@@ -144,7 +144,7 @@ class validate_form():
         获取字段详情
         '''
         data = None
-        if self.params['fields'].has_key(value):
+        if value in self.params['fields']:
             data = self.params['fields'][value]
             if params:
                 for i in params:
@@ -159,12 +159,12 @@ class validate_form():
         def validate(f):
             def one():
                 try:
-                    if self.params.has_key(args):
+                    if args in self.params:
                         for i in self.params[args]:
                             field = None
 
                             if type(i) == dict:
-                                if i.has_key('field'):
+                                if 'field' in i:
                                     field = self.get_field(i['field'], i)
                             else:
                                 field = self.get_field(i)
@@ -175,28 +175,28 @@ class validate_form():
                             else:
                                 value = self.get_data(field['type'], field['field'])
 
-                                if not field.has_key('required') or not field['required']:
+                                if 'required' not in field or not field['required']:
                                     if value:
                                         self.validate_params(value, field, f)
                                     else:
-                                        if field.has_key('default'):
+                                        if 'default' in field:
                                             self.add_default(field['default'], field['field'])
                                 else:
                                     if not value:
-                                        if field.has_key('default'):
+                                        if 'default' in field:
                                             self.add_default(field['default'], field['field'])
                                         else:
-                                            if field.has_key('msg'):
+                                            if 'msg' in field:
                                                 return ResultDeal(code=-1, msg=field['msg'])
                                             else:
-                                                return ResultDeal(code=-1, msg=u'请填写%s' % field['name'])
+                                                return ResultDeal(code=-1, msg='请填写%s' % field['name'])
                                     else:
                                         self.validate_params(value, field, f)
 
                     return f()
                 except Exception as e:
-                    print e
-                    return ResultDeal(code=-1, msg=e.message)
+                    print(e)
+                    return ResultDeal(code=-1, msg=str(e))
             return one
 
         return validate

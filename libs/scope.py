@@ -4,8 +4,8 @@
 @Description: 权限判断方法
 @Author: Zpp
 @Date: 2019-09-04 16:55:43
-@LastEditTime: 2020-05-07 09:43:10
-@LastEditors: Zpp
+LastEditTime: 2020-11-24 16:32:20
+LastEditors: Zpp
 '''
 from models import db
 from models.system import Admin, Role, Interface, Menu, InitSql
@@ -19,7 +19,7 @@ def checkDb():
         res = s.query(InitSql).first()
         return res.is_init
     except Exception as e:
-        return str('数据库未连接或者其他错误请查看错误信息：' + e.message)
+        return str('数据库未连接或者其他错误请查看错误信息：%s' % e)
 
 
 def isExists(s, model, params):
@@ -39,12 +39,12 @@ def isExists(s, model, params):
             if is_exists:
                 return {
                     'value': querys.one(),
-                    'error': u'%s已存在' % params[i]['name']
+                    'error': '%s已存在' % params[i]['name']
                 }
 
         return True
     except Exception as e:
-        print e
+        print(e)
         return True
 
 
@@ -76,6 +76,6 @@ def is_in_scope(admin_id, path):
                 return True
 
         return False
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
         return False

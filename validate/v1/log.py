@@ -12,20 +12,20 @@ params = {
     # 验证字段
     'fields': {
         'type[]': {
-            'name': u'日志类型',
+            'name': '日志类型',
             'type': 'list'
         },
         'status[]': {
-            'name': u'日志状态',
+            'name': '日志状态',
             'type': 'list'
         },
         'page': {
-            'name': u'页码',
+            'name': '页码',
             'type': 'int',
             'default': 1
         },
         'page_size': {
-            'name': u'条数',
+            'name': '条数',
             'type': 'int',
             'default': 20
         }

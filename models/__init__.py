@@ -4,13 +4,16 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 10:23:51
-@LastEditTime: 2020-05-18 10:41:52
-@LastEditors: Zpp
+LastEditTime: 2020-11-24 16:15:04
+LastEditors: Zpp
 '''
 from conf.setting import _config
 from flask_sqlalchemy import SQLAlchemy
+import pymysql
+pymysql.install_as_MySQLdb()
 
 db = SQLAlchemy()
+
 
 def init_app(app):
     # mysql 数据库连接数据

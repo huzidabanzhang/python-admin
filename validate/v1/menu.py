@@ -12,73 +12,73 @@ params = {
     # 验证字段
     'fields': {
         'pid': {
-            'name': u'父编号',
+            'name': '父编号',
             'type': 'str',
             'required': True,
             'default': '0'
         },
         'title': {
-            'name': u'菜单名称',
+            'name': '菜单名称',
             'type': 'str',
             'required': True
         },
         'name': {
-            'name': u'路由名称',
+            'name': '路由名称',
             'type': 'str',
             'required': True
         },
         'path': {
-            'name': u'路径',
+            'name': '路径',
             'type': 'str',
             'required': True
         },
         'icon': {
-            'name': u'菜单图标',
+            'name': '菜单图标',
             'type': 'str',
             'required': True
         },
         'mark': {
-            'name': u'菜单标识',
+            'name': '菜单标识',
             'type': 'str',
             'required': True
         },
         'sort': {
-            'name': u'排序',
+            'name': '排序',
             'type': 'int',
             'required': True
         },
         'component': {
-            'name': u'路由组件',
+            'name': '路由组件',
             'type': 'str',
             'required': True
         },
         'componentPath': {
-            'name': u'组件路径',
+            'name': '组件路径',
             'type': 'str',
             'required': True
         },
         'disable': {
-            'name': u'可见性',
+            'name': '可见性',
             'type': 'boolean',
             'required': True
         },
         'cache': {
-            'name': u'路由缓存',
+            'name': '路由缓存',
             'type': 'boolean',
             'required': True
         },
         'menu_id': {
-            'name': u'菜单编号',
+            'name': '菜单编号',
             'type': 'str',
             'required': True
         },
         'role_id': {
-            'name': u'角色',
+            'name': '角色',
             'type': 'str',
             'required': True
         },
         'is_interface': {
-            'name': u'是否带API',
+            'name': '是否带API',
             'type': 'boolean'
         }
     },

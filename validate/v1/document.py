@@ -12,52 +12,52 @@ params = {
     # 验证字段
     'fields': {
         'document': {
-            'name': u'文件',
+            'name': '文件',
             'type': 'files',
             'required': True,
-            'msg': u'请选择上传文件'
+            'msg': '请选择上传文件'
         },
         'admin_id': {
-            'name': u'管理员编号',
+            'name': '管理员编号',
             'type': 'str',
             'required': True
         },
         'uid[]': {
-            'name': u'文件编号',
+            'name': '文件编号',
             'type': 'list',
             'required': True
         },
         'status': {
-            'name': u'类型',
+            'name': '类型',
             'type': 'int',
             'required': True
         },
         'folder_id': {
-            'name': u'所属文件夹',
+            'name': '所属文件夹',
             'type': 'str'
         },
         'document_id[]': {
-            'name': u'附件编号',
+            'name': '附件编号',
             'type': 'list',
             'required': True
         },
         'deleted': {
-            'name': u'是否放入回收站',
+            'name': '是否放入回收站',
             'type': 'boolean',
             'required': True
         },
         'page': {
-            'name': u'页码',
+            'name': '页码',
             'type': 'int',
             'default': 1
         },
         'page_size': {
-            'name': u'条数',
+            'name': '条数',
             'type': 'int',
             'default': 20
         },
         'order_by': {
-            'name': u'排序字段',
+            'name': '排序字段',
             'type': 'str',
             'default': None
         }

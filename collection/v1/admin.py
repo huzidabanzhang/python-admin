@@ -26,15 +26,15 @@ class AdminModel():
         try:
             data = {}
             for i in ['role_id', 'disable']:
-                if params.has_key(i):
+                if i in params:
                     data[i] = params[i]
 
             result = Admin.query.filter_by(**data).order_by(order_by).paginate(page, page_size, error_out=False)
 
             return {'data': [value.to_json() for value in result.items], 'total': result.total}
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def CreateAdminRequest(self, params):
         '''
@@ -72,8 +72,8 @@ class AdminModel():
             return True
         except Exception as e:
             s.rollback()
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def GetAdminRequest(self, username, password):
         '''
@@ -104,7 +104,7 @@ class AdminModel():
                         user_id=admin.admin_id,
                         flag=False,
                         number=number,
-                        ip=request.headers['X-Real-Ip'] if request.headers.has_key('X-Real-Ip') else request.remote_addr
+                        ip=request.headers['X-Real-Ip'] if 'X-Real-Ip' in request.headers else request.remote_addr
                     ))
                 s.commit()
                 if number - base_info['lock_times'] == 0:
@@ -149,8 +149,8 @@ class AdminModel():
                 'user': user
             }
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def ModifyAdminRequest(self, admin_id, params):
         '''
@@ -190,9 +190,9 @@ class AdminModel():
             s.commit()
             return user
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)
 
     def LockAdminRequest(self, admin_id, disable):
         '''
@@ -204,9 +204,9 @@ class AdminModel():
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)
 
     def DelAdminRequest(self, admins):
         '''
@@ -220,6 +220,6 @@ class AdminModel():
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)

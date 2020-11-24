@@ -4,8 +4,8 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-05 16:07:19
-@LastEditTime: 2020-05-25 14:16:38
-@LastEditors: Zpp
+LastEditTime: 2020-11-24 14:10:40
+LastEditors: Zpp
 '''
 from flask import Flask
 from flask_socketio import SocketIO
@@ -29,18 +29,18 @@ def create_app():
 
 logs.init_app()
 # 初始化
-logging.info(u'-----初始化项目-----')
+logging.info('-----初始化项目-----')
 app = create_app()
 socketio = SocketIO(app)
 sockets.init_app(socketio)
 logging.info('--------------------')
 
 try:
-    logging.info(u'------启动成功------')
+    logging.info('------启动成功------')
     if IsWindows():
         socketio.run(app, host=server_info['host'], port=server_info['port'])
     else:
         socketio.run(app)
 except Exception as e:
-    print e
-    logging.error(u'------启动失败------')
+    print(e)
+    logging.error('------启动失败------')

@@ -30,7 +30,7 @@ class Captcha(object):
     line_number = 2
 
     SOURCE = list(string.ascii_letters)
-    SOURCE.extend(map(str, list(range(0, 10))))
+    SOURCE.extend(list(map(str, list(range(0, 10)))))
 
     @classmethod
     def __gen_line(cls, draw, width, height):

@@ -19,8 +19,8 @@ import json
 class RoleModel():
     def __init__(self):
         self.exists = {
-            'name': u'角色名称',
-            'mark': u'标识'
+            'name': '角色名称',
+            'mark': '标识'
         }
 
     def isCreateExists(self, s, params):
@@ -42,7 +42,7 @@ class RoleModel():
         '''
         d = {}
         for i in self.exists:
-            if params.has_key(i) and params[i] != data.__dict__[i]:
+            if i in params and params[i] != data.__dict__[i]:
                 d[i] = {
                     'value': params[i],
                     'name': self.exists[i]
@@ -76,8 +76,8 @@ class RoleModel():
             return True
         except Exception as e:
             s.rollback()
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def GetRoleRequest(self, role_id):
         '''
@@ -91,8 +91,8 @@ class RoleModel():
 
             return role.to_json()
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def ModifyRoleRequest(self, role_id, params):
         '''
@@ -119,9 +119,9 @@ class RoleModel():
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)
 
     def LockRoleRequest(self, role_id, disable):
         '''
@@ -133,9 +133,9 @@ class RoleModel():
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)
 
     def DelRoleRequest(self, role_id):
         '''
@@ -149,9 +149,9 @@ class RoleModel():
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)
 
     def QueryRoleByParamRequest(self, params):
         '''
@@ -160,7 +160,7 @@ class RoleModel():
         s = db.session()
         try:
             data = {}
-            if params.has_key('disable'):
+            if 'disable' in params:
                 data['disable'] = params['disable']
 
             result = Role.query.filter_by(**data).order_by(Role.id).all()
@@ -171,5 +171,5 @@ class RoleModel():
 
             return data
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)

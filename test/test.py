@@ -18,9 +18,9 @@ if __name__ == '__main__':
     reader = geoip2.database.Reader(os.path.join(root, 'tools/GeoLite2-City.mmdb'))
 
     response = reader.city('116.234.9.196')
-    print response.continent.names["zh-CN"]
-    print response.country.names["zh-CN"]
-    print response.subdivisions.most_specific.names["zh-CN"]
-    print response.city.names["zh-CN"]
-    print response.location.longitude
-    print response.location.latitude
+    print(response.continent.names["zh-CN"])
+    print(response.country.names["zh-CN"])
+    print(response.subdivisions.most_specific.names["zh-CN"])
+    print(response.city.names["zh-CN"])
+    print(response.location.longitude)
+    print(response.location.latitude)

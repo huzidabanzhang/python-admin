@@ -37,8 +37,8 @@ class FolderModel():
 
             return [value.to_json() for value in result]
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def CreateFolderRequest(self, params):
         '''
@@ -58,8 +58,8 @@ class FolderModel():
             return item.to_json()
         except Exception as e:
             s.rollback()
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def ModifyFolderRequest(self, folder_id, params):
         '''
@@ -72,14 +72,14 @@ class FolderModel():
                 return str('文件夹不存在')
 
             folder.name = params['name']
-            if params.has_key('pid'):
+            if 'pid' in params:
                 folder.pid = params['pid']
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)
 
     def DelFolderRequest(self, folder_id):
         '''
@@ -100,6 +100,6 @@ class FolderModel():
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)

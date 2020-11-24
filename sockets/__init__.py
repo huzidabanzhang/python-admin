@@ -15,28 +15,28 @@ client = []
 
 class MyCustomNamespace(Namespace):
     def on_error(self, e):
-        print e
+        print(e)
 
     def on_error_default(self, e):
-        print e
+        print(e)
 
     def on_connect(self):
         client.append(request.sid)
-        print client
+        print(client)
         emit('my_response', '连接成功')
 
     def on_disconnect(self):
         sid = request.sid
         if sid in client:
             client.remove(sid)
-        print client
+        print(client)
 
     def on_heart(self, data):
-        print data
+        print(data)
         emit('heart', 'server')
 
     def on_my_response(self, data):
-        print data
+        print(data)
 
 
 def init_app(socketio):

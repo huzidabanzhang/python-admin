@@ -22,16 +22,16 @@ class LogModel():
         s = db.session()
         try:
             filters = {
-                Log.type.in_(params['type']) if params.has_key('type') else text('1 = 1'),
-                Log.status.in_(params['status']) if params.has_key('status') else text('1 = 1')
+                Log.type.in_(params['type']) if 'type' in params else text('1 = 1'),
+                Log.status.in_(params['status']) if 'status' in params else text('1 = 1')
             }
 
             result = Log.query.filter(*filters).order_by(text('-id')).paginate(page, page_size, error_out=False)
 
             return {'data': [value.to_json() for value in result.items], 'total': result.total}
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def CreateLogRequest(self, params):
         '''
@@ -62,6 +62,6 @@ class LogModel():
             s.add(item)
             s.commit()
             return True
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             return False

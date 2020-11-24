@@ -4,8 +4,8 @@
 @Description: 工具
 @Author: Zpp
 @Date: 2019-10-28 11:28:09
-@LastEditors: Zpp
-@LastEditTime: 2020-06-08 10:27:30
+LastEditors: Zpp
+LastEditTime: 2020-11-24 16:27:50
 '''
 import platform
 
@@ -32,3 +32,14 @@ def WriteFile(path, content, type='w'):
         return True
     except:
         return False
+
+
+def health_database_status(s, sql):
+    is_db = True
+
+    try:
+        s.execute(sql)
+    except:
+        is_db = False
+
+    return is_db

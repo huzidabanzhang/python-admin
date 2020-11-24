@@ -12,37 +12,37 @@ params = {
     # 验证字段
     'fields': {
         'name': {
-            'name': u'角色名称',
+            'name': '角色名称',
             'type': 'str',
             'required': True
         },
         'mark': {
-            'name': u'角色标识',
+            'name': '角色标识',
             'type': 'str',
             'required': True
         },
         'disable': {
-            'name': u'可见性',
+            'name': '可见性',
             'type': 'boolean',
             'required': True
         },
         'role_list[]': {
-            'name': u'API列表',
+            'name': 'API列表',
             'type': 'list',
             'required': True
         },
         'menu[]': {
-            'name': u'菜单列表',
+            'name': '菜单列表',
             'type': 'list',
             'required': True
         },
         'role_id[]': {
-            'name': u'角色编号',
+            'name': '角色编号',
             'type': 'list',
             'required': True
         },
         'role_id': {
-            'name': u'角色编号',
+            'name': '角色编号',
             'type': 'str',
             'required': True
         }

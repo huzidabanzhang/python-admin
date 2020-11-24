@@ -10,3 +10,4 @@ Flask-HTTPAuth
 Flask-Compress
 geoip2
 flask_socketio
+healthcheck

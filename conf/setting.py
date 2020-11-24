@@ -502,7 +502,7 @@ init_menu = [
 
 # 默认判断字段
 default = {
-    'role_mark': u'SYS_ADMIN'
+    'role_mark': 'SYS_ADMIN'
 }
 
 

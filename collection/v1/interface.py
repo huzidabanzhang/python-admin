@@ -19,9 +19,9 @@ import copy
 class InterfaceModel():
     def __init__(self):
         self.exists = {
-            'name': u'接口名称',
-            'path': u'路由',
-            'mark': u'标识'
+            'name': '接口名称',
+            'path': '路由',
+            'mark': '标识'
         }
 
     def isCreateExists(self, s, params):
@@ -43,7 +43,7 @@ class InterfaceModel():
         '''
         d = {}
         for i in self.exists:
-            if params.has_key(i) and params[i] != data.__dict__[i]:
+            if i in params and params[i] != data.__dict__[i]:
                 d[i] = {
                     'value': params[i],
                     'name': self.exists[i]
@@ -61,17 +61,17 @@ class InterfaceModel():
             data = {}
 
             for i in Int:
-                if params.has_key(i):
+                if i in params:
                     data[i] = params[i]
 
             result = Interface.query.filter_by(**data).filter(
-                Interface.name.like("%" + params['name'] + "%") if params.has_key('name') else text('')
+                Interface.name.like("%" + params['name'] + "%") if 'name' in params else text('')
             ).order_by(order_by).paginate(page, page_size, error_out=False)
 
             return {'data': [value.to_json() for value in result.items], 'total': result.total}
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def CreateInterfaceRequest(self, params):
         '''
@@ -103,8 +103,8 @@ class InterfaceModel():
             return data
         except Exception as e:
             s.rollback()
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def ModifyInterfaceRequest(self, interface_id, params):
         '''
@@ -120,7 +120,7 @@ class InterfaceModel():
             data = {}
 
             for i in params:
-                if i in AllowableFields and params.has_key(i):
+                if i in AllowableFields and i in params:
                     data[i] = params[i]
 
             is_exists = self.isSaveExists(s, data, interface)
@@ -134,9 +134,9 @@ class InterfaceModel():
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)
 
     def LockInterfaceRequest(self, interface_id, disable):
         '''
@@ -148,9 +148,9 @@ class InterfaceModel():
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)
 
     def DelInterfaceRequest(self, interface_id):
         '''
@@ -164,6 +164,6 @@ class InterfaceModel():
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)

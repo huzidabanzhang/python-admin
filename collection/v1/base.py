@@ -27,8 +27,8 @@ import calendar
 
 class BaseModel():
     def __init__(self):
-        self.role_name = u'超级管理员'
-        self.user_name = u'Admin'
+        self.role_name = '超级管理员'
+        self.user_name = 'Admin'
         self.M = MenuModel()
         self.I = InterfaceModel()
 
@@ -76,7 +76,7 @@ class BaseModel():
             folder = Folder(
                 folder_id=uuid.uuid4(),
                 admin_id=None,
-                name=u'系统文件',
+                name='系统文件',
                 is_sys=True
             )
             s.add(folder)
@@ -91,8 +91,8 @@ class BaseModel():
             }
         except Exception as e:
             s.rollback()
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def __get_code(self):
         code_list = []
@@ -117,7 +117,7 @@ class BaseModel():
             else:
                 menu = is_exists['value']
 
-            if m.has_key('interface'):
+            if 'interface' in m:
                 interfaces = []
                 for f in m['interface']:
                     is_exists = self.I.isCreateExists(s, f)
@@ -130,7 +130,7 @@ class BaseModel():
                 menu.interfaces = interfaces
 
             s.commit()
-            if m.has_key('children'):
+            if 'children' in m:
                 self.__init_menus(s, m['children'], menu_id)
 
     def __create_menu(self, params, menu_id, pid):
@@ -185,8 +185,8 @@ class BaseModel():
                 'name': filename
             }
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def ImportSql(self, file):
         s = db.session()
@@ -214,8 +214,8 @@ class BaseModel():
             return True
         except Exception as e:
             s.rollback()
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def GetLoginInfo(self, admin_id, query_time):
         '''
@@ -253,7 +253,7 @@ class BaseModel():
 
             data = {}
             for i in res:
-                if not data.has_key(i[1]):
+                if i[1] not in data:
                     data[i[1]] = []
                 data[i[1]].append({
                     'name': i[0],
@@ -262,8 +262,8 @@ class BaseModel():
 
             return data
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def GetAllUserLoginCount(self):
         '''
@@ -279,13 +279,13 @@ class BaseModel():
                 Log.status == 0
             ).group_by('username').all()
 
-            user_list = [u'用户', u'登录次数']
+            user_list = ['用户', '登录次数']
             data = []
             for i in user_count:
                 user_list.append(i[0])
                 data.append({
-                    u'用户': i[0],
-                    u'登录次数': i[1]
+                    '用户': i[0],
+                    '登录次数': i[1]
                 })
 
             return {
@@ -293,8 +293,8 @@ class BaseModel():
                 'user': user_list
             }
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def GetUserLoginIp(self):
         '''
@@ -316,7 +316,7 @@ class BaseModel():
             for i in ip_list:
                 try:
                     response = reader.city(i[0])
-                    if not ip.has_key(response.city.names["zh-CN"]):
+                    if response.city.names["zh-CN"] not in ip:
                         ip[response.city.names["zh-CN"]] = {
                             'count': 1,
                             'ip': [i[0]]
@@ -337,8 +337,8 @@ class BaseModel():
                 'city': city
             }
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def GetReadmeContent(self):
         '''
@@ -352,5 +352,5 @@ class BaseModel():
                 'content': content
             }
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)

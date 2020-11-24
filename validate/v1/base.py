@@ -12,24 +12,24 @@ params = {
     # 验证字段
     'fields': {
         'type': {
-            'name': u'导出类型',
+            'name': '导出类型',
             'type': 'int',
             'between': [1, 2, 3],
             'required': True
         },
         'document': {
-            'name': u'数据库文件',
+            'name': '数据库文件',
             'type': 'file',
             'required': True,
-            'msg': u'请选择上传数据库文件'
+            'msg': '请选择上传数据库文件'
         },
         'admin_id': {
-            'name': u'管理员编号',
+            'name': '管理员编号',
             'type': 'str',
             'required': True
         },
         'time': {
-            'name': u'查询时间',
+            'name': '查询时间',
             'type': 'str',
             'required': True
         }

@@ -4,8 +4,8 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 10:23:44
-@LastEditTime: 2020-05-18 15:17:33
-@LastEditors: Zpp
+LastEditTime: 2020-11-24 16:06:11
+LastEditors: Zpp
 '''
 from flask_session import Session
 from flask_compress import Compress
@@ -13,7 +13,7 @@ from flask_cache import Cache
 from conf.setting import token_info, session_info, cache_info, _config
 from libs.utils import IsWindows
 
-cache = Cache()
+cache = Cache(with_jinja2_ext=False)
 
 
 def init_app(app):

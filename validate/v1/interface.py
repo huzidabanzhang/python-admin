@@ -12,68 +12,68 @@ params = {
     # 验证字段
     'fields': {
         'name': {
-            'name': u'接口名称',
+            'name': '接口名称',
             'type': 'str',
             'required': True
         },
         'path': {
-            'name': u'路径',
+            'name': '路径',
             'type': 'str',
             'required': True
         },
         'method': {
-            'name': u'请求方式',
+            'name': '请求方式',
             'type': 'str',
             'between': ['GET', 'POST', 'PUT', 'DELETE'],
             'required': True
         },
         'mark': {
-            'name': u'菜单标识',
+            'name': '菜单标识',
             'type': 'str',
             'required': True
         },
         'description': {
-            'name': u'描述',
+            'name': '描述',
             'type': 'str',
             'required': True
         },
         'menus[]': {
-            'name': u'所属菜单',
+            'name': '所属菜单',
             'type': 'list',
             'required': True
         },
         'forbid': {
-            'name': u'可隐藏',
+            'name': '可隐藏',
             'type': 'boolean',
             'required': True
         },
         'disable': {
-            'name': u'可见性',
+            'name': '可见性',
             'type': 'boolean',
             'required': True
         },
         'interface_id[]': {
-            'name': u'接口编号',
+            'name': '接口编号',
             'type': 'list',
             'required': True
         },
         'interface_id': {
-            'name': u'接口编号',
+            'name': '接口编号',
             'type': 'str',
             'required': True
         },
         'page': {
-            'name': u'页码',
+            'name': '页码',
             'type': 'int',
             'default': 1
         },
         'page_size': {
-            'name': u'条数',
+            'name': '条数',
             'type': 'int',
             'default': 20
         },
         'order_by': {
-            'name': u'排序字段',
+            'name': '排序字段',
             'type': 'str',
             'default': None
         }

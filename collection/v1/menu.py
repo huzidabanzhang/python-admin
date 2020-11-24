@@ -20,10 +20,10 @@ import json
 class MenuModel():
     def __init__(self):
         self.exists = {
-            'name': u'路由名称',
-            'title': u'菜单名称',
-            'path': u'路由',
-            'mark': u'标识'
+            'name': '路由名称',
+            'title': '菜单名称',
+            'path': '路由',
+            'mark': '标识'
         }
 
     def isCreateExists(self, s, params):
@@ -45,7 +45,7 @@ class MenuModel():
         '''
         d = {}
         for i in self.exists:
-            if params.has_key(i) and params[i] != data.__dict__[i]:
+            if i in params and params[i] != data.__dict__[i]:
                 d[i] = {
                     'value': params[i],
                     'name': self.exists[i]
@@ -60,7 +60,7 @@ class MenuModel():
         s = db.session()
         try:
             data = {}
-            if params.has_key('disable'):
+            if 'disable' in params:
                 data['disable'] = params['disable']
 
             result = Menu.query.filter_by(**data).order_by(Menu.sort, Menu.id).all()
@@ -84,7 +84,7 @@ class MenuModel():
                         'children': interfaces
                     })
 
-                if params.has_key('role_id'):
+                if 'role_id' in params:
                     role = Role.query.filter(Role.role_id == params['role_id']).first()
                     if role.mark == default['role_mark']:
                         for i in menus:
@@ -102,8 +102,8 @@ class MenuModel():
             else:
                 return [value.to_json() for value in result]
         except Exception as e:
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def CreateMenuRequest(self, params):
         '''
@@ -135,8 +135,8 @@ class MenuModel():
             return True
         except Exception as e:
             s.rollback()
-            print e
-            return str(e.message)
+            print(e)
+            return str(e)
 
     def ModifyMenuRequest(self, menu_id, params):
         '''
@@ -152,7 +152,7 @@ class MenuModel():
             data = {}
 
             for i in params:
-                if i in AllowableFields and params.has_key(i):
+                if i in AllowableFields and i in params:
                     data[i] = params[i]
 
             is_exists = self.isSaveExists(s, data, menu)
@@ -164,9 +164,9 @@ class MenuModel():
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)
 
     def DelMenuRequest(self, menu_id):
         '''
@@ -184,9 +184,9 @@ class MenuModel():
             s.commit()
             return True
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)
 
     def GetMenuToInterfaceRequest(self, menu_id):
         '''
@@ -197,6 +197,6 @@ class MenuModel():
             menu = s.query(Menu).filter(Menu.menu_id == menu_id).first()
             return [i.to_json() for i in menu.interfaces]
         except Exception as e:
-            print e
+            print(e)
             s.rollback()
-            return str(e.message)
+            return str(e)
