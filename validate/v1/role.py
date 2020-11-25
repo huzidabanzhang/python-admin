@@ -4,8 +4,8 @@
 @Description: 角色验证器
 @Author: Zpp
 @Date: 2020-05-29 14:21:43
-@LastEditors: Zpp
-@LastEditTime: 2020-05-29 14:27:32
+LastEditors: Zpp
+LastEditTime: 2020-11-25 15:52:57
 '''
 
 params = {
@@ -26,7 +26,7 @@ params = {
             'type': 'boolean',
             'required': True
         },
-        'role_list[]': {
+        'interface[]': {
             'name': 'API列表',
             'type': 'list',
             'required': True
@@ -47,8 +47,8 @@ params = {
             'required': True
         }
     },
-    'Create': ['name', 'mark', 'role_list[]', 'disable', 'menu[]'],
-    'Modify': ['role_id', 'name', 'mark', 'role_list[]', 'disable', 'menu[]'],
+    'Create': ['name', 'mark', 'interface[]', 'disable', 'menu[]'],
+    'Modify': ['role_id', 'name', 'mark', 'interface[]', 'disable', 'menu[]'],
     'Lock': ['role_id[]', 'disable'],
     'Del': ['role_id[]'],
     'Query': [{

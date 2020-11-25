@@ -4,8 +4,8 @@
 @Description: 鉴权控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-@LastEditTime: 2020-05-29 14:37:31
-@LastEditors: Zpp
+LastEditTime: 2020-11-25 16:00:54
+LastEditors: Zpp
 '''
 from flask import request
 from models import db
@@ -58,7 +58,7 @@ class RoleModel():
         is_exists = self.isCreateExists(s, params)
 
         if is_exists != True:
-            return str(is_exists['error'].encode('utf8'))
+            return str(is_exists['error'])
 
         try:
             item = Role(
@@ -66,10 +66,8 @@ class RoleModel():
                 mark=params['mark'],
                 role_id=str(uuid.uuid4()),
                 disable=params['disable'],
-                role_list=json.dumps({
-                    'I': params.getlist('role_list[]'),
-                    'M': params.getlist('menu[]')
-                })
+                menus=s.query(Menu).filter(Menu.menu_id.in_(params.getlist('menu[]'))).all(),
+                interfaces=s.query(Interface).filter(Interface.interface_id.in_(params.getlist('interface[]'))).all()
             )
             s.add(item)
             s.commit()
@@ -107,15 +105,13 @@ class RoleModel():
             is_exists = self.isSaveExists(s, params, role)
 
             if is_exists != True:
-                return str(is_exists['error'].encode('utf8'))
+                return str(is_exists['error'])
 
             role.name = params['name']
             role.mark = params['mark']
             role.disable = params['disable']
-            role.role_list = json.dumps({
-                'I': params.getlist('role_list[]'),
-                'M': params.getlist('menu[]')
-            })
+            role.menus = s.query(Menu).filter(Menu.menu_id.in_(params.getlist('menu[]'))).all()
+            role.interfaces = s.query(Interface).filter(Interface.interface_id.in_(params.getlist('interface[]'))).all()
             s.commit()
             return True
         except Exception as e:
@@ -165,11 +161,7 @@ class RoleModel():
 
             result = Role.query.filter_by(**data).order_by(Role.id).all()
 
-            data = []
-            for value in result:
-                data.append(value.to_json())
-
-            return data
+            return [value.to_json() for value in result]
         except Exception as e:
             print(e)
             return str(e)

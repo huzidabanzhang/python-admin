@@ -4,8 +4,8 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-@LastEditTime: 2020-05-06 17:29:52
-@LastEditors: Zpp
+LastEditTime: 2020-11-25 16:20:08
+LastEditors: Zpp
 '''
 from flask import request
 from models import db
@@ -68,6 +68,7 @@ class MenuModel():
             if is_interface:
                 select = []
                 menus = []
+
                 for value in result:
                     interfaces = []
                     for item in value.interfaces:
@@ -86,14 +87,16 @@ class MenuModel():
 
                 if 'role_id' in params:
                     role = Role.query.filter(Role.role_id == params['role_id']).first()
-                    if role.mark == default['role_mark']:
-                        for i in menus:
+
+                    # vue树形控件的选择原理 只需要子节点id
+                    for i in role.interfaces:
+                        for m in i.menus:
+                            select.append('%s.%s' % (m.menu_id, i.interface_id))
+                    # 补充没有接口的菜单
+                    menu = [i.menu_id for i in role.menus]
+                    for i in menus:
+                        if len(i['children']) == 0 and i['menu_id'] in menu:
                             select.append(i['menu_id'])
-                    else:
-                        for value in json.loads(role.role_list)['I']:
-                            select.append(value)
-                        # for value in role.menus:
-                        #     select.append(value.menu_id)
 
                 return {
                     'data': menus,
@@ -113,7 +116,7 @@ class MenuModel():
         is_exists = self.isCreateExists(s, params)
 
         if is_exists != True:
-            return str(is_exists['error'].encode('utf8'))
+            return str(is_exists['error'])
 
         try:
             item = Menu(
@@ -148,19 +151,17 @@ class MenuModel():
             if not menu:
                 return str('菜单不存在')
 
-            AllowableFields = ['pid', 'title', 'path', 'icon', 'sort', 'component', 'componentPath', 'name', 'cache', 'disable']
-            data = {}
-
-            for i in params:
-                if i in AllowableFields and i in params:
-                    data[i] = params[i]
-
-            is_exists = self.isSaveExists(s, data, menu)
+            is_exists = self.isSaveExists(s, params, menu)
 
             if is_exists != True:
-                return str(is_exists['error'].encode('utf8'))
+                return str(is_exists['error'])
 
-            s.query(Menu).filter(Menu.menu_id == menu_id).update(data)
+            AllowableFields = ['pid', 'title', 'path', 'icon', 'sort', 'component', 'componentPath', 'name', 'cache', 'disable']
+
+            for i in params:
+                if i in AllowableFields and hasattr(menu, i):
+                    setattr(menu, i, params[i])
+
             s.commit()
             return True
         except Exception as e:

@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-LastEditTime: 2020-11-25 11:14:28
+LastEditTime: 2020-11-25 14:56:11
 LastEditors: Zpp
 '''
 from flask import request
@@ -48,7 +48,7 @@ class AdminModel():
                 return str('角色不存在')
 
             if role.mark == default['role_mark']:
-                return str('不能设为为超级管理员')
+                return str('不能设为超级管理员角色')
 
             admin = s.query(Admin).filter(Admin.username == params['username']).first()
 
@@ -120,10 +120,12 @@ class AdminModel():
             menu = [value.to_json() for value in role.menus] if role else []
 
             user = copy.deepcopy(admin.to_json())
-            del user['id']
-            del user['create_time']
-            del user['update_time']
             user['mark'] = role.mark
+
+            # 删除不必要信息
+            del_list = ['id', 'create_time', 'update_time']
+            for i in del_list:
+                del user[i]
 
             # 登录成功删除掉原来的锁定记录
             if is_lock:
@@ -148,8 +150,6 @@ class AdminModel():
             admin = s.query(Admin).filter(Admin.admin_id == admin_id).first()
             if not admin:
                 return str('管理员不存在')
-            if admin.disable:
-                return str('管理员被禁用')
 
             role = s.query(Role).filter(Role.role_id == params['role_id']).first()
 
@@ -157,22 +157,23 @@ class AdminModel():
                 return str('角色不存在')
 
             if admin.role_id != role.role_id and role.mark == default['role_mark']:
-                return str('不能设为为超级管理员')
+                return str('不能设为超级管理员')
 
-            admin.nickname = params['nickname']
-            admin.sex = params['sex']
-            admin.role_id = params['role_id']
-            admin.avatar = params['avatar']
-            admin.email = params['email']
-            admin.disable = params['disable']
+            AllowableFields = ['nickname', 'sex', 'role_id', 'avatar', 'email', 'disable']
+
+            for i in params:
+                if i in AllowableFields and hasattr(admin, i):
+                    setattr(admin, i, params[i])
+
             if params['password'] != admin.password:
                 admin.password = _config.get_md5(params['password'])
 
             user = copy.deepcopy(admin.to_json())
-            del user['id']
-            del user['create_time']
-            del user['update_time']
             user['mark'] = role.mark
+            # 删除不必要信息
+            del_list = ['id', 'create_time', 'update_time']
+            for i in del_list:
+                del user[i]
 
             s.commit()
             return user

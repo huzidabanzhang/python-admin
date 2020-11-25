@@ -4,8 +4,8 @@
 @Description: 接口控制器
 @Author: Zpp
 @Date: 2019-10-14 13:40:29
-@LastEditors: Zpp
-@LastEditTime: 2020-05-29 16:37:50
+LastEditors: Zpp
+LastEditTime: 2020-11-25 14:45:58
 '''
 from flask import request
 from models import db
@@ -116,21 +116,19 @@ class InterfaceModel():
             if not interface:
                 return str('接口不存在')
 
-            AllowableFields = ['name', 'path', 'method', 'description', 'disable']
-            data = {}
-
-            for i in params:
-                if i in AllowableFields and i in params:
-                    data[i] = params[i]
-
-            is_exists = self.isSaveExists(s, data, interface)
+            is_exists = self.isSaveExists(s, params, interface)
 
             if is_exists != True:
-                return str(is_exists['error'].encode('utf8'))
+                return str(is_exists['error'])
+
+            AllowableFields = ['name', 'path', 'method', 'description', 'disable']
+
+            for i in params:
+                if i in AllowableFields and hasattr(interface, i):
+                    setattr(interface, i, params[i])
 
             menus = s.query(Menu).filter(Menu.menu_id.in_(params.getlist('menus[]'))).all()
             interface.menus = menus
-            s.query(Interface).filter(Interface.interface_id == interface_id).update(data)
             s.commit()
             return True
         except Exception as e:
