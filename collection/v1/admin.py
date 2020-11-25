@@ -4,8 +4,8 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-@LastEditTime: 2020-05-28 09:42:20
-@LastEditors: Zpp
+LastEditTime: 2020-11-25 11:14:28
+LastEditors: Zpp
 '''
 from flask import request
 from models import db
@@ -115,22 +115,9 @@ class AdminModel():
             if admin.disable:
                 return str('管理员被禁用')
 
-            menu = []
-            interface = []
-
             role = s.query(Role).filter(Role.role_id == admin.role_id).first()
-            if role:
-                if role.mark == default['role_mark']:
-                    interface = [value.to_json() for value in s.query(Interface).all()]
-                    menu = [value.to_json() for value in s.query(Menu).all()]
-                else:
-                    i = []
-                    I = json.loads(role.role_list)['I']
-                    M = json.loads(role.role_list)['M']
-                    for x in I:
-                        i.append(x.split('.')[1])
-                    interface = [value.to_json() for value in s.query(Interface).filter(Interface.interface_id.in_(i)).all()]
-                    menu = [value.to_json() for value in s.query(Menu).filter(Menu.menu_id.in_(M)).all()]
+            interface = [value.to_json() for value in role.interfaces] if role else []
+            menu = [value.to_json() for value in role.menus] if role else []
 
             user = copy.deepcopy(admin.to_json())
             del user['id']

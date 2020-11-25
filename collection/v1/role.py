@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 权限控制器
+@Description: 鉴权控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
 @LastEditTime: 2020-05-29 14:37:31
@@ -52,7 +52,7 @@ class RoleModel():
 
     def CreateRoleRequest(self, params):
         '''
-        新建权限
+        新建鉴权
         '''
         s = db.session()
         is_exists = self.isCreateExists(s, params)
@@ -81,7 +81,7 @@ class RoleModel():
 
     def GetRoleRequest(self, role_id):
         '''
-        查询权限
+        查询鉴权
         '''
         s = db.session()
         try:
@@ -96,7 +96,7 @@ class RoleModel():
 
     def ModifyRoleRequest(self, role_id, params):
         '''
-        修改权限信息
+        修改鉴权信息
         '''
         s = db.session()
         try:
@@ -125,7 +125,7 @@ class RoleModel():
 
     def LockRoleRequest(self, role_id, disable):
         '''
-        禁用权限
+        禁用鉴权
         '''
         s = db.session()
         try:
@@ -139,7 +139,7 @@ class RoleModel():
 
     def DelRoleRequest(self, role_id):
         '''
-        删除权限
+        删除鉴权
         '''
         s = db.session()
         try:
@@ -155,7 +155,7 @@ class RoleModel():
 
     def QueryRoleByParamRequest(self, params):
         '''
-        权限列表
+        鉴权列表
         '''
         s = db.session()
         try:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-\
 '''
-@Description: 权限API
+@Description: 鉴权API
 @Author: Zpp
 @Date: 2019-09-12 10:30:39
 @LastEditTime: 2020-06-05 09:52:23

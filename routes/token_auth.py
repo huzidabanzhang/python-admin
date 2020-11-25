@@ -75,7 +75,7 @@ def get_auth_token(token):
 def validate_current_access(f):
     @wraps(f)
     def decorated_function(*args, **kws):
-        # 路由权限
+        # 路由鉴权
         info = get_auth_token(session.get('admin'))
         if info['is_admin']:
             return f(*args, **kws)

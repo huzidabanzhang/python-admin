@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:UTF-8 -*-
 '''
-@Description: 权限判断方法
+@Description: 鉴权判断方法
 @Author: Zpp
 @Date: 2019-09-04 16:55:43
 LastEditTime: 2020-11-24 16:32:20
@@ -50,7 +50,7 @@ def isExists(s, model, params):
 
 def is_in_scope(admin_id, path):
     '''
-    路由权限判断
+    路由鉴权判断
     '''
     s = db.session()
     try:

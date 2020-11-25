@@ -4,8 +4,8 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-@LastEditTime: 2020-06-04 14:53:13
-@LastEditors: Zpp
+LastEditTime: 2020-11-25 11:22:09
+LastEditors: Zpp
 '''
 import hashlib
 import os
@@ -310,7 +310,7 @@ init_menu = [
         ]
     },
     {
-        "title": "权限",
+        "title": "鉴权",
         "path": "/role",
         "icon": "shield",
         "mark": "role",
@@ -491,6 +491,48 @@ init_menu = [
                         "name": "QueryLogByParam",
                         "description": "获取日志列表",
                         "mark": "get_log_list",
+                        "forbid": True
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "Markdown",
+        "path": "/markdown",
+        "icon": "file-text-o",
+        "mark": "markdown",
+        'name': 'Markdown',
+        'component': 'layoutHeaderAside',
+        'componentPath': 'layout/header-aside',
+        'cache': True,
+        "children": [
+            {
+                "title": "markdown编辑器",
+                "path": "/markdown/wirte",
+                "icon": "edit",
+                "mark": "markdown_wirte",
+                'name': 'MarkdwonWrite',
+                'component': 'markdown_wirte',
+                'componentPath': 'sys/markdown/wirte',
+                'cache': True
+            },
+            {
+                "title": "预览",
+                "path": "/markdown/preview",
+                "mark": "markdown_preview",
+                "icon": "eye",
+                'name': 'Preview',
+                'component': 'preview',
+                'componentPath': 'sys/markdown/index',
+                'cache': True,
+                "interface": [
+                    {
+                        "path": "/v1/Base/GetReadmeContent",
+                        "method": "POST",
+                        "name": "GetReadmeContent",
+                        "description": "获取README.md的内容",
+                        "mark": "get_content",
                         "forbid": True
                     }
                 ]

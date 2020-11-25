@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-LastEditTime: 2020-11-25 10:09:00
+LastEditTime: 2020-11-25 11:03:56
 LastEditors: Zpp
 '''
 from models import db
@@ -29,6 +29,7 @@ class BaseModel():
     def __init__(self):
         self.role_name = '超级管理员'
         self.user_name = 'Admin'
+        self.folder_name = '系统文件'
         self.M = MenuModel()
         self.I = InterfaceModel()
 
@@ -39,17 +40,14 @@ class BaseModel():
 
         s = db.session()
         try:
-            s.add(InitSql(is_init=False))
-            s.commit()
-
             role_id = str(uuid.uuid4())
             role = Role(
                 role_id=role_id,
                 name=self.role_name,
                 mark=default['role_mark']
             )
-            s.add(role)
-            s.commit()
+
+            self.__init_menus(role, s, init_menu)
 
             password = self.__get_code()
             if not is_init:
@@ -66,28 +64,25 @@ class BaseModel():
                     password=params['password'],
                     role_id=role_id
                 )
-            s.add(admin)
-            s.commit()
-
-            self.__init_menus(s, init_menu)
 
             folder = Folder(
                 folder_id=str(uuid.uuid4()),
-                name='系统文件'
+                name=self.folder_name
             )
-            s.add(folder)
-            s.commit()
 
-            sql = s.query(InitSql).one()
-            sql.is_init = True
+            init = InitSql(is_init=True)
+
+            s.add_all([role, admin, folder, init])
             s.commit()
             return {
                 'username': self.user_name,
                 'password': password
             }
         except Exception as e:
-            s.rollback()
             print(e)
+            s.rollback()
+            s.add(InitSql(is_init=False))
+            s.commit()
             return str(e)
 
     def __get_code(self):
@@ -102,19 +97,12 @@ class BaseModel():
         code_num = ''.join(code)
         return code_num
 
-    def __init_menus(self, s, data, pid='0'):
+    def __init_menus(self, role, s, data, pid='0'):
         for m in data:
             menu_id = str(uuid.uuid4())
-            is_exists = self.M.isCreateExists(s, m)
-
-            if is_exists == True:
-                menu = self.__create_menu(m, menu_id, pid)
-                s.add(menu)
-            else:
-                menu = is_exists['value']
+            menu = self.__create_menu(m, menu_id, pid)
 
             if 'interface' in m:
-                interfaces = []
                 for f in m['interface']:
                     is_exists = self.I.isCreateExists(s, f)
                     if is_exists == True:
@@ -122,12 +110,14 @@ class BaseModel():
                     else:
                         interface = is_exists['value']
                     s.add(interface)
-                    interfaces.append(interface)
-                menu.interfaces = interfaces
+                    menu.interfaces.append(interface)
+                    role.interfaces.append(interface)
 
-            s.commit()
+            s.add(menu)
+            role.menus.append(menu)
+
             if 'children' in m:
-                self.__init_menus(s, m['children'], menu_id)
+                self.__init_menus(role, s, m['children'], menu_id)
 
     def __create_menu(self, params, menu_id, pid):
         return Menu(

@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-LastEditTime: 2020-11-25 10:07:03
+LastEditTime: 2020-11-25 11:00:46
 LastEditors: Zpp
 '''
 from models import db
@@ -24,6 +24,24 @@ InterfaceToMenu = db.Table(
     'db_interface_to_menu',
     db.Column('menu_id', db.String(36), db.ForeignKey('db_menu.menu_id', ondelete='CASCADE')),
     db.Column('interface_id', db.String(36), db.ForeignKey('db_interface.interface_id', ondelete='CASCADE')),
+    useexisting=True,
+    mysql_engine='InnoDB',
+    mysql_charset='utf8'
+)
+
+InterfaceToRole = db.Table(
+    'db_interface_to_role',
+    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id', ondelete='CASCADE')),
+    db.Column('interface_id', db.String(36), db.ForeignKey('db_interface.interface_id', ondelete='CASCADE')),
+    useexisting=True,
+    mysql_engine='InnoDB',
+    mysql_charset='utf8'
+)
+
+MenuToRole = db.Table(
+    'db_menu_to_role',
+    db.Column('role_id', db.String(36), db.ForeignKey('db_role.role_id', ondelete='CASCADE')),
+    db.Column('menu_id', db.String(36), db.ForeignKey('db_menu.menu_id', ondelete='CASCADE')),
     useexisting=True,
     mysql_engine='InnoDB',
     mysql_charset='utf8'
@@ -103,7 +121,7 @@ class LoginLock(db.Model):
 
 class Role(db.Model):
     '''
-    权限
+    鉴权
     '''
     __tablename__ = 'db_role'
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
@@ -111,8 +129,15 @@ class Role(db.Model):
     name = db.Column(db.String(64), nullable=False, unique=True)
     mark = db.Column(db.String(64), nullable=False, unique=True)
     disable = db.Column(db.Boolean, index=True, default=False)
-    role_list = db.Column(db.Text)
     admins = db.relationship('Admin', backref='role')
+    interfaces = db.relationship('Interface',
+                                 secondary=InterfaceToRole,
+                                 backref=db.backref('roles', lazy='dynamic'),
+                                 lazy='dynamic')
+    menus = db.relationship('Menu',
+                            secondary=MenuToRole,
+                            backref=db.backref('roles', lazy='dynamic'),
+                            lazy='dynamic')
     __table_args__ = (table_args())
 
     def to_json(self):
@@ -169,7 +194,7 @@ class Interface(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, index=True, autoincrement=True)
     interface_id = db.Column(db.String(36), index=True, nullable=False, unique=True)
     name = db.Column(db.String(64), index=True, nullable=False, unique=True)
-    path = db.Column(db.String(255), nullable=False, unique=True)
+    path = db.Column(db.String(255), nullable=False)
     method = db.Column(db.String(36), nullable=False)
     description = db.Column(db.String(255), nullable=False)
     mark = db.Column(db.String(255), nullable=False, unique=True)

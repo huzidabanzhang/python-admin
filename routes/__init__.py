@@ -81,7 +81,7 @@ def init_app(app):
 
     @app.errorhandler(403)
     def handle_403_error(error):
-        return ResultDeal(code=403, msg='您没有访问权限')
+        return ResultDeal(code=403, msg='您没有访问鉴权')
 
     @app.errorhandler(404)
     def handle_404_error(error):

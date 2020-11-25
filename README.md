@@ -2,8 +2,7 @@
 
 https://test.ig132n.cn/
 
-测试账号：Test 密码：111111 
-
+测试账号：Test 密码：111111
 
 前端地址 [章胖胖](https://github.com/huzidabanzhang/python-admin-pm "章胖胖")
 
@@ -11,7 +10,7 @@ https://test.ig132n.cn/
 
 ![菜单](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/menu.png "菜单")
 
-![权限](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/role.png "权限")
+![鉴权](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/role.png "鉴权")
 
 ## 验证器
 
@@ -33,7 +32,7 @@ params = {
     # 引用验证字段场景
     'Test': ['admin_id[]', 'disable'],
     # 验证场景中需要修改字段里面的内容或增加字段内容
-    
+
     # 用dict里面加入field这个很重要要判断是哪个字段dict会覆盖原来的判断条件
     'Test2': [{
         'field': 'code',
@@ -99,12 +98,11 @@ tools/manage.py 为数据库版本控制的 py，具体的使用介绍你可以�
 python start.py # 启动服务
 ```
 
-前端页面打开第一次会提示是否初始化数据库，初始化后会提示弹出Admin的初始密码登录即可.
+前端页面打开第一次会提示是否初始化数据库，初始化后会提示弹出 Admin 的初始密码登录即可.
 
 ## 计划
 
-升级到python3
-
+升级到 python3
 
 ........
 
