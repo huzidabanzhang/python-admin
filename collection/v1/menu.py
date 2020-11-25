@@ -117,7 +117,7 @@ class MenuModel():
 
         try:
             item = Menu(
-                menu_id=uuid.uuid4(),
+                menu_id=str(uuid.uuid4()),
                 pid=params['pid'],
                 title=params['title'],
                 sort=int(params['sort']),

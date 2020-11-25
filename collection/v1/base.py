@@ -4,8 +4,8 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-@LastEditTime: 2020-06-08 09:55:34
-@LastEditors: Zpp
+LastEditTime: 2020-11-25 10:09:00
+LastEditors: Zpp
 '''
 from models import db
 from models.system import Admin, Role, Menu, Interface, InitSql, Folder
@@ -42,7 +42,7 @@ class BaseModel():
             s.add(InitSql(is_init=False))
             s.commit()
 
-            role_id = uuid.uuid4()
+            role_id = str(uuid.uuid4())
             role = Role(
                 role_id=role_id,
                 name=self.role_name,
@@ -54,10 +54,9 @@ class BaseModel():
             password = self.__get_code()
             if not is_init:
                 admin = Admin(
-                    admin_id=uuid.uuid4(),
+                    admin_id=str(uuid.uuid4()),
                     username=self.user_name,
                     password=_config.get_md5(password),
-                    avatar='',
                     role_id=role_id
                 )
             else:
@@ -65,7 +64,6 @@ class BaseModel():
                     admin_id=params['admin_id'],
                     username=self.user_name,
                     password=params['password'],
-                    avatar='',
                     role_id=role_id
                 )
             s.add(admin)
@@ -74,10 +72,8 @@ class BaseModel():
             self.__init_menus(s, init_menu)
 
             folder = Folder(
-                folder_id=uuid.uuid4(),
-                admin_id=None,
-                name='系统文件',
-                is_sys=True
+                folder_id=str(uuid.uuid4()),
+                name='系统文件'
             )
             s.add(folder)
             s.commit()
@@ -86,7 +82,7 @@ class BaseModel():
             sql.is_init = True
             s.commit()
             return {
-                'username': 'Admin',
+                'username': self.user_name,
                 'password': password
             }
         except Exception as e:
@@ -108,7 +104,7 @@ class BaseModel():
 
     def __init_menus(self, s, data, pid='0'):
         for m in data:
-            menu_id = uuid.uuid4()
+            menu_id = str(uuid.uuid4())
             is_exists = self.M.isCreateExists(s, m)
 
             if is_exists == True:
@@ -122,7 +118,7 @@ class BaseModel():
                 for f in m['interface']:
                     is_exists = self.I.isCreateExists(s, f)
                     if is_exists == True:
-                        interface = self.__create_interface(s, f, uuid.uuid4())
+                        interface = self.__create_interface(s, f, str(uuid.uuid4()))
                     else:
                         interface = is_exists['value']
                     s.add(interface)

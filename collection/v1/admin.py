@@ -56,7 +56,7 @@ class AdminModel():
                 return str('管理员已存在')
 
             item = Admin(
-                admin_id=uuid.uuid4(),
+                admin_id=str(uuid.uuid4()),
                 username=params['username'],
                 password=_config.get_md5(params['password']),
                 sex=int(params['sex']),
@@ -100,7 +100,7 @@ class AdminModel():
                     is_lock.number = number
                 else:
                     s.add(LoginLock(
-                        lock_id=uuid.uuid4(),
+                        lock_id=str(uuid.uuid4()),
                         user_id=admin.admin_id,
                         flag=False,
                         number=number,

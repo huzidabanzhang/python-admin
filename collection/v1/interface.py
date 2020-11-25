@@ -87,7 +87,7 @@ class InterfaceModel():
             menus = s.query(Menu).filter(Menu.menu_id.in_(params.getlist('menus[]'))).all()
 
             item = Interface(
-                interface_id=uuid.uuid4(),
+                interface_id=str(uuid.uuid4()),
                 name=params['name'],
                 path=params['path'],
                 method=params['method'],

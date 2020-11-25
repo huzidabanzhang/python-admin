@@ -64,7 +64,7 @@ class RoleModel():
             item = Role(
                 name=params['name'],
                 mark=params['mark'],
-                role_id=uuid.uuid4(),
+                role_id=str(uuid.uuid4()),
                 disable=params['disable'],
                 role_list=json.dumps({
                     'I': params.getlist('role_list[]'),

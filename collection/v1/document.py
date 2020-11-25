@@ -89,7 +89,7 @@ class DocumentModel():
                 file.save(document_dir + path)
 
                 item = Document(
-                    document_id=uuid.uuid4(),
+                    document_id=str(uuid.uuid4()),
                     admin_id=params['admin_id'],
                     name=file_name,
                     status=file_status,

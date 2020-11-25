@@ -47,7 +47,7 @@ class FolderModel():
         s = db.session()
         try:
             item = Folder(
-                folder_id=uuid.uuid4(),
+                folder_id=str(uuid.uuid4()),
                 pid=params['pid'],
                 name=params['name'],
                 admin_id=params['admin_id'],
