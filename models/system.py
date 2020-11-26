@@ -4,7 +4,7 @@
 @Description: 系统相关的几张表结构
 @Author: Zpp
 @Date: 2019-09-05 15:57:55
-LastEditTime: 2020-11-25 11:00:46
+LastEditTime: 2020-11-26 16:00:20
 LastEditors: Zpp
 '''
 from models import db
@@ -200,6 +200,14 @@ class Interface(db.Model):
     mark = db.Column(db.String(255), nullable=False, unique=True)
     disable = db.Column(db.Boolean, index=True, default=False)
     forbid = db.Column(db.Boolean, index=True, default=True)
+    menu = db.relationship('Menu',
+                           secondary=InterfaceToMenu,
+                           backref=db.backref('interface', lazy='dynamic'),
+                           lazy='dynamic')
+    role = db.relationship('Role',
+                           secondary=InterfaceToRole,
+                           backref=db.backref('interface', lazy='dynamic'),
+                           lazy='dynamic')
     __table_args__ = (table_args())
 
     def to_json(self):
