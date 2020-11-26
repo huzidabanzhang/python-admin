@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2020-02-19 19:45:33
-LastEditTime: 2020-11-25 11:03:56
+LastEditTime: 2020-11-26 10:05:18
 LastEditors: Zpp
 '''
 from models import db
@@ -100,26 +100,24 @@ class BaseModel():
     def __init_menus(self, role, s, data, pid='0'):
         for m in data:
             menu_id = str(uuid.uuid4())
-            menu = self.__create_menu(m, menu_id, pid)
+            menu = self.__create_menu(role, m, menu_id, pid)
 
             if 'interface' in m:
                 for f in m['interface']:
                     is_exists = self.I.isCreateExists(s, f)
                     if is_exists == True:
-                        interface = self.__create_interface(s, f, str(uuid.uuid4()))
+                        interface = self.__create_interface(role, s, f, str(uuid.uuid4()))
                     else:
                         interface = is_exists['value']
                     s.add(interface)
                     menu.interfaces.append(interface)
-                    role.interfaces.append(interface)
 
             s.add(menu)
-            role.menus.append(menu)
 
             if 'children' in m:
                 self.__init_menus(role, s, m['children'], menu_id)
 
-    def __create_menu(self, params, menu_id, pid):
+    def __create_menu(self, role, params, menu_id, pid):
         return Menu(
             menu_id=menu_id,
             pid=pid,
@@ -130,10 +128,11 @@ class BaseModel():
             component=params['component'],
             componentPath=params['componentPath'],
             name=params['name'],
-            cache=params['cache']
+            cache=params['cache'],
+            roles=[role]
         )
 
-    def __create_interface(self, s, params, interface_id):
+    def __create_interface(self, role, s, params, interface_id):
         return Interface(
             interface_id=interface_id,
             name=params['name'],
@@ -141,7 +140,8 @@ class BaseModel():
             method=params['method'],
             description=params['description'],
             mark=params['mark'],
-            forbid=params['forbid']
+            forbid=params['forbid'],
+            roles=[role]
         )
 
     def ExportSql(self, type=1):

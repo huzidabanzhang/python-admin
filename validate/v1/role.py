@@ -5,7 +5,7 @@
 @Author: Zpp
 @Date: 2020-05-29 14:21:43
 LastEditors: Zpp
-LastEditTime: 2020-11-25 15:52:57
+LastEditTime: 2020-11-26 11:09:27
 '''
 
 params = {
@@ -45,6 +45,10 @@ params = {
             'name': '角色编号',
             'type': 'str',
             'required': True
+        },
+        'is_default': {
+            'name': '获取系统角色Id',
+            'type': 'boolean'
         }
     },
     'Create': ['name', 'mark', 'interface[]', 'disable', 'menu[]'],
@@ -54,5 +58,5 @@ params = {
     'Query': [{
         'field': 'disable',
         'required': False
-    }]
+    }, 'is_default']
 }

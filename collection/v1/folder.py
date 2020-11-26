@@ -4,8 +4,8 @@
 @Description: 文件夹控制器
 @Author: Zpp
 @Date: 2019-12-23 14:53:50
-@LastEditors  : Please set LastEditors
-@LastEditTime : 2020-02-14 14:49:46
+LastEditors: Zpp
+LastEditTime: 2020-11-26 09:32:22
 '''
 from flask import request
 from models import db
@@ -71,9 +71,12 @@ class FolderModel():
             if not folder:
                 return str('文件夹不存在')
 
-            folder.name = params['name']
-            if 'pid' in params:
-                folder.pid = params['pid']
+            AllowableFields = ['pid', 'name']
+
+            for i in params:
+                if i in AllowableFields and hasattr(folder, i):
+                    setattr(folder, i, params[i])
+
             s.commit()
             return True
         except Exception as e:

@@ -4,7 +4,7 @@
 @Description: 鉴权控制器
 @Author: Zpp
 @Date: 2019-09-10 16:01:46
-LastEditTime: 2020-11-25 16:00:54
+LastEditTime: 2020-11-26 13:49:01
 LastEditors: Zpp
 '''
 from flask import request
@@ -12,6 +12,7 @@ from models import db
 from models.system import Role, Interface, Menu
 from sqlalchemy import text
 from libs.scope import isExists
+from conf.setting import default
 import uuid
 import json
 
@@ -161,7 +162,15 @@ class RoleModel():
 
             result = Role.query.filter_by(**data).order_by(Role.id).all()
 
-            return [value.to_json() for value in result]
+            if 'is_default' in params:
+                res = Role.query.filter(Role.mark == default['role_mark']).first()
+
+                return {
+                    'data': [value.to_json() for value in result],
+                    'default': res.role_id if res else None
+                }
+            else:
+                return [value.to_json() for value in result]
         except Exception as e:
             print(e)
             return str(e)

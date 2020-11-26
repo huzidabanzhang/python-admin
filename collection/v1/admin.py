@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-09 10:02:39
-LastEditTime: 2020-11-25 14:56:11
+LastEditTime: 2020-11-26 10:09:46
 LastEditors: Zpp
 '''
 from flask import request
@@ -117,7 +117,7 @@ class AdminModel():
 
             role = s.query(Role).filter(Role.role_id == admin.role_id).first()
             interface = [value.to_json() for value in role.interfaces] if role else []
-            menu = [value.to_json() for value in role.menus] if role else []
+            menu = [value.to_json() for value in role.menus.order_by(Menu.sort, Menu.id)] if role else []
 
             user = copy.deepcopy(admin.to_json())
             user['mark'] = role.mark

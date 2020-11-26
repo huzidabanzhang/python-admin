@@ -4,8 +4,8 @@
 @Description: 鉴权API
 @Author: Zpp
 @Date: 2019-09-12 10:30:39
-@LastEditTime: 2020-06-05 09:52:23
-@LastEditors: Zpp
+LastEditTime: 2020-11-26 11:10:34
+LastEditors: Zpp
 '''
 from flask import Blueprint, request
 from collection.v1.role import RoleModel
@@ -81,11 +81,7 @@ def ModifyRole():
 @validate_current_access
 @validate.form('Query')
 def QueryRoleByParam():
-    params = {}
-    if request.form.get('disable') != None:
-        params['disable'] = request.form.get('disable')
-
-    result = RoleModel().QueryRoleByParamRequest(params=params)
+    result = RoleModel().QueryRoleByParamRequest(params=request.form)
 
     if type(result).__name__ == 'str':
         return ResultDeal(msg=result, code=-1)

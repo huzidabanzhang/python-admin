@@ -4,8 +4,8 @@
 @Description: 菜单验证器
 @Author: Zpp
 @Date: 2020-05-29 14:08:17
-@LastEditors: Zpp
-@LastEditTime: 2020-05-29 14:56:01
+LastEditors: Zpp
+LastEditTime: 2020-11-26 11:08:16
 '''
 
 params = {
@@ -80,11 +80,16 @@ params = {
         'is_interface': {
             'name': '是否带API',
             'type': 'boolean'
+        },
+        'roles[]': {
+            'name': '角色集',
+            'type': 'list',
+            'required': True
         }
     },
-    'Create': ['pid', 'title', 'path', 'icon', 'mark', 'sort', 'component', 'componentPath', 'name', 'cache', 'disable'],
+    'Create': ['pid', 'title', 'path', 'icon', 'mark', 'sort', 'component', 'componentPath', 'name', 'cache', 'disable', 'roles[]'],
     'Get': ['menu_id'],
-    'Modify': ['menu_id', 'pid', 'title', 'path', 'icon', 'mark', 'sort', 'component', 'componentPath', 'name', 'cache', 'disable'],
+    'Modify': ['menu_id', 'pid', 'title', 'path', 'icon', 'mark', 'sort', 'component', 'componentPath', 'name', 'cache', 'disable', 'roles[]'],
     'Del': ['menu_id'],
     'Query': ['is_interface', {
         'field': 'disable',

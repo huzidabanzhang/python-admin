@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-LastEditTime: 2020-11-25 16:20:08
+LastEditTime: 2020-11-26 10:12:09
 LastEditors: Zpp
 '''
 from flask import request
@@ -103,7 +103,14 @@ class MenuModel():
                     'select': select
                 }
             else:
-                return [value.to_json() for value in result]
+                res = []
+                for i in result:
+                    roles = [r.role_id for r in i.roles]
+                    item = i.to_json()
+                    item['roles'] = roles
+                    res.append(item)
+
+                return res
         except Exception as e:
             print(e)
             return str(e)
@@ -119,7 +126,7 @@ class MenuModel():
             return str(is_exists['error'])
 
         try:
-            item = Menu(
+            menu = Menu(
                 menu_id=str(uuid.uuid4()),
                 pid=params['pid'],
                 title=params['title'],
@@ -133,7 +140,12 @@ class MenuModel():
                 cache=params['cache'],
                 disable=params['disable']
             )
-            s.add(item)
+
+            # 角色关联
+            res = s.query(Role).filter(Role.role_id.in_(params.getlist('roles[]'))).all()
+            menu.roles = res
+            s.add(menu)
+
             s.commit()
             return True
         except Exception as e:
@@ -161,6 +173,10 @@ class MenuModel():
             for i in params:
                 if i in AllowableFields and hasattr(menu, i):
                     setattr(menu, i, params[i])
+
+            # 角色关联
+            res = s.query(Role).filter(Role.role_id.in_(params.getlist('roles[]'))).all()
+            menu.roles = res
 
             s.commit()
             return True
