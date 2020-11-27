@@ -4,8 +4,8 @@
 @Description: 接口验证器
 @Author: Zpp
 @Date: 2020-05-29 16:29:31
-@LastEditors: Zpp
-@LastEditTime: 2020-05-29 16:41:54
+LastEditors: Zpp
+LastEditTime: 2020-11-26 14:13:53
 '''
 
 params = {
@@ -39,6 +39,11 @@ params = {
         },
         'menus[]': {
             'name': '所属菜单',
+            'type': 'list',
+            'required': True
+        },
+        'roles[]': {
+            'name': '角色集',
             'type': 'list',
             'required': True
         },
@@ -76,10 +81,18 @@ params = {
             'name': '排序字段',
             'type': 'str',
             'default': None
+        },
+        'menu_id': {
+            'name': '菜单',
+            'type': 'str'
+        },
+        'role_id': {
+            'name': '角色',
+            'type': 'str'
         }
     },
-    'Create': ['name', 'path', 'method', 'description', 'menus[]', 'mark', 'forbid', 'disable'],
-    'Modify': ['interface_id', 'name', 'path', 'method', 'description', 'menus[]', 'mark', 'forbid', 'disable'],
+    'Create': ['name', 'path', 'method', 'description', 'menus[]', 'mark', 'forbid', 'disable', 'roles[]'],
+    'Modify': ['interface_id', 'name', 'path', 'method', 'description', 'menus[]', 'mark', 'forbid', 'disable', 'roles[]'],
     'Del': ['interface_id[]'],
     'Lock': ['interface_id[]', 'disable'],
     'Query': [{
@@ -91,5 +104,5 @@ params = {
     }, {
         'field': 'method',
         'required': False
-    }, 'page', 'page_size', 'order_by']
+    }, 'page', 'page_size', 'order_by', 'menu_id', 'role_id']
 }

@@ -4,8 +4,8 @@
 @Description: 接口API
 @Author: Zpp
 @Date: 2019-10-14 13:50:25
-@LastEditors: Zpp
-@LastEditTime: 2020-06-05 09:48:53
+LastEditors: Zpp
+LastEditTime: 2020-11-26 14:10:54
 '''
 from flask import Blueprint, request
 from collection.v1.interface import InterfaceModel
@@ -79,14 +79,8 @@ def ModifyInterface():
 @validate_current_access
 @validate.form('Query')
 def QueryInterfaceByParam():
-    params = {}
-    Ary = ['name', 'method', 'disable']
-    for i in Ary:
-        if request.form.get(i) != None:
-            params[i] = request.form.get(i)
-
     result = InterfaceModel().QueryInterfaceByParamRequest(
-        params=params,
+        params=request.form,
         page=int(request.form.get('page')),
         page_size=int(request.form.get('page_size')),
         order_by=request.form.get('order_by')
