@@ -1,16 +1,40 @@
-## 演示
+### <center>如果对您有帮助，请帮忙点右上角 "Star" 支持一下 谢谢！
 
-https://test.ig132n.cn/
+## 预览
+
+[Preview](https://test.ig132n.cn/ "Preview")
 
 测试账号：Test 密码：111111
 
-前端地址 [章胖胖](https://github.com/huzidabanzhang/python-admin-pm "章胖胖")
+VUE 仓库地址 [章胖胖](https://github.com/huzidabanzhang/python-admin-pm "章胖胖")
 
-![首页](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/desktop.png "首页")
+## 功能
 
-![菜单](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/menu.png "菜单")
+-   管理员管理
+-   菜单管理
+-   角色管理
+-   接口管理
+-   文档管理
+-   数据库管理
+-   日志查看
 
-![鉴权](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/role.png "鉴权")
+## 注意
+
+tools/manage.py 为数据库版本控制的 py，具体的使用介绍你可以看： [章胖胖的笔记](https://huzidabanzhang.github.io/notes/2020-03-30.html#python-flask-migrate-%E8%BF%81%E7%A7%BB%E6%95%B0%E6%8D%AE%E5%BA%93 "章胖胖的笔记")
+
+其中 conf 下有 aliyun.py 主要放密钥 需要的自己新建
+
+加入 GeoLite2 的 IP 转换地址
+
+## 启动
+
+第一次启动前，先创建一个数据库，然后在目录 conf/setting.py 里面类中修改连接数据库信息
+
+```shell
+python start.py # 启动服务
+```
+
+前端页面打开第一次会提示是否初始化数据库，初始化后会提示弹出 Admin 的初始密码登录即可.
 
 ## 验证器
 
@@ -72,37 +96,31 @@ params = {
 }
 ```
 
-## 功能
-
--   管理员管理
--   菜单管理
--   角色管理
--   接口管理
--   文档管理
--   数据库管理
--   日志查看
-
-## 注意
-
-tools/manage.py 为数据库版本控制的 py，具体的使用介绍你可以看： [章胖胖的笔记](https://huzidabanzhang.github.io/notes/2020-03-30.html#python-flask-migrate-%E8%BF%81%E7%A7%BB%E6%95%B0%E6%8D%AE%E5%BA%93 "章胖胖的笔记")
-
-其中 conf 下有 aliyun.py 主要放密钥 需要的自己新建
-
-加入 GeoLite2 的 IP 转换地址
-
-## 启动
-
-第一次启动前，先创建一个数据库，然后在目录 conf/setting.py 里面类中修改连接数据库信息
-
-```shell
-python start.py # 启动服务
-```
-
-前端页面打开第一次会提示是否初始化数据库，初始化后会提示弹出 Admin 的初始密码登录即可.
-
 ## 计划
 
-升级到 python3
+已经到 python3
+
+python2 的移动到了分支中
+
+![首页](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/desktop.png "首页")
+
+![菜单](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/menu.jpg "菜单")
+
+![鉴权](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/role.jpg "鉴权")
+
+![鉴权编辑](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/role_edit.jpg "鉴权编辑")
+
+![接口](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/interface.jpg "接口")
+
+![接口编辑](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/interface_edit.jpg "接口编辑")
+
+![管理员](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/admin.jpg "管理员")
+
+![日志](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/log.jpg "日志")
+
+![markdown](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/markdown.jpg "markdown")
+
+![上传](https://github.com/huzidabanzhang/python-admin/blob/master/static/image/markdown/upload.jpg "上传")
 
 ........
 
