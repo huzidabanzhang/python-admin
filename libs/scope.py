@@ -4,7 +4,7 @@
 @Description: 鉴权判断方法
 @Author: Zpp
 @Date: 2019-09-04 16:55:43
-LastEditTime: 2020-11-24 16:32:20
+LastEditTime: 2020-12-01 13:39:07
 LastEditors: Zpp
 '''
 from models import db
@@ -62,16 +62,11 @@ def is_in_scope(admin_id, path):
 
         role = s.query(Role).filter(Role.role_id == admin.role_id, Role.disable == False).one()
         if role:
-            i = []
-            I = json.loads(role.role_list)['I']
-            M = json.loads(role.role_list)['M']
-            for x in I:
-                i.append(x.split('.')[1])
-
-            interface = s.query(Interface).filter(Interface.interface_id.in_(i), Interface.disable == False, Interface.path == path).one()
+            interface = role.interfaces.filter(Interface.disable == False, Interface.path == path)
             if interface:
                 return True
-            menu = s.query(Menu).filter(Menu.menu_id.in_(M), Menu.disable == False, Menu.path == path).one()
+
+            menu = role.menus.filter(Menu.disable == False, Menu.path == path)
             if menu:
                 return True
 

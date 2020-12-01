@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-10 16:05:51
-LastEditTime: 2020-11-26 10:12:09
+LastEditTime: 2020-12-01 13:59:26
 LastEditors: Zpp
 '''
 from flask import request
@@ -82,7 +82,8 @@ class MenuModel():
                         'title': value.title,
                         'menu_id': value.menu_id,
                         'pid': value.pid,
-                        'children': interfaces
+                        'children': interfaces,
+                        'count': Menu.query.filter(Menu.pid == value.menu_id).count()
                     })
 
                 if 'role_id' in params:
@@ -95,7 +96,7 @@ class MenuModel():
                     # 补充没有接口的菜单
                     menu = [i.menu_id for i in role.menus]
                     for i in menus:
-                        if len(i['children']) == 0 and i['menu_id'] in menu:
+                        if len(i['children']) == 0 and i['count'] == 0 and i['menu_id'] in menu:
                             select.append(i['menu_id'])
 
                 return {

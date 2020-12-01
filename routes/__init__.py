@@ -4,7 +4,7 @@
 @Description: API蓝图初始化注册
 @Author: Zpp
 @Date: 2019-09-04 10:23:46
-LastEditTime: 2020-11-24 16:27:39
+LastEditTime: 2020-12-01 13:32:25
 LastEditors: Zpp
 '''
 from .v1.admin import route_admin
@@ -81,7 +81,7 @@ def init_app(app):
 
     @app.errorhandler(403)
     def handle_403_error(error):
-        return ResultDeal(code=403, msg='您没有访问鉴权')
+        return ResultDeal(code=403, msg='您没有访问权限')
 
     @app.errorhandler(404)
     def handle_404_error(error):
