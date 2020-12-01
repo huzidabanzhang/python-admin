@@ -12,3 +12,5 @@ geoip2
 flask_socketio
 healthcheck
 PyMySQL
+gevent
+gevent-websocket
