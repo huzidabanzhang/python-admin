@@ -4,7 +4,7 @@
 @Description: API蓝图初始化注册
 @Author: Zpp
 @Date: 2019-09-04 10:23:46
-LastEditTime: 2020-12-01 13:32:25
+LastEditTime: 2021-02-09 11:28:05
 LastEditors: Zpp
 '''
 from .v1.admin import route_admin

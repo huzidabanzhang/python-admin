@@ -4,7 +4,7 @@
 @Description: 基本配置信息
 @Author: Zpp
 @Date: 2019-09-02 15:53:39
-LastEditTime: 2020-11-25 11:22:09
+LastEditTime: 2021-02-09 11:19:21
 LastEditors: Zpp
 '''
 import hashlib
@@ -557,7 +557,7 @@ class Config():
             self.port = 3306
             self.admin = 'root'
             self.password = 'intersky'
-            self.db = 'flask'
+            self.db = 'chubby'
         else:
             self.port = 3306
             self.admin = 'admin_zpp'
