@@ -1,5 +1,5 @@
 Flask==0.12.2
-Werkzeug==0.12.2
+Werkzeug==0.15.3
 Flask-Session
 aliyun-python-sdk-core
 Flask-Cache
