@@ -4,8 +4,8 @@
 @Description: 管理员验证器
 @Author: Zpp
 @Date: 2020-05-27 16:56:52
-@LastEditors: Zpp
-@LastEditTime: 2020-06-05 09:54:06
+LastEditors: Zpp
+LastEditTime: 2022-03-22 08:55:38
 '''
 
 params = {
@@ -21,7 +21,7 @@ params = {
         'username': {
             'name': '用户名',
             'type': 'str',
-            'min': 6,
+            'min': 2,
             'required': True
         },
         'password': {

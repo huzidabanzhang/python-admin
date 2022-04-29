@@ -4,7 +4,7 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-04 16:06:14
-LastEditTime: 2020-11-24 16:59:20
+LastEditTime: 2022-04-29 10:18:07
 LastEditors: Zpp
 '''
 
@@ -12,7 +12,6 @@ from flask import current_app, request, session, abort
 from flask_httpauth import HTTPBasicAuth
 from functools import wraps
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
-from libs.code import ResultDeal
 from libs.scope import is_in_scope
 
 auth = HTTPBasicAuth()

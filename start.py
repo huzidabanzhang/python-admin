@@ -4,10 +4,11 @@
 @Description: 
 @Author: Zpp
 @Date: 2019-09-05 16:07:19
-LastEditTime: 2021-02-09 09:37:34
+LastEditTime: 2022-04-11 14:30:53
 LastEditors: Zpp
 '''
 from flask import Flask
+from flask_cors import CORS
 # from flask_socketio import SocketIO
 from conf.setting import server_info
 from libs.utils import IsWindows
@@ -21,10 +22,17 @@ import logging
 
 def create_app():
     app = Flask(__name__)
+    CORS(
+        app,
+        origins=['http://localhost:5001', 'https://test.ig132n.cn'],
+        supports_credentials=True,
+        methods='GET, POST'
+    )
     models.init_app(app)
     routes.init_app(app)
     services.init_app(app)
     return app
+
 
 logs.init_app()
 # 初始化

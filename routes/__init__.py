@@ -4,7 +4,7 @@
 @Description: API蓝图初始化注册
 @Author: Zpp
 @Date: 2019-09-04 10:23:46
-LastEditTime: 2021-02-09 11:28:05
+LastEditTime: 2022-04-29 10:02:58
 LastEditors: Zpp
 '''
 from .v1.admin import route_admin
@@ -23,7 +23,6 @@ from models.system import InitSql
 from datetime import datetime
 from libs.utils import health_database_status
 from healthcheck import HealthCheck
-import time
 
 
 def init_app(app):
@@ -57,43 +56,25 @@ def init_app(app):
         if response:
             db.session.close()
 
-    @app.after_request
-    def handel_after_request(resp):
-        """
-        #请求钩子，在所有的请求发生后执行，加入headers
-        :param resp:
-        :return:
-        """
-        resp = make_response(resp)
-        allow_address = ['http://localhost:5001', 'https://test.ig132n.cn']
-        origin = request.headers['Origin'] if 'Origin' in request.headers else None
-        if origin in allow_address:
-            resp.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
-            resp.headers['Access-Control-Allow-Methods'] = 'GET, POST'
-            resp.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type,Authorization,isCheck,Origin,isGet'
-            resp.headers['Access-Control-Allow-Credentials'] = 'true'
-
-        return resp
-
     @app.errorhandler(401)
     def handle_401_error(error):
-        return ResultDeal(code=401, msg='登录认证失效，请重新登录')
+        return '登录认证失效，请重新登录', 401
 
     @app.errorhandler(403)
     def handle_403_error(error):
-        return ResultDeal(code=403, msg='您没有访问权限')
+        return '您没有访问权限', 403
 
     @app.errorhandler(404)
     def handle_404_error(error):
-        return ResultDeal(code=404, msg='文件或者页面不存在')
+        return '文件或者页面不存在', 404
 
     @app.errorhandler(405)
     def handle_404_error(error):
-        return ResultDeal(code=405, msg='方法不被允许')
+        return '方法不被允许', 405
 
     @app.errorhandler(500)
     def handle_500_error(error):
-        return ResultDeal(code=500, msg='服务器错误 %s' % error)
+        return '服务器错误 % s' % error, 500
 
     @app.route('/favicon.ico')
     def favicon():
