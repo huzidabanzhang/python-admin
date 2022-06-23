@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-05 16:07:19
-LastEditTime: 2022-06-23 09:58:33
+LastEditTime: 2022-06-23 10:27:35
 LastEditors: Zpp
 '''
 from flask import Flask
@@ -76,6 +76,7 @@ def getVehicleInfo():
 
 @app.route('/v1/close', methods=['GET', 'POST'], endpoint='handleClose')
 def handleClose():
+
     return json.dumps({
         'outputSpeech': '执行成功, 通风和哨兵模式已关闭'
     })
