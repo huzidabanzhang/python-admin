@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-05 16:07:19
-LastEditTime: 2022-06-15 18:28:19
+LastEditTime: 2022-06-23 09:58:33
 LastEditors: Zpp
 '''
 from flask import Flask
@@ -76,11 +76,6 @@ def getVehicleInfo():
 
 @app.route('/v1/close', methods=['GET', 'POST'], endpoint='handleClose')
 def handleClose():
-    # tesla = Tesla()
-    # tesla.getTeslaIds()
-    # loadtion = tesla.getTeslaLoction()
-    # tesla.setWindowControl('close', loadtion)
-    # tesla.setSentryMode('false')
     return json.dumps({
         'outputSpeech': '执行成功, 通风和哨兵模式已关闭'
     })
