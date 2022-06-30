@@ -4,7 +4,7 @@
 @Description:
 @Author: Zpp
 @Date: 2019-09-05 16:07:19
-LastEditTime: 2022-06-23 10:27:35
+LastEditTime: 2022-06-30 15:47:51
 LastEditors: Zpp
 '''
 from flask import Flask
@@ -13,13 +13,11 @@ from sqlalchemy import Float
 # from flask_socketio import SocketIO
 from conf.setting import server_info
 from libs.utils import IsWindows
-import requests
 import models
 import routes
 import services
 import logs
 import logging
-import json
 
 
 def create_app():
@@ -43,44 +41,6 @@ app = create_app()
 # socketio = SocketIO(app)
 # sockets.init_app(socketio)
 logging.info('--------------------')
-
-
-@app.route('/v1/vehicle/info', methods=['GET'], endpoint='getVehicleInfo')
-def getVehicleInfo():
-    return json.dumps({
-        "display_name": "旋风冲锋",
-        "latitude": 30.33835,
-        "longitude": 121.231738,
-        "address": "浙江省宁波市慈溪市滨海四路",
-        "usable_battery_level": 61.6,
-        "percentage": 80,
-        "window": {
-            "fd_window": 1,
-            "fp_window": 0,
-            "rd_window": 1,
-            "rp_window": 0
-        },
-        "locked": False,
-        "door": {
-            "df": 1,
-            "dr": 1,
-            "pf": 0,
-            "pr": 0
-        },
-        "inside_temp": 23.8,
-        "charging_state": "Disconnected",
-        "odometer": 5354,
-        "enabled_function": 0
-    })
-
-
-@app.route('/v1/close', methods=['GET', 'POST'], endpoint='handleClose')
-def handleClose():
-
-    return json.dumps({
-        'outputSpeech': '执行成功, 通风和哨兵模式已关闭'
-    })
-
 
 try:
     logging.info('------启动成功------')
